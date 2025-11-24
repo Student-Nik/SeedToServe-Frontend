@@ -4,6 +4,7 @@ import MainLayout from './layouts/MainLayout'
 import Dashboard from './pages/Dashboard'
 import SignUp from './components/SignUp'
 import SignIn from './components/SignIn'
+import AuthSuccess from './components/AuthSucess'
 
 
 const App = () => {
@@ -11,7 +12,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/login" element={<SignIn />} />
-
+        <Route path="/auth-success" element={<AuthSuccess />} />
         <Route path="/dashboard" element={<MainLayout />}>
           <Route index element={<Dashboard />} />
         </Route>

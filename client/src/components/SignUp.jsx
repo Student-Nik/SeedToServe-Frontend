@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { showToast } from "@/helpers/showToast";
+import GoogleLogin from "./GoogleLogin";
 
 // ✅ Validation Schema
 const formSchema = z
@@ -24,12 +25,9 @@ const formSchema = z
     firstName: z.string().min(3, "First Name is required"),
     lastName: z.string().min(3, "Last Name is required"),
     email: z.string().email("Invalid email address"),
-    phone: z
-      .string()
-      .min(10, "Phone number must be at least 10 digits")
-      .regex(/^[0-9]+$/, "Phone must contain only numbers"),
     password: z.string().min(6, "Password must be at least 6 characters long"),
     confirmPassword: z.string().min(6, "Confirm Password is required"),
+    registrationType: z.enum(["Farmer", "Buyer"], { required_error: "Select a registration type" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -47,23 +45,22 @@ const SignUp = () => {
       firstName: "",
       lastName: "",
       email: "",
-      phone: "",
       password: "",
       confirmPassword: "",
+      registrationType:"",
     },
   });
-
   //  Submit Handler with API call
   const onSubmit = async (values) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/register/user", {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
-      const data = await response.json();
+      const data = await response.text();
 
       if (!response.ok) {
         return showToast("error", data.message || "Registration failed");
@@ -96,6 +93,44 @@ const SignUp = () => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Registration Type */}
+<FormField
+  control={form.control}
+  name="registrationType"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel className="text-gray-700 font-medium mb-2">
+        Select Registration Type
+      </FormLabel>
+      <FormControl>
+        <div className="flex gap-4">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              value="Farmer"
+              checked={field.value === "Farmer"}
+              onChange={() => field.onChange("Farmer")}
+              className="accent-[#2563eb]"
+            />
+            Farmer
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              value="Buyer"
+              checked={field.value === "Buyer"}
+              onChange={() => field.onChange("Buyer")}
+              className="accent-[#2563eb]"
+            />
+            Buyer
+          </label>
+        </div>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
             {/* First Name */}
             <FormField
               control={form.control}
@@ -173,33 +208,6 @@ const SignUp = () => {
                 </FormItem>
               )}
             />
-
-            {/* Phone */}
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700 font-medium flex items-center gap-2">
-                    <FaPhoneAlt className="text-[#2563eb]" /> Phone
-                  </FormLabel>
-                  <FormControl>
-                    <motion.div
-                      whileHover={{ scale: 1.03 }}
-                      transition={{ type: "spring", stiffness: 200 }}
-                    >
-                      <Input
-                        placeholder="Enter your phone number"
-                        {...field}
-                        className="border-gray-300 focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/30 transition"
-                      />
-                    </motion.div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* Password */}
             <FormField
               control={form.control}
@@ -276,7 +284,7 @@ const SignUp = () => {
           whileTap={{ scale: 0.96 }}
           className="flex items-center justify-center w-full border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
         >
-          <FcGoogle className="mr-2 text-xl" /> Sign up with Google
+          <GoogleLogin />
         </motion.button>
 
         <p className="text-sm text-gray-700 mt-6 text-center">

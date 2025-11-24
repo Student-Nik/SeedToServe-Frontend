@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { email, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { showToast } from "@/helpers/showToast";
+import GoogleLogin from "./GoogleLogin";
 
 //  Validation Schema
 const formSchema = z.object({
@@ -42,7 +43,7 @@ const SignIn = () => {
   const onSubmit = async (values) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -55,6 +56,8 @@ const SignIn = () => {
       }
 
       showToast("success", data.message || "Login successful!");
+      navigate("/dashboard")
+
     } catch (err) {
       showToast("error", err.message || "Server error");
     } finally {
@@ -76,7 +79,7 @@ const SignIn = () => {
           transition={{ delay: 0.2 }}
           className="text-gray-800 mb-6 text-3xl font-extrabold text-center"
         >
-          Create Your Account
+          Login to SeedToServe
         </motion.h2>
 
         <Form {...form}>
@@ -139,7 +142,7 @@ const SignIn = () => {
                 className="w-full py-3 bg-[#2563eb] text-white font-semibold rounded-lg shadow-md hover:bg-[#1d4ed8] transition duration-300"
                 disabled={loading}
               >
-                {loading ? "Signing Up..." : "Create Account"}
+                {loading ? "signing in..." : "Sign In"}
               </Button>
             </motion.div>
           </form>
@@ -154,7 +157,7 @@ const SignIn = () => {
           whileTap={{ scale: 0.96 }}
           className="flex items-center justify-center w-full border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
         >
-          <FcGoogle className="mr-2 text-xl" /> Sign up with Google
+          <GoogleLogin />
         </motion.button>
 
         <p className="text-sm text-gray-700 mt-6 text-center">

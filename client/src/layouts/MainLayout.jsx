@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Topbar from "@/components/Topbar";
 import React from "react";
 import { Outlet } from "react-router-dom";
@@ -10,7 +11,10 @@ const MainLayout = () => {
 
       {/* Full-width Main Content */}
       <main className="w-full">
+        <div>
         <Outlet />
+        </div>
+        <Footer />
       </main>
     </div>
   );
