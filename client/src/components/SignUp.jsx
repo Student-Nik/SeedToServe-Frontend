@@ -47,7 +47,7 @@ const SignUp = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      registrationType:"",
+      registrationType: "",
     },
   });
   //  Submit Handler with API call
@@ -94,42 +94,42 @@ const SignUp = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Registration Type */}
-<FormField
-  control={form.control}
-  name="registrationType"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel className="text-gray-700 font-medium mb-2">
-        Select Registration Type
-      </FormLabel>
-      <FormControl>
-        <div className="flex gap-4">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              value="Farmer"
-              checked={field.value === "Farmer"}
-              onChange={() => field.onChange("Farmer")}
-              className="accent-[#2563eb]"
+            <FormField
+              control={form.control}
+              name="registrationType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 font-medium mb-2">
+                    Select Registration Type
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex gap-4">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          value="Farmer"
+                          checked={field.value === "Farmer"}
+                          onChange={() => field.onChange("Farmer")}
+                          className="accent-[#2563eb]"
+                        />
+                        Farmer
+                      </label>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          value="Buyer"
+                          checked={field.value === "Buyer"}
+                          onChange={() => field.onChange("Buyer")}
+                          className="accent-[#2563eb]"
+                        />
+                        Buyer
+                      </label>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            Farmer
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              value="Buyer"
-              checked={field.value === "Buyer"}
-              onChange={() => field.onChange("Buyer")}
-              className="accent-[#2563eb]"
-            />
-            Buyer
-          </label>
-        </div>
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
 
             {/* First Name */}
             <FormField

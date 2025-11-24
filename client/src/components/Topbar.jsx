@@ -16,7 +16,7 @@ const Topbar = () => {
                 {/* Left: Logo */}
                 <div
                     className="flex items-center cursor-pointer"
-                    onClick={() => navigate("/dashboard")}
+                    onClick={() => navigate("/")}
                 >
                     <img
                         src={logo}
@@ -36,33 +36,17 @@ const Topbar = () => {
 
                 {/* Right: Desktop Menu */}
                 <ul className="hidden md:flex items-center space-x-6 font-medium">
-                    <Link to="/dashboard">
+                    <Link to="/">
                         <li className="hover:text-[#000000] transition">Dashboard</li>
                     </Link>
 
-                    <Link to="/dashboard/transaction">
+                    <Link to="">
                         <li className="hover:text-[#000000] transition">Shop</li>
                     </Link>
-
-                    <Link to="/dashboard/analytics">
-                        <li className="hover:text-[#000000] transition">Analytics</li>
+                   
+                     <Link to="/signup" className="pt-2 border-t border-[#e5e1b0]">
+                        <li className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2 transition"> Sign Up</li>
                     </Link>
-
-                    <Link to="/dashboard/profile">
-                        <li className="hover:text-[#000000] transition">Profile</li>
-                    </Link>
-
-                    <Link to="/dashboard/notifications">
-                        <li className="hover:text-[#000000] transition">
-                            <IoMdNotificationsOutline className="sm:w-5 sm:h-5" />
-                        </li>
-                    </Link>
-
-                    <button
-                        className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
-                    >
-                        Log out
-                    </button>
                 </ul>
             </div>
 
@@ -77,27 +61,9 @@ const Topbar = () => {
                         <li className="hover:text-[#000000] transition">Shop</li>
                     </Link>
 
-                    <Link to="/dashboard/analytics">
-                        <li className="hover:text-[#000000] transition">Analytics</li>
+                     <Link to="/signup" className="pt-2 border-t border-[#e5e1b0]">
+                        <li className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2 transition"> Sign Up</li>
                     </Link>
-
-                    <Link to="/dashboard/profile">
-                        <li className="hover:text-[#000000] transition">Profile</li>
-                    </Link>
-
-                    <Link to="/dashboard/notifications">
-                        <li className="hover:text-[#000000] transition">
-                            <IoMdNotificationsOutline className="sm:w-5 sm:h-5" />
-                        </li>
-                    </Link>
-
-                    <div className="pt-2 border-t border-[#e5e1b0]">
-                        <button
-                            className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2 transition"
-                        >
-                            Log out
-                        </button>
-                    </div>
                 </ul>
             )}
         </header>

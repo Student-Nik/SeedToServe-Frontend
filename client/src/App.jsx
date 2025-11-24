@@ -5,18 +5,23 @@ import Dashboard from './pages/Dashboard'
 import SignUp from './components/SignUp'
 import SignIn from './components/SignIn'
 import AuthSuccess from './components/AuthSucess'
+import FarmerPopup from './pages/FarmerPopup'
+import AddCategory from './pages/AddCategory'
 
 
 const App = () => {
   return (
       <Routes>
-        <Route path="/" element={<SignUp />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/auth-success" element={<AuthSuccess />} />
-        <Route path="/dashboard" element={<MainLayout />}>
-          <Route index element={<Dashboard />} />
+
+        <Route path="/" element={<MainLayout />}>
+        <Route index element={<Dashboard />} />
         </Route>
 
+        <Route path="/farmer-popup" element={<FarmerPopup />} />
+        <Route path="/addcategory" element={<AddCategory />} />
       </Routes>
 
   )

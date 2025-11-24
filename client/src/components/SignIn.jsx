@@ -56,7 +56,11 @@ const SignIn = () => {
       }
 
       showToast("success", data.message || "Login successful!");
-      navigate("/dashboard")
+        if (data.registrationType === "FARMER") {
+          navigate("/farmer");
+        } else {
+          navigate("/BUYYER");
+        }
 
     } catch (err) {
       showToast("error", err.message || "Server error");
@@ -163,7 +167,7 @@ const SignIn = () => {
         <p className="text-sm text-gray-700 mt-6 text-center">
           Already have an account?{" "}
           <Link
-            to="/"
+            to="/signup"
             className="text-[#2563eb] font-medium hover:underline"
           >
             Login here
