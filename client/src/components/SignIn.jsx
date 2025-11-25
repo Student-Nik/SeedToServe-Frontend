@@ -21,10 +21,10 @@ import GoogleLogin from "./GoogleLogin";
 
 //  Validation Schema
 const formSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6, "Password is required"),
-  })
-  
+  email: z.string().email(),
+  password: z.string().min(6, "Password is required"),
+})
+
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -56,11 +56,11 @@ const SignIn = () => {
       }
 
       showToast("success", data.message || "Login successful!");
-        if (data.registrationType === "FARMER") {
-          navigate("/farmer-popup");
-        } else {
-          navigate("/BUYYER");
-        }
+      if (data.registrationType === "Buyer") {
+        navigate("/buyer-popup");
+      } else {
+         navigate("/farmer-popup");
+      }
 
     } catch (err) {
       showToast("error", err.message || "Server error");
@@ -156,13 +156,9 @@ const SignIn = () => {
           <span className="text-sm text-gray-500">OR</span>
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.96 }}
-          className="flex items-center justify-center w-full border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
-        >
+        <div>
           <GoogleLogin />
-        </motion.button>
+        </div>
 
         <p className="text-sm text-gray-700 mt-6 text-center">
           Already have an account?{" "}

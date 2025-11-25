@@ -16,8 +16,7 @@ const GoogleLogin = () => {
   return (
     <>
       <Button
-        variant="outline"
-        className="w-full flex items-center justify-center bg-black gap-2"
+        className="w-full flex items-center justify-centerS gap-2 bg-white text-black hover:bg-White-100"
         onClick={handleGoogleLogin}
       >
         <FcGoogle />

@@ -278,15 +278,10 @@ const SignUp = () => {
         <div className="flex items-center justify-center my-6">
           <span className="text-sm text-gray-500">OR</span>
         </div>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.96 }}
-          className="flex items-center justify-center w-full border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
-        >
+        <div>
           <GoogleLogin />
-        </motion.button>
-
+        </div>
+          
         <p className="text-sm text-gray-700 mt-6 text-center">
           Already have an account?{" "}
           <Link
