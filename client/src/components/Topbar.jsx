@@ -45,7 +45,7 @@ const Topbar = () => {
                     </Link>
                    
                      <Link to="/signup" className="pt-2 border-t border-[#e5e1b0]">
-                        <li className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2 transition"> Sign Up</li>
+                        <li className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded-lg px-4 py-2 transition"> Sign Up</li>
                     </Link>
                 </ul>
             </div>
@@ -62,7 +62,7 @@ const Topbar = () => {
                     </Link>
 
                      <Link to="/signup" className="pt-2 border-t border-[#e5e1b0]">
-                        <li className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2 transition"> Sign Up</li>
+                        <li className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white rounded-lg px-4 py-2 transition"> Sign Up</li>
                     </Link>
                 </ul>
             )}

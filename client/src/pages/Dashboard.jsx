@@ -9,6 +9,7 @@ import B from "@/assets/images/B.jpg";
 import C from "@/assets/images/C.jpg";
 import D from "@/assets/images/D.jpg";
 import E from "@/assets/images/E.jpg";
+import { useNavigate } from "react-router-dom";
 
 const features = [
   { title: "Professional Farmers", description: "Our farmers bring years of experience to ensure the highest quality yield.", icon: "🚜" },
@@ -39,6 +40,7 @@ const services = [
 ];
 
 const Dashboard = () => {
+  const navigate = useNavigate()
   return (
     <div className="relative min-h-screen w-full bg-[#FFFBE8] overflow-hidden pb-10">
       {/* Hero Section */}
@@ -258,7 +260,9 @@ const Dashboard = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 200 }}
               >
-                <Button className="rounded-full bg-[#4E7C4A] hover:bg-[#3f6a3c] text-white px-8 py-6 font-semibold text-lg">
+                <Button className="rounded-full bg-[#4E7C4A] hover:bg-[#3f6a3c] text-white px-8 py-6 font-semibold text-lg"
+                 onClick={() => navigate("/signup")}
+                >
                   Buy Now →
                 </Button>
               </motion.div>

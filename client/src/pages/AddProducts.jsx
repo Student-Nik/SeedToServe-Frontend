@@ -4,12 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { FiEdit, FiTrash2, FiCheck, FiX } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiCheck, FiX, FiArrowLeft } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { showToast } from "@/helpers/showToast";
 
-// ⭐ SHADCN FORM
+//  SHADCN FORM
 import {
   Form,
   FormField,
@@ -19,7 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-// ⭐ SHADCN SELECT
+//  SHADCN SELECT
 import {
   Select,
   SelectTrigger,
@@ -27,6 +27,8 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useNavigate } from "react-router-dom";
 
 // ------------------ ZOD SCHEMA ------------------ //
 
@@ -45,7 +47,7 @@ const AddProduct = () => {
   const [products, setProducts] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate() 
   const [editIndex, setEditIndex] = useState(null);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -103,36 +105,79 @@ const AddProduct = () => {
 
   // ------------------ ADD PRODUCT ------------------ //
 
+  // const onSubmit = async (data) => {
+  //   setLoading(true);
+  //   try {
+  //     const token = localStorage.getItem("token");
+
+  //     const formData = new FormData();
+  //     formData.append("categoryName", data.categoryName);
+  //     formData.append("name", data.name);
+  //     formData.append("description", data.description || "");
+  //     formData.append("price", data.price);
+  //     formData.append("stock", data.stock);
+  //     if (data.image) formData.append("image", data.image);
+
+  //     const res = await fetch("http://localhost:8080/api/farmer/products/add/product", {
+  //       method: "POST",
+  //       headers: { Authorization: `Bearer ${token}` },
+  //       body: formData,
+  //     });
+
+  //     const newProduct = await res.json();
+  //     setProducts((prev) => [...prev, newProduct]);
+  //     console.log(newProduct)
+  //     form.reset();
+  //     showToast("success", "Product added successfully");
+  //   } catch {
+  //     showToast("error", "Failed to add product");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const onSubmit = async (data) => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
+  setLoading(true);
+  try {
+    const token = localStorage.getItem("token");
 
-      const formData = new FormData();
-      formData.append("categoryName", data.categoryName);
-      formData.append("name", data.name);
-      formData.append("description", data.description || "");
-      formData.append("price", data.price);
-      formData.append("stock", data.stock);
-      if (data.image) formData.append("image", data.image);
+    const formData = new FormData();
 
-      const res = await fetch("http://localhost:8080/api/farmer/products/add/product", {
+    const productJson = JSON.stringify({
+      categoryName: data.categoryName,
+      name: data.name,
+      description: data.description || "",
+      price: data.price,
+      stock: data.stock,
+    });
+
+    formData.append("productDto", productJson); // <-- IMPORTANT
+    if (data.image) formData.append("image", data.image);
+
+    const res = await fetch(
+      "http://localhost:8080/api/farmer/products/add/product",
+      {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`, // DO NOT add content-type !!
+        },
         body: formData,
-      });
+      }
+    );
 
-      const newProduct = await res.json();
-      setProducts((prev) => [...prev, newProduct]);
+    const newProduct = await res.json();
+    setProducts((prev) => [...prev, newProduct]);
 
-      form.reset();
-      showToast("success", "Product added successfully");
-    } catch {
-      showToast("error", "Failed to add product");
-    } finally {
-      setLoading(false);
-    }
-  };
+    form.reset();
+    showToast("success", "Product added successfully");
+
+  } catch (err) {
+    showToast("error", "Failed to add product");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // ------------------ DELETE PRODUCT ------------------ //
 
@@ -213,6 +258,14 @@ const AddProduct = () => {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto space-y-8">
 
+       <Button
+                variant="outline"
+                className="flex items-center gap-2 mb-4"
+                onClick={() => navigate("/farmer-popup")}
+              >
+                <FiArrowLeft size={18} /> Back
+              </Button>
+      
         {/* ADD PRODUCT FORM */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

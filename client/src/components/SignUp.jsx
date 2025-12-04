@@ -61,7 +61,7 @@ const SignUp = () => {
       });
 
       const data = await response.text();
-
+      console.log("registrationType =", data.registrationType);
       if (!response.ok) {
         return showToast("error", data.message || "Registration failed");
       }
