@@ -5,7 +5,7 @@ import icon from "../assets/images/logo.png";
 
 export default function Footer() {
     return (
-        <footer className="bg-[#F1F4D8] pt-30 pb-10 relative overflow-hidden">
+        <footer className="bg-[#F1F4D8] pb-5 relative overflow-hidden">
             <div className="w-full bg-[#E4E78A] py-4 px-6 flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <Phone size={18} />
@@ -17,7 +17,7 @@ export default function Footer() {
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mt-12">
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mt-3">
                 <div>
                     <div className="flex items-center gap-2">
                         <img src={icon} alt="logo" className="w-10 h-10 rounded-full" />
@@ -73,7 +73,7 @@ export default function Footer() {
             {/* Bottom Border */}
             <div className="border-t border-gray-300 mt-12 pt-4 pb-2"></div>
 
-            <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between text-sm text-gray-600">
+            <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between text-sm text-gray-600 ">
                 <div className="flex gap-6">
                     <p>Terms & Conditions</p>
                     <p>Privacy Policy</p>

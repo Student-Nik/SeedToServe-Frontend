@@ -104,38 +104,6 @@ const AddProduct = () => {
   }, []);
 
   // ------------------ ADD PRODUCT ------------------ //
-
-  // const onSubmit = async (data) => {
-  //   setLoading(true);
-  //   try {
-  //     const token = localStorage.getItem("token");
-
-  //     const formData = new FormData();
-  //     formData.append("categoryName", data.categoryName);
-  //     formData.append("name", data.name);
-  //     formData.append("description", data.description || "");
-  //     formData.append("price", data.price);
-  //     formData.append("stock", data.stock);
-  //     if (data.image) formData.append("image", data.image);
-
-  //     const res = await fetch("http://localhost:8080/api/farmer/products/add/product", {
-  //       method: "POST",
-  //       headers: { Authorization: `Bearer ${token}` },
-  //       body: formData,
-  //     });
-
-  //     const newProduct = await res.json();
-  //     setProducts((prev) => [...prev, newProduct]);
-  //     console.log(newProduct)
-  //     form.reset();
-  //     showToast("success", "Product added successfully");
-  //   } catch {
-  //     showToast("error", "Failed to add product");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const onSubmit = async (data) => {
   setLoading(true);
   try {
