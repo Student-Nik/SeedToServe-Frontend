@@ -9,7 +9,7 @@ import B from "@/assets/images/B.jpg";
 import C from "@/assets/images/C.jpg";
 import D from "@/assets/images/D.jpg";
 import E from "@/assets/images/E.jpg";
-import video from "@/assets/images/video.mp4";
+// import video from "@/assets/images/video.mp4";
 import { useNavigate } from "react-router-dom";
 
 const features = [
@@ -51,7 +51,7 @@ const Dashboard = () => {
           animate={{ scale: 1 }}
           transition={{ duration: 2 }}
         />
-        <div className="absolute inset-0 overflow-hidden">
+        {/* <div className="absolute inset-0 overflow-hidden">
           <video
             src={video}
             autoPlay
@@ -60,7 +60,7 @@ const Dashboard = () => {
             playsInline
             className="w-full h-full object-cover brightness-75"
           />
-        </div>
+        </div> */}
 
         <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 text-white">
           <motion.div
