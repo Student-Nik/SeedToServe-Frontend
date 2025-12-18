@@ -4,15 +4,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FaTractor, FaSeedling, FaTools } from "react-icons/fa";
 import { GiFarmer } from "react-icons/gi";
-import A from "@/assets/images/A.jpg";
-import B from "@/assets/images/B.jpg";
-import C from "@/assets/images/C.jpg";
-import D from "@/assets/images/D.jpg";
-import E from "@/assets/images/E.jpg";
-// import video from "@/assets/images/video.mp4";
 import { useNavigate } from "react-router-dom";
 
-const features = [
+const Dashboard = () => {
+   const VIDEO_URL = "https://res.cloudinary.com/dfpgxonqe/video/upload/f_auto,q_auto/Vedios_lgdrbw.mp4";
+  const A = "https://res.cloudinary.com/dfpgxonqe/image/upload/v1766040822/A_ryzhv9.jpg";
+  const B = "https://res.cloudinary.com/dfpgxonqe/image/upload/v1766040893/B_oafepw.jpg";
+  const C = "https://res.cloudinary.com/dfpgxonqe/image/upload/v1766040918/C_egpqa9.jpg";
+  const D = "https://res.cloudinary.com/dfpgxonqe/image/upload/v1766040936/D_njrcqc.jpg";
+  const E = "https://res.cloudinary.com/dfpgxonqe/image/upload/v1766040971/E_gijyke.jpg";
+
+
+  const features = [
   { title: "Professional Farmers", description: "Our farmers bring years of experience to ensure the highest quality yield.", icon: "🚜" },
   { title: "Fresh Vegetables", description: "Sustainably grown produce straight from our eco farms.", icon: "🥦" },
   { title: "Agriculture Products", description: "We provide a wide range of organic agricultural products.", icon: "🌾" },
@@ -39,8 +42,7 @@ const services = [
     image: D,
   },
 ];
-
-const Dashboard = () => {
+ 
   const navigate = useNavigate()
   return (
     <div className="relative min-h-screen w-full bg-[#FFFBE8] overflow-hidden pb-10">
@@ -51,16 +53,21 @@ const Dashboard = () => {
           animate={{ scale: 1 }}
           transition={{ duration: 2 }}
         />
-        {/* <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
           <video
-            src={video}
             autoPlay
             loop
             muted
             playsInline
+            preload="metadata"
             className="w-full h-full object-cover brightness-75"
-          />
-        </div> */}
+          >
+            <source
+              src={VIDEO_URL}
+              type="video/mp4"
+            />
+          </video>
+        </div>
 
         <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 text-white">
           <motion.div
