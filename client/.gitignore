@@ -23,3 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 *.mp4
+# BFG cleanup files
+bfg-*.jar
+*BFG-*.txt
+*BFG*.report
+*.bfg-report
+.gitattributes
