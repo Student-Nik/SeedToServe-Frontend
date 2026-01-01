@@ -34,12 +34,14 @@ import { useNavigate } from "react-router-dom";
 
 const categorySchema = z.object({
   categoryId: z.string().min(1, "Please select category"),
+  categoryName: z.string().min(1, "Category is required"),
   name: z.string().min(2, "Product name must be at least 2 characters"),
   description: z.string().optional(),
-  price: z.coerce.number().min(1, "Price must be greater than 0"),
-  stock: z.coerce.number().min(0, "Stock cannot be negative"),
+  price: z.coerce.number().min(1),
+  stock: z.coerce.number().min(0),
   image: z.any().optional(),
 });
+
 
 // ------------------ MAIN COMPONENT ------------------ //
 
@@ -58,6 +60,7 @@ const AddProduct = () => {
     resolver: zodResolver(categorySchema),
     defaultValues: {
       categoryId: "",
+      categoryName: "",
       name: "",
       description: "",
       price: "",
@@ -65,6 +68,7 @@ const AddProduct = () => {
       image: null,
     },
   });
+
 
   // ------------------ FETCH CATEGORY ------------------ //
 
@@ -77,6 +81,7 @@ const AddProduct = () => {
 
       const data = await res.json();
       setCategoriesList(data);
+      console.log(data)
     } catch {
       showToast("error", "Failed to fetch categories");
     }
@@ -112,6 +117,7 @@ const AddProduct = () => {
       const formData = new FormData();
 
       const productJson = JSON.stringify({
+        categoryName: data.categoryName,
         categoryId: data.categoryId,
         name: data.name,
         description: data.description || "",
@@ -119,7 +125,10 @@ const AddProduct = () => {
         stock: data.stock,
       });
 
-      formData.append("productDto", productJson); // <-- IMPORTANT
+      formData.append(
+        "productDto",
+        new Blob([productJson], { type: "application/json" })
+      );
       if (data.image) formData.append("image", data.image);
 
       const res = await fetch(
@@ -132,10 +141,8 @@ const AddProduct = () => {
           body: formData,
         }
       );
-      console.log(res)
       const newProduct = await res.json();
       setProducts((prev) => [...prev, newProduct]);
-      console.log(newProduct)
       form.reset();
       showToast("success", "Product added successfully");
 
@@ -150,7 +157,7 @@ const AddProduct = () => {
   // ------------------ DELETE PRODUCT ------------------ //
 
   const handleDelete = async (name) => {
-    if (!confirm(`Delete product "${name}"?`)) return;
+    if (!confirm(`Delete product "${name}" ?`)) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -256,13 +263,24 @@ const AddProduct = () => {
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger className="border p-2">
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+
+                          const selectedCategory = categoriesList.find(
+                            (cat) => String(cat.id) === value
+                          );
+                          form.setValue("categoryName", selectedCategory?.name || "");
+                        }}
+                        value={field.value}
+                      >
+                        <SelectTrigger>
                           <SelectValue placeholder="-- Select Category --" />
                         </SelectTrigger>
+
                         <SelectContent>
                           {categoriesList.map((cat) => (
-                            <SelectItem key={cat._id} value={cat._id}>
+                            <SelectItem key={cat.id} value={String(cat.id)}>
                               {cat.name}
                             </SelectItem>
                           ))}
@@ -273,7 +291,6 @@ const AddProduct = () => {
                   </FormItem>
                 )}
               />
-
               {/* NAME */}
               <FormField
                 control={form.control}
