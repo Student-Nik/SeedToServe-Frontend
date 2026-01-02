@@ -37,7 +37,7 @@ const AuthSuccess = () => {
 
     
         if (data.registrationType === "FARMER") {
-          navigate("/farmer");
+          navigate("/farmer-popup");
         } else {
           navigate("/dashboard");
         }

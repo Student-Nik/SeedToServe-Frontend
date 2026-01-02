@@ -17,8 +17,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { showToast } from "@/helpers/showToast";
-import GoogleLogin from "./GoogleLogin";
-import StarsBackgroundWrapper from "./StarsBackground";
+import GoogleLogin from "@/components/GoogleLogin";
+import StarsBackgroundWrapper from "@/components/StarsBackground";
 
 // ✅ Validation Schema
 const formSchema = z

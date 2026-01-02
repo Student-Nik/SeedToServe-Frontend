@@ -1,14 +1,16 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import {Routes, Route } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout'
 import Dashboard from './pages/Dashboard'
-import SignUp from './components/SignUp'
-import SignIn from './components/SignIn'
 import AuthSuccess from './components/AuthSucess'
 import FarmerPopup from './pages/FarmerPopup'
 import AddCategory from './pages/AddCategory'
 import AddProduct from './pages/AddProducts'
 import OnlyFarmerAllowed from './components/OnlyFramerAllowed'
+import SignUp from './pages/SignUp'
+import SignIn from './pages/SignIn'
+import UserLayout from './layouts/UserLayout'
+import UserDashboard from './pages/UserDashboard'
 
 
 const App = () => {
@@ -26,6 +28,10 @@ const App = () => {
           <Route path="/farmer-popup" element={<FarmerPopup />} />
           <Route path="/addcategory" element={<AddCategory />} />
           <Route path="/addproducts" element={<AddProduct />} />
+        </Route>
+
+        <Route path="/dashboard" element={<UserLayout />}>
+            <Route index element={<UserDashboard />} />
         </Route>
       </Routes>
   )

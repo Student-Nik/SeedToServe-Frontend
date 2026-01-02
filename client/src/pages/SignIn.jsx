@@ -17,8 +17,8 @@ import { useForm } from "react-hook-form";
 import { email, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { showToast } from "@/helpers/showToast";
-import GoogleLogin from "./GoogleLogin";
-import StarsBackgroundWrapper from "./StarsBackground";
+import GoogleLogin from "../components/GoogleLogin";
+import StarsBackgroundWrapper from "../components/StarsBackground";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/user/user.slice";
 
@@ -76,7 +76,7 @@ const SignIn = () => {
     if (role === "FARMER") {
       navigate("/farmer-popup");
     } else {
-      navigate("/buyer-popup");
+      navigate("//dashboard");
     }
   } catch (err) {
     showToast("error", err.message || "Server error");

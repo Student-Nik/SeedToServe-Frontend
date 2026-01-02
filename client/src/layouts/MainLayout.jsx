@@ -6,13 +6,10 @@ import { Outlet } from "react-router-dom";
 const MainLayout = () => {
   return (
     <div className="min-h-screen w-full bg-[#FFFBE8] text-[#1f2937] overflow-x-hidden">
-      {/* Full-width Topbar */}
       <Topbar />
-
-      {/* Full-width Main Content */}
       <main className="w-full">
         <div>
-        <Outlet />
+          <Outlet />
         </div>
         <Footer />
       </main>
