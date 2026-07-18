@@ -1,253 +1,150 @@
-import { motion } from "framer-motion";
-import { Truck, ShieldCheck, Leaf } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import CategoryGrid from "@/components/UserDashboard/CategoryGrid";
+import HeroSection from "@/components/UserDashboard/HeroSection";
+import ProductSection from "@/components/UserDashboard/ProductSection";
+import PromoBanner from "@/components/UserDashboard/PromoBanner";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const PRODUCTS_API = "http://localhost:8080/buy/products";
 
 const UserDashboard = () => {
-  const Aa =
-    "https://res.cloudinary.com/dfpgxonqe/image/upload/v1772088432/Aa_jzs8lw.avif";
-  const fruits =
-    "https://res.cloudinary.com/dfpgxonqe/image/upload/v1772088626/Fruits_jhlu2y.avif";
-  const vegetables =
-    "https://res.cloudinary.com/dfpgxonqe/image/upload/v1772088713/Vegetables_m7ab3d.avif";
-  const Grains =
-    "https://res.cloudinary.com/dfpgxonqe/image/upload/v1772088705/Grains_oar20c.avif";
-
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-const navigate = useNavigate();
-  // ✅ FETCH API
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    console.log("UserDashboard mounted ✅");
+    const controller = new AbortController();
 
     const fetchProducts = async () => {
-      console.log("Fetching products...");
+      setLoading(true);
+      setError(null);
 
       try {
-        const res = await fetch(
-          "http://localhost:8080/api/farmer/products/show/products",
-        );
+        const res = await fetch(PRODUCTS_API, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+        });
 
-        console.log("Response received:", res);
+        if (!res.ok) {
+          throw new Error(`Request failed with status ${res.status}`);
+        }
 
         const data = await res.json();
-        console.log("Data:", data);
-
-        setProducts(data);
+        setProducts(Array.isArray(data) ? data : data?.products ?? []);
       } catch (err) {
-        console.error("Error fetching products:", err);
+        if (err.name !== "AbortError") {
+          console.error("Error fetching products:", err);
+          setError("Couldn't load products. Please try again shortly.");
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProducts();
+
+    return () => controller.abort();
   }, []);
+
+  // filter once, client-side, by categoryName
+  const byCategory = useMemo(() => {
+    const norm = (s) => (s || "").toLowerCase();
+    return {
+      vegetables: products.filter((p) => norm(p.categoryName).includes("veget")),
+      fruits: products.filter((p) => norm(p.categoryName).includes("fruit")),
+      dairy: products.filter((p) => norm(p.categoryName).includes("dairy")),
+      grains: products.filter((p) => norm(p.categoryName).includes("grain")),
+    };
+  }, [products]);
+
+  const handleAddToCart = (item) => {
+    // TODO: wire up to cart context / API
+    console.log("Add to cart:", item);
+  };
+
   return (
-    <div className="bg-[#0B1E20] text-gray-200 min-h-screen ">
-      {/* ================= HERO ================= */}
-      <section className="relative w-full min-h-[90vh] flex items-center">
-        <img
-          src={Aa}
-          alt="Farm"
-          className="absolute inset-0 w-full h-full object-cover 
-               brightness-125 contrast-110 saturate-150"
+    <div className="bg-gray-50 min-h-screen">
+      <HeroSection
+        onShopNow={() => navigate("/dashboard/products")}
+        onExploreCategories={() =>
+          document.getElementById("categories")?.scrollIntoView({ behavior: "smooth" })
+        }
+      />
+
+      <div id="categories">
+        <CategoryGrid
+          onSelectCategory={(name) => navigate(`/dashboard/products?category=${name}`)}
+          onViewAll={() => navigate("/dashboard/products")}
         />
-        <div className="absolute inset-0 bg-[#0B1E20]/50"></div>
+      </div>
 
-        <div className="relative z-10 max-w-6xl px-6 md:px-12">
-          <motion.h1
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            className="text-5xl md:text-6xl font-bold text-green-200"
-          >
-            From Soil to Soul
-          </motion.h1>
+      <div className="px-4 sm:px-6">
+        <PromoBanner
+          tag="Seasonal Picks"
+          title="Seasonal Products, Handpicked Fresh"
+          desc="Enjoy the best of the season - sourced fresh from local farms every week"
+          ctaText="Shop Seasonal"
+          onCtaClick={() => navigate("/dashboard/products?filter=seasonal")}
+        />
+      </div>
 
-          <motion.p
-            initial={{ x: -80, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="mt-4 text-gray-200 text-lg max-w-xl"
-          >
-            Experience fresh farm produce delivered directly to your doorstep.
-            Support farmers and eat healthier.
-          </motion.p>
+      {error && (
+        <p className="text-center text-sm text-red-500 py-4">{error}</p>
+      )}
 
-          <motion.div
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="flex gap-4 mt-6"
-          >
-            <button className="bg-[#E07A5F] px-6 py-3 rounded-full hover:scale-105 transition">
-              Shop Fresh →
-            </button>
+      {loading ? (
+        <p className="text-center text-sm text-gray-400 py-10">Loading fresh picks...</p>
+      ) : (
+        <>
+          <ProductSection
+            title="Fresh Vegetables"
+            subtitle="Straight from the farm, picked this morning"
+            products={byCategory.vegetables}
+            onAdd={handleAddToCart}
+            onViewAll={() => navigate("/dashboard/products?category=vegetables")}
+          />
 
-            <button className="border border-green-300 px-6 py-3 rounded-full hover:bg-green-800 transition">
-              Learn More
-            </button>
-          </motion.div>
-        </div>
-      </section>
+          <ProductSection
+            title="Fresh Fruits"
+            subtitle="Naturally sweet and packed with nutrients"
+            products={byCategory.fruits}
+            onAdd={handleAddToCart}
+            onViewAll={() => navigate("/dashboard/products?category=fruits")}
+          />
 
-      {/* ================= FEATURES ================= */}
-      <section className="grid md:grid-cols-3 gap-8 py-16 text-center bg-[#10292C]">
-        {[
-          {
-            icon: <Truck />,
-            title: "Free Delivery",
-            desc: "On orders above ₹500",
-          },
-          {
-            icon: <ShieldCheck />,
-            title: "Quality Assured",
-            desc: "100% fresh guarantee",
-          },
-          {
-            icon: <Leaf />,
-            title: "Organic & Pure",
-            desc: "Directly from farms",
-          },
-        ].map((item, i) => (
-          <motion.div key={i} whileHover={{ scale: 1.08 }}>
-            <div className="bg-[#1E3A3D] p-5 rounded-full inline-block mb-4">
-              {item.icon}
-            </div>
-            <h3 className="text-xl font-semibold text-green-300">
-              {item.title}
-            </h3>
-            <p className="text-gray-400">{item.desc}</p>
-          </motion.div>
-        ))}
-      </section>
+          <ProductSection
+            title="Dairy Products"
+            subtitle="Farm-fresh dairy delivered every morning"
+            products={byCategory.dairy}
+            onAdd={handleAddToCart}
+            onViewAll={() => navigate("/dashboard/products?category=dairy")}
+          />
+        </>
+      )}
 
-      {/* ================= CATEGORIES ================= */}
-      <section className="py-16 px-8">
-        <p className="text-center text-sm text-green-400 tracking-widest">
-          SHOP BY CATEGORY
-        </p>
-
-        <h2 className="text-center text-4xl md:text-5xl font-bold text-green-200 mt-2 mb-10">
-          Fresh From The Farm
-        </h2>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { name: "Vegetables", img: vegetables },
-            { name: "Fruits", img: fruits },
-            { name: "Grains", img: Grains },
-          ].map((cat, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ scale: 1.05 }}
-              className="relative rounded-xl overflow-hidden cursor-pointer"
-            >
-              <img
-                src={cat.img}
-                className="w-full h-64 object-cover opacity-70"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-
-              <div className="absolute bottom-5 left-5">
-                <h3 className="text-2xl font-bold">{cat.name}</h3>
-                <p className="text-sm text-gray-300">
-                  Explore fresh {cat.name.toLowerCase()}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= PRODUCTS ================= */}
-      <section className="py-16 px-8 bg-[#10292C]">
-        <p className="text-center text-sm text-green-400 tracking-widest">
-          BESTSELLERS
-        </p>
-
-        <h2 className="text-center text-4xl md:text-5xl font-bold text-green-200 mt-2">
-          Featured Products
-        </h2>
-
-        <p className="text-center text-gray-400 mt-2 mb-10">
-          Handpicked fresh produce from trusted farmers
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {products.map((item, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ scale: 1.05 }}
-              className="bg-[#1E3A3D] rounded-xl overflow-hidden"
-            >
-              <div className="relative">
-                <img
-                  src={item.imageBase64}
-                  className="h-56 w-full object-cover"
-                  alt={item.name}
-                />
-              </div>
-
-              <div className="p-4">
-                <p className="text-sm text-gray-400 uppercase">
-                  {item.categoryName || "Vegetables"}
-                </p>
-
-                <h3 className="text-xl font-semibold">{item.name}</h3>
-
-                <p className="text-sm text-gray-400">
-                  By {item.farmerName || "Farmer"}
-                </p>
-
-                <div className="mt-3 flex justify-between items-center">
-                  <span className="text-green-300 font-bold">
-                    ₹{item.price}/kg
-                  </span>
-
-                  <button className="bg-green-600 px-4 py-1 rounded-full text-sm hover:bg-green-700 transition">
-                    Add
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          className="flex justify-center mt-14"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.button
-            onClick={() => navigate("/dashboard/products")}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-            animate={{ y: [0, -6, 0] }}
-            transition={{
-              y: {
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
-            }}
-            className="group relative px-10 py-4 
-                 bg-gradient-to-r from-green-500 via-emerald-500 to-green-600 
-                 text-white font-semibold text-lg 
-                 rounded-full shadow-xl 
-                 overflow-hidden"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              Explore Complete Collection
-              <motion.span
-                initial={{ x: 0 }}
-                whileHover={{ x: 6 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                →
-              </motion.span>
-            </span>
-          </motion.button>
-        </motion.div>
-      </section>
+      <div className="px-4 sm:px-6 pb-14 grid sm:grid-cols-2 gap-5">
+        <PromoBanner
+          tag="100% Certified Organic"
+          tagColor="bg-green-600"
+          title="Pure Organic Products, Naturally Grown"
+          desc="No pesticides, no chemicals - just pure goodness from certified organic farms."
+          ctaText="Shop Organic"
+          bg="bg-gray-900"
+          onCtaClick={() => navigate("/dashboard/products?filter=organic")}
+        />
+        <PromoBanner
+          tag="Limited Time Offer"
+          tagColor="bg-white/20"
+          title="Flat 25% Off"
+          desc="On your first order above ₹499. Use code FRESH25 at checkout."
+          ctaText="Grab the Deal"
+          ctaColor="bg-white text-gray-900 hover:bg-gray-100"
+          bg="bg-green-900"
+          onCtaClick={() => navigate("/dashboard/products?promo=FRESH25")}
+        />
+      </div>
     </div>
   );
 };
