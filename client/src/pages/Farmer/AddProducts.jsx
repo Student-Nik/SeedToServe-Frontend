@@ -110,48 +110,76 @@ const AddProduct = () => {
 
   // ------------------ ADD PRODUCT ------------------ //
   const onSubmit = async (data) => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
+  setLoading(true);
 
-      const formData = new FormData();
+  try {
+    const token = localStorage.getItem("token");
 
-      const productJson = JSON.stringify({
-        categoryName: data.categoryName,
-        categoryId: data.categoryId,
-        name: data.name,
-        description: data.description || "",
-        price: data.price,
-        stock: data.stock,
-      });
+    const formData = new FormData();
 
-      formData.append(
-        "productDto",
-        new Blob([productJson], { type: "application/json" })
-      );
-      if (data.image) formData.append("image", data.image);
+    const product = {
+      categoryName: data.categoryName,
+      categoryId: data.categoryId,
+      name: data.name,
+      description: data.description || "",
+      price: data.price,
+      stock: data.stock,
+    };
 
-      const res = await fetch(
-        "http://localhost:8080/api/farmer/products/add/product",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
-      const newProduct = await res.json();
-      setProducts((prev) => [...prev, newProduct]);
-      form.reset();
-      showToast("success", "Product added successfully");
+    formData.append(
+      "productDto",
+      new Blob([JSON.stringify(product)], {
+        type: "application/json",
+      })
+    );
 
-    } catch (err) {
-      showToast("error", "Failed to add product");
-    } finally {
-      setLoading(false);
+    // Upload image
+    if (data.image) {
+      formData.append("imageFile", data.image);
     }
-  };
+
+    // Debug
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    const res = await fetch(
+      "http://localhost:8080/api/farmer/products/add/product",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(await res.text());
+    }
+
+    const newProduct = await res.json();
+
+    setProducts((prev) => [...prev, newProduct]);
+
+    form.reset({
+      categoryId: "",
+      categoryName: "",
+      name: "",
+      description: "",
+      price: "",
+      stock: "",
+      image: null,
+    });
+
+    showToast("success", "Product added successfully");
+  } catch (err) {
+    console.error(err);
+    showToast("error", "Failed to add product");
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   // ------------------ DELETE PRODUCT ------------------ //
