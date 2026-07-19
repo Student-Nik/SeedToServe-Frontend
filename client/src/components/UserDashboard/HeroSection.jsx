@@ -1,9 +1,16 @@
 import { Truck, Leaf } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const heroImg =
   "https://res.cloudinary.com/dfpgxonqe/image/upload/v1772088432/Aa_jzs8lw.avif";
 
-export default function HeroSection({ onShopNow, onExploreCategories }) {
+export default function HeroSection() {
+  const navigate = useNavigate();
+
+  const goToProducts = () => {
+    navigate("/dashboard/products");
+  };
+
   return (
     <section className="relative w-full min-h-[70vh] sm:min-h-[85vh] flex items-center overflow-hidden">
       <img
@@ -24,18 +31,20 @@ export default function HeroSection({ onShopNow, onExploreCategories }) {
 
         <p className="mt-4 text-gray-200 text-sm sm:text-lg max-w-xl">
           Get the freshest fruits, vegetables, dairy and organic products
-          sourced directly from local farmers, delivered to your doorstep in hours.
+          sourced directly from local farmers, delivered to your doorstep in
+          hours.
         </p>
 
         <div className="flex flex-wrap gap-3 sm:gap-4 mt-6">
           <button
-            onClick={onShopNow}
+            onClick={goToProducts}
             className="bg-red-500 hover:bg-red-600 transition text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-medium"
           >
             Shop Now
           </button>
+
           <button
-            onClick={onExploreCategories}
+            onClick={goToProducts}
             className="border border-white text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-medium hover:bg-white/10 transition"
           >
             Explore Categories
@@ -46,6 +55,7 @@ export default function HeroSection({ onShopNow, onExploreCategories }) {
           <span className="flex items-center gap-1.5">
             <Truck size={16} /> Delivery in 2 hours
           </span>
+
           <span className="flex items-center gap-1.5">
             <Leaf size={16} /> 100% Organic Certified
           </span>

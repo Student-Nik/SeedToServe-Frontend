@@ -10,7 +10,7 @@ const navLinks = [
   { label: "Orders"},
 ];
 
-const categories = ["Vegetables", "Fruits", "Dairy", "Grains", "Organic", "Offers"];
+const categories = ["Vegetables", "Fruits", "Dairy", "Grains", "Organic"];
 
 const UserTopbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
