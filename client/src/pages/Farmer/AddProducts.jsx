@@ -27,7 +27,14 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
 
 // ------------------ ZOD SCHEMA ------------------ //
@@ -42,14 +49,13 @@ const categorySchema = z.object({
   image: z.any().optional(),
 });
 
-
 // ------------------ MAIN COMPONENT ------------------ //
 
 const AddProduct = () => {
   const [products, setProducts] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [editIndex, setEditIndex] = useState(null);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -69,19 +75,21 @@ const AddProduct = () => {
     },
   });
 
-
   // ------------------ FETCH CATEGORY ------------------ //
 
   const fetchCategoriesList = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8080/api/farmer/categories/show/categories", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        "http://localhost:8080/api/farmer/categories/show/categories",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       const data = await res.json();
       setCategoriesList(data);
-      console.log(data)
+      console.log(data);
     } catch {
       showToast("error", "Failed to fetch categories");
     }
@@ -92,11 +100,15 @@ const AddProduct = () => {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:8080/api/farmer/products/show/products", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        "http://localhost:8080/api/farmer/products/show/products",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       const data = await res.json();
+      console.log("products:", data);
       setProducts(data);
     } catch {
       showToast("error", "Failed to fetch products");
@@ -110,77 +122,76 @@ const AddProduct = () => {
 
   // ------------------ ADD PRODUCT ------------------ //
   const onSubmit = async (data) => {
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    const formData = new FormData();
+      const formData = new FormData();
 
-    const product = {
-      categoryName: data.categoryName,
-      categoryId: data.categoryId,
-      name: data.name,
-      description: data.description || "",
-      price: data.price,
-      stock: data.stock,
-    };
+      const product = {
+        categoryName: data.categoryName,
+        categoryId: data.categoryId,
+        name: data.name,
+        description: data.description || "",
+        price: data.price,
+        stock: data.stock,
+      };
 
-    formData.append(
-      "productDto",
-      new Blob([JSON.stringify(product)], {
-        type: "application/json",
-      })
-    );
+      formData.append(
+        "productDto",
+        new Blob([JSON.stringify(product)], {
+          type: "application/json",
+        }),
+      );
 
-    // Upload image
-    if (data.image) {
-      formData.append("imageFile", data.image);
-    }
-
-    // Debug
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
-    const res = await fetch(
-      "http://localhost:8080/api/farmer/products/add/product",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
+      // Upload image
+      if (data.image) {
+        formData.append("imageFile", data.image);
       }
-    );
 
-    if (!res.ok) {
-      throw new Error(await res.text());
+      // Debug
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      const res = await fetch(
+        "http://localhost:8080/api/farmer/products/add/product",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        },
+      );
+
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
+
+      const newProduct = await res.json();
+
+      setProducts((prev) => [...prev, newProduct]);
+
+      form.reset({
+        categoryId: "",
+        categoryName: "",
+        name: "",
+        description: "",
+        price: "",
+        stock: "",
+        image: null,
+      });
+      console.log(newProduct);
+      showToast("success", "Product added successfully");
+    } catch (err) {
+      console.error(err);
+      showToast("error", "Failed to add product");
+    } finally {
+      setLoading(false);
     }
-
-    const newProduct = await res.json();
-
-    setProducts((prev) => [...prev, newProduct]);
-
-    form.reset({
-      categoryId: "",
-      categoryName: "",
-      name: "",
-      description: "",
-      price: "",
-      stock: "",
-      image: null,
-    });
-
-    showToast("success", "Product added successfully");
-  } catch (err) {
-    console.error(err);
-    showToast("error", "Failed to add product");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   // ------------------ DELETE PRODUCT ------------------ //
 
@@ -190,10 +201,13 @@ const AddProduct = () => {
     try {
       const token = localStorage.getItem("token");
 
-      await fetch(`http://localhost:8080/api/farmer/products/delete/product/${name}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await fetch(
+        `http://localhost:8080/api/farmer/products/delete/product/${name}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       setProducts(products.filter((p) => p.name !== name));
       showToast("success", "Product deleted");
@@ -239,7 +253,7 @@ const AddProduct = () => {
             price: editPrice,
             stock: editStock,
           }),
-        }
+        },
       );
 
       const updatedProduct = await res.json();
@@ -260,7 +274,6 @@ const AddProduct = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto space-y-8">
-
         <Button
           variant="outline"
           className="flex items-center gap-2 mb-4"
@@ -281,8 +294,10 @@ const AddProduct = () => {
           </h2>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col gap-4"
+            >
               {/* CATEGORY SELECT (shadcn) */}
               <FormField
                 control={form.control}
@@ -296,9 +311,12 @@ const AddProduct = () => {
                           field.onChange(value);
 
                           const selectedCategory = categoriesList.find(
-                            (cat) => String(cat.id) === value
+                            (cat) => String(cat.id) === value,
                           );
-                          form.setValue("categoryName", selectedCategory?.name || "");
+                          form.setValue(
+                            "categoryName",
+                            selectedCategory?.name || "",
+                          );
                         }}
                         value={field.value}
                       >
@@ -371,7 +389,11 @@ const AddProduct = () => {
                   <FormItem>
                     <FormLabel>Stock</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Stock / Quantity" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="Stock / Quantity"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -389,7 +411,9 @@ const AddProduct = () => {
                       <Input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => form.setValue("image", e.target.files[0])}
+                        onChange={(e) =>
+                          form.setValue("image", e.target.files[0])
+                        }
                       />
                     </FormControl>
                   </FormItem>
@@ -483,12 +507,11 @@ const AddProduct = () => {
 
                   <TableCell>
                     <img
-                      src={product.imageUrl}
+                      src={product.imageBase64}
                       alt={product.name}
                       className="h-16 w-16 object-cover rounded"
                     />
                   </TableCell>
-
                   <TableCell className="text-center flex justify-center space-x-2">
                     {editIndex === index ? (
                       <>

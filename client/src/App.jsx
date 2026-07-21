@@ -18,6 +18,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Products from "./pages/dashboard/Products";
 import ProductDetails from "./pages/dashboard/ProductDetails";
+import Cart from "./pages/Cart";
 
 const App = () => {
   return (
@@ -44,6 +45,7 @@ const App = () => {
         <Route index element={<UserDashboard />} />
         <Route path="products" element={<Products />} />
         <Route path="products/:id" element={<ProductDetails />} />
+        <Route path="cart" element={<Cart />} />
       </Route>
     </Routes>
   );
