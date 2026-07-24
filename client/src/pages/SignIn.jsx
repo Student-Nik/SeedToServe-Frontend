@@ -98,7 +98,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row">
       {/* ---------------- LEFT / BRAND PANEL ---------------- */}
       <motion.div
         initial={{ opacity: 0, x: -40 }}

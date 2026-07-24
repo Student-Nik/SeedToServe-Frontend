@@ -4,18 +4,14 @@ import { Outlet } from "react-router-dom";
 
 const UserLayout = () => {
   return (
-    <div className="min-h-screen w-full bg-[#0B1E20] overflow-x-hidden">
-      
+    <div className="min-h-screen w-full overflow-x-hidden">
       <UserTopbar />
-
-      {/* ADD PROPER SPACING FOR FLOATING TOPBAR */}
-       <main className="w-full">
-              <div>
-                <Outlet />
-              </div>
-              <UserFooter />
-            </main>
-
+      <main className="w-full">
+        <div>
+          <Outlet />
+        </div>
+        <UserFooter />
+      </main>
     </div>
   );
 };

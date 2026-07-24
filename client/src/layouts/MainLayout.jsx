@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {
   return (
-    <div className="min-h-screen w-full bg-[#FFFBE8] text-[#1f2937] overflow-x-hidden">
+    <div className="min-h-screen w-full text-[#1f2937] overflow-x-hidden">
       <Topbar />
       <main className="w-full">
         <div>
@@ -16,5 +16,4 @@ const MainLayout = () => {
     </div>
   );
 };
-
 export default MainLayout;

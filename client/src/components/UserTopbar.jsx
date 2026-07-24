@@ -22,7 +22,7 @@ const UserTopbar = () => {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="w-full bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50"
+      className="w-full  border-b border-gray-200 shadow-sm sticky top-0 z-50"
     >
       {/* ---------------- Top row ---------------- */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">

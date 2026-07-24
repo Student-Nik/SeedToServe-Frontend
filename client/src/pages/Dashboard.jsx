@@ -79,7 +79,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative min-h-screen w-full bg-white overflow-hidden pb-10">
+    <div className="relative min-h-screen w-full overflow-hidden pb-10">
       {/* ---------------- Hero Section ---------------- */}
       <div className="relative w-full h-[480px] sm:h-[560px] md:h-[620px] overflow-hidden rounded-b-[24px] sm:rounded-b-[40px] shadow-lg">
         <div className="absolute inset-0 overflow-hidden">

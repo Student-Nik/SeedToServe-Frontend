@@ -132,14 +132,14 @@ const Cart = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center ">
         <div className="h-10 w-10 border-4 border-gray-200 border-t-red-500 rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
+    <div className="min-h-screen  pb-10">
       <div className="max-w-6xl mx-auto px-4 pt-6">
         <button
           onClick={() => navigate(-1)}

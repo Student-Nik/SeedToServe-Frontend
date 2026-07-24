@@ -126,7 +126,7 @@ export default function Products() {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="min-h-screen bg-gray-50"
+      className="min-h-screen"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 

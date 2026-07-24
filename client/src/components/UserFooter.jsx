@@ -5,7 +5,7 @@ import icon from "../assets/images/logo.png";
 
 export default function UserFooter() {
   return (
-    <footer className="bg-white text-gray-600 pb-5 relative overflow-hidden border-t border-gray-100">
+    <footer className=" text-gray-600 pb-5 relative overflow-hidden border-t border-gray-100">
 
       {/* Top Contact Bar */}
       <div className="w-full bg-gray-900 py-4 px-4 sm:px-6 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-3 sm:gap-4 text-center sm:text-left">
