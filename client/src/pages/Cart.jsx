@@ -10,8 +10,13 @@ const API_BASE = "http://localhost:8080/api/customer/cart";
 
 const Cart = () => {
   const navigate = useNavigate();
+
   const [cartItems, setCartItems] = useState([]);
-  const [totals, setTotals] = useState({ totalAmount: 0, totalItems: 0 });
+  const [totals, setTotals] = useState({
+    totalAmount: 0,
+    totalItems: 0,
+  });
+
   const [loading, setLoading] = useState(true);
   const [updatingItemId, setUpdatingItemId] = useState(null);
 
@@ -23,14 +28,19 @@ const Cart = () => {
 
   const fetchCart = async () => {
     setLoading(true);
+
     try {
       const res = await fetch(`${API_BASE}/show`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
+
       if (!res.ok) throw new Error("Failed to fetch cart");
 
       const data = await res.json();
-      console.log("cart show response:", data); // TEMP: remove once confirmed stable
+
+      console.log("Cart Response:", data);
 
       setCartItems(data.items || []);
       setTotals({
@@ -45,58 +55,78 @@ const Cart = () => {
     }
   };
 
-  const handleUpdateQuantity = async (productId, newQuantity) => {
+  const handleUpdateQuantity = async (itemId, newQuantity) => {
     if (newQuantity < 1) return;
 
-    const prevItems = cartItems;
-    setUpdatingItemId(productId);
+    const prevItems = [...cartItems];
 
-    // optimistic update
+    setUpdatingItemId(itemId);
+
     setCartItems((prev) =>
       prev.map((item) =>
-        item.productId === productId ? { ...item, quantity: newQuantity } : item
+        item.id === itemId
+          ? {
+              ...item,
+              quantity: newQuantity,
+              subtotal: item.price * newQuantity,
+            }
+          : item
       )
     );
 
     try {
+      console.log("Updating Item:", itemId);
+
       const res = await fetch(
-        `${API_BASE}/update/item?itemId=${productId}&quantity=${newQuantity}`,
+        `${API_BASE}/update/item?itemId=${itemId}&quantity=${newQuantity}`,
         {
           method: "PUT",
-          headers: { Authorization: `Bearer ${getToken()}` },
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
         }
       );
+
       if (!res.ok) throw new Error("Failed to update quantity");
 
-      // refetch so totalAmount/subtotal stay accurate from backend
       await fetchCart();
     } catch (err) {
       console.error(err);
-      setCartItems(prevItems); // rollback
+      setCartItems(prevItems);
       showToast("error", "Failed to update quantity");
     } finally {
       setUpdatingItemId(null);
     }
   };
 
-  const handleRemoveItem = async (productId) => {
-    const prevItems = cartItems;
-    setUpdatingItemId(productId);
+  const handleRemoveItem = async (itemId) => {
+    const prevItems = [...cartItems];
 
-    setCartItems((prev) => prev.filter((item) => item.productId !== productId));
+    setUpdatingItemId(itemId);
+
+    setCartItems((prev) => prev.filter((item) => item.id !== itemId));
 
     try {
-      const res = await fetch(`${API_BASE}/delete/item?itemId=${productId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
+      console.log("Deleting Item:", itemId);
+
+      const res = await fetch(
+        `${API_BASE}/delete/item?itemId=${itemId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
       if (!res.ok) throw new Error("Failed to remove item");
 
       showToast("success", "Item removed from cart");
+
       await fetchCart();
     } catch (err) {
       console.error(err);
-      setCartItems(prevItems); // rollback
+      setCartItems(prevItems);
       showToast("error", "Failed to remove item");
     } finally {
       setUpdatingItemId(null);
@@ -104,24 +134,23 @@ const Cart = () => {
   };
 
   const handleClearCart = async () => {
-    if (!confirm("Clear all items from your cart?")) return;
-
-    const prevItems = cartItems;
-    const prevTotals = totals;
-    setCartItems([]);
-    setTotals({ totalAmount: 0, totalItems: 0 });
+    if (!window.confirm("Clear all items from your cart?")) return;
 
     try {
       const res = await fetch(`${API_BASE}/clear`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${getToken()}` },
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
+
       if (!res.ok) throw new Error("Failed to clear cart");
+
       showToast("success", "Cart cleared");
+
+      fetchCart();
     } catch (err) {
       console.error(err);
-      setCartItems(prevItems); // rollback
-      setTotals(prevTotals);
       showToast("error", "Failed to clear cart");
     }
   };
@@ -132,8 +161,8 @@ const Cart = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="h-10 w-10 border-4 border-gray-200 border-t-red-500 rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
       </div>
     );
   }
@@ -145,17 +174,21 @@ const Cart = () => {
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-4"
         >
-          <FiArrowLeft size={16} /> Back
+          <FiArrowLeft size={16} />
+          Back
         </button>
 
         <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
           STEP 1 — SHOPPING CART
         </span>
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-2">
+
+        <h1 className="text-2xl sm:text-3xl font-bold mt-2">
           Your Shopping Cart
         </h1>
+
         <p className="text-sm text-gray-500 mt-1">
-          {totals.totalItems} {totals.totalItems === 1 ? "item" : "items"} in your cart
+          {totals.totalItems}{" "}
+          {totals.totalItems === 1 ? "item" : "items"} in your cart
         </p>
 
         {cartItems.length === 0 ? (
@@ -168,11 +201,11 @@ const Cart = () => {
               <div className="bg-white rounded-2xl shadow-sm border px-5 sm:px-6">
                 {cartItems.map((item) => (
                   <CartItem
-                    key={item.productId}
+                    key={item.id}
                     item={item}
                     onUpdateQuantity={handleUpdateQuantity}
                     onRemove={handleRemoveItem}
-                    updating={updatingItemId === item.productId}
+                    updating={updatingItemId === item.id}
                   />
                 ))}
               </div>
@@ -185,13 +218,11 @@ const Cart = () => {
               </button>
             </div>
 
-            <div>
-              <CartSummary
-                itemCount={totals.totalItems}
-                subtotal={totals.totalAmount}
-                onCheckout={handleCheckout}
-              />
-            </div>
+            <CartSummary
+              itemCount={totals.totalItems}
+              subtotal={totals.totalAmount}
+              onCheckout={handleCheckout}
+            />
           </div>
         )}
       </div>

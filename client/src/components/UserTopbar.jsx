@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import logo from "@/assets/images/logo.png";
 
 const navLinks = [
-  { label: "Home"},
-  { label: "Products"},
-  { label: "Orders"},
+  { label: "Home", path: "/dashboard" },
+  { label: "Products", path: "/dashboard/products" },
+  { label: "Orders", path: "/dashboard/orders" },
 ];
 
 const categories = ["Vegetables", "Fruits", "Dairy", "Grains", "Organic"];
@@ -25,21 +25,26 @@ const UserTopbar = () => {
       className="w-full bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50"
     >
       {/* ---------------- Top row ---------------- */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
         {/* LOGO */}
         <motion.div
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 cursor-pointer shrink-0"
+          className="flex items-center gap-2.5 sm:gap-3 cursor-pointer shrink-0 group"
         >
-          <img
-            src={logo}
-            alt="SeedToServe logo"
-            className="w-9 h-9 rounded-lg object-cover"
-          />
-          <h1 className="text-lg font-extrabold text-[#1C1C1C] tracking-tight hidden xs:block">
-            Seed<span className="text-[#E24A3B]">To</span>Serve
+          <div className="relative">
+            <div className="absolute inset-0 rounded-2xl bg-[#E24A3B]/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <img
+              src={logo}
+              alt="SeedToServe logo"
+              className="relative w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl object-cover ring-1 ring-gray-200 shadow-md group-hover:ring-[#E24A3B]/40 group-hover:shadow-lg transition-all duration-300"
+            />
+          </div>
+          <h1 className="text-xl sm:text-2xl md:text-[1.7rem] font-extrabold tracking-tight leading-none">
+            <span className="text-[#1C1C1C]">Seed</span>
+            <span className="text-[#E24A3B]">To</span>
+            <span className="text-[#1C1C1C]">Serve</span>
           </h1>
         </motion.div>
 
@@ -122,18 +127,6 @@ const UserTopbar = () => {
           </span>
         ))}
         <span className="w-px bg-gray-200" />
-        {categories.map((cat) => (
-          <span
-            key={cat}
-            className={`cursor-pointer transition-colors ${
-              cat === "Offers"
-                ? "text-[#E24A3B] font-semibold"
-                : "text-gray-600 hover:text-[#E24A3B]"
-            }`}
-          >
-            {cat}
-          </span>
-        ))}
       </div>
 
       {/* ---------------- Mobile dropdown menu ---------------- */}

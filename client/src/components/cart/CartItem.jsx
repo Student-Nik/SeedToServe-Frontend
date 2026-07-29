@@ -19,7 +19,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, updating }) => {
 
       <div className="flex items-center border rounded-lg overflow-hidden flex-shrink-0">
         <button
-          onClick={() => onUpdateQuantity(item.productId, item.quantity - 1)}
+          onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
           disabled={updating || item.quantity <= 1}
           className="h-8 w-8 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 transition"
         >
@@ -27,7 +27,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, updating }) => {
         </button>
         <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
         <button
-          onClick={() => onUpdateQuantity(item.productId, item.quantity + 1)}
+          onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
           disabled={updating}
           className="h-8 w-8 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 transition"
         >
