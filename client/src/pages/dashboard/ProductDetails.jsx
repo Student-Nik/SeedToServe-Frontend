@@ -16,6 +16,7 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import { showToast } from "@/helpers/showToast";
+import { getToken } from "@/utils/auth";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ const ProductDetail = () => {
   const fetchProduct = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       const res = await fetch(`http://localhost:8080/show/product/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -64,7 +65,7 @@ const ProductDetail = () => {
 
 const handleAddToCart = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = getToken();
 
     const res = await fetch("http://localhost:8080/api/customer/cart/add", {
       method: "POST",

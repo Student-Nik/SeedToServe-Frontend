@@ -19,6 +19,7 @@ import SignIn from "./pages/SignIn";
 import Products from "./pages/dashboard/Products";
 import ProductDetails from "./pages/dashboard/ProductDetails";
 import Cart from "./pages/Cart";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -33,19 +34,24 @@ const App = () => {
         <Route index element={<Dashboard />} />
       </Route>
 
-      {/* Farmer Routes */}
-      <Route element={<OnlyFarmerAllowed />}>
-        <Route path="/farmer-popup" element={<FarmerPopup />} />
-        <Route path="/addcategory" element={<AddCategory />} />
-        <Route path="/addproducts" element={<AddProduct />} />
-      </Route>
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
 
-      {/* User Dashboard */}
-      <Route path="/dashboard" element={<UserLayout />}>
-        <Route index element={<UserDashboard />} />
-        <Route path="products" element={<Products />} />
-        <Route path="products/:id" element={<ProductDetails />} />
-        <Route path="cart" element={<Cart />} />
+        {/* Farmer Routes */}
+        <Route element={<OnlyFarmerAllowed />}>
+          <Route path="/farmer-popup" element={<FarmerPopup />} />
+          <Route path="/addcategory" element={<AddCategory />} />
+          <Route path="/addproducts" element={<AddProduct />} />
+        </Route>
+
+        {/* User Dashboard */}
+        <Route path="/dashboard" element={<UserLayout />}>
+          <Route index element={<UserDashboard />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/:id" element={<ProductDetails />} />
+          <Route path="cart" element={<Cart />} />
+        </Route>
+
       </Route>
     </Routes>
   );

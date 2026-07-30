@@ -1,29 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isLoggedIn: false,
-  user: null,   // will store { username }
-  role: null,   // "FARMER" | "BUYER"
-  token: null,  // JWT token
+  isLoggedIN: false,
+  user: null,
+  token: null,
 };
 
-const userSlice = createSlice({
+export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const { user, role, token } = action.payload;
-
-      state.isLoggedIn = true;
-      state.user = user || null;
-      state.role = role || null;
-      state.token = token || null;
+      state.isLoggedIN = true;
+      state.user = action.payload.user;
+      state.token = action.payload.token;
     },
 
     removeUser: (state) => {
-      state.isLoggedIn = false;
+      state.isLoggedIN = false;
       state.user = null;
-      state.role = null;
       state.token = null;
     },
   },

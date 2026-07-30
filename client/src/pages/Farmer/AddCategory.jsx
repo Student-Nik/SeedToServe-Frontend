@@ -27,6 +27,7 @@ import {
 import { FiEdit, FiTrash2, FiCheck, FiX, FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "@/helpers/showToast";
+import { getToken } from "@/utils/auth";
 
 // Zod schema
 const categorySchema = z.object({
@@ -51,7 +52,7 @@ const AddCategory = () => {
   // Fetch categories
   const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       const res = await fetch(
         "http://localhost:8080/api/farmer/categories/show/categories",
         {
@@ -75,7 +76,7 @@ const AddCategory = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       const res = await fetch(
         "http://localhost:8080/api/farmer/categories/add/category",
         {
@@ -104,7 +105,7 @@ const AddCategory = () => {
     if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       await fetch(
         `http://localhost:8080/api/farmer/categories/delete/category/${name}`,
         {
@@ -137,7 +138,7 @@ const AddCategory = () => {
     if (!editName) return;
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       const res = await fetch(
         `http://localhost:8080/api/farmer/categories/update/category/${originalName}`,
         {

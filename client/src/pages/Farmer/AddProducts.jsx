@@ -36,6 +36,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
+import { getToken } from "@/utils/auth";
 
 // ------------------ ZOD SCHEMA ------------------ //
 
@@ -79,7 +80,7 @@ const AddProduct = () => {
 
   const fetchCategoriesList = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       const res = await fetch(
         "http://localhost:8080/api/farmer/categories/show/categories",
         {
@@ -99,7 +100,7 @@ const AddProduct = () => {
 
   const fetchProducts = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       const res = await fetch(
         "http://localhost:8080/api/farmer/products/show/products",
         {
@@ -125,7 +126,7 @@ const AddProduct = () => {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
 
       const formData = new FormData();
 
@@ -199,7 +200,7 @@ const AddProduct = () => {
     if (!confirm(`Delete product "${name}" ?`)) return;
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
 
       await fetch(
         `http://localhost:8080/api/farmer/products/delete/product/${name}`,
@@ -237,7 +238,7 @@ const AddProduct = () => {
 
   const handleUpdate = async (originalName) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
 
       const res = await fetch(
         `http://localhost:8080/api/farmer/products/update/product/${originalName}`,

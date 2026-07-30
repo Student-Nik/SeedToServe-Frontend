@@ -5,6 +5,7 @@ import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
 import EmptyCart from "@/components/cart/EmptyCart";
 import { showToast } from "@/helpers/showToast";
+import { getToken } from "@/utils/auth";
 
 const API_BASE = "http://localhost:8080/api/customer/cart";
 
@@ -20,7 +21,7 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [updatingItemId, setUpdatingItemId] = useState(null);
 
-  const getToken = () => localStorage.getItem("token");
+  const token = getToken();
 
   useEffect(() => {
     fetchCart();
@@ -32,7 +33,7 @@ const Cart = () => {
     try {
       const res = await fetch(`${API_BASE}/show`, {
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 

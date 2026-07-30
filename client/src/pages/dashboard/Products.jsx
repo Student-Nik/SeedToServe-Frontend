@@ -6,6 +6,7 @@ import ProductSort from "@/components/Products/ProductSort";
 import ProductSkeleton from "@/components/Products/ProductSkeleton";
 import EmptyProducts from "@/components/Products/EmptyProducts";
 import ProductGrid from "@/components/Products/ProductGrid";
+import { getToken } from "@/utils/auth";
 
 
 export default function Products() {
@@ -22,7 +23,7 @@ export default function Products() {
     try {
       setLoading(true);
 
-      const token = localStorage.getItem("token");
+      const token = getToken();
 
       const res = await fetch("http://localhost:8080/buy/products", {
         headers: {

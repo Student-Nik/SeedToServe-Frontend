@@ -2,6 +2,7 @@ import CategoryGrid from "@/components/UserDashboard/CategoryGrid";
 import HeroSection from "@/components/UserDashboard/HeroSection";
 import ProductSection from "@/components/UserDashboard/ProductSection";
 import PromoBanner from "@/components/UserDashboard/PromoBanner";
+import { getToken } from "@/utils/auth";
 import { useEffect, useState } from "react";
 
 const UserDashboard = () => {
@@ -17,7 +18,7 @@ const UserDashboard = () => {
     try {
       setLoading(true);
 
-      const token = localStorage.getItem("token");
+      const token = getToken();
 
       const res = await fetch("http://localhost:8080/buy/products", {
         headers: {
