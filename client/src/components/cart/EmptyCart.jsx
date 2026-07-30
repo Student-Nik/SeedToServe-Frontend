@@ -12,7 +12,7 @@ const EmptyCart = () => {
       </div>
       <h3 className="font-semibold text-gray-800 text-lg">Your cart is empty</h3>
       <p className="text-sm text-gray-500">Looks like you haven't added anything yet.</p>
-      <Button className="bg-red-500 hover:bg-red-600 text-white mt-2" onClick={() => navigate("/")}>
+      <Button className="bg-red-500 hover:bg-red-600 text-white mt-2" onClick={() => navigate("/dashboard/products")}>
         Continue Shopping
       </Button>
     </div>

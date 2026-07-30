@@ -90,18 +90,6 @@ const UserDashboard = () => {
             subtitle="Naturally sweet and packed with nutrients"
             products={fruits}
           />
-
-          <ProductSection
-            title="Dairy Products"
-            subtitle="Farm-fresh dairy delivered every morning"
-            products={dairy}
-          />
-
-          <ProductSection
-            title="Grains"
-            subtitle="Healthy grains for everyday meals"
-            products={grains}
-          />
         </>
       )}
 

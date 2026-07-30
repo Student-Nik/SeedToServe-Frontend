@@ -1,119 +1,204 @@
 import React from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
-import { Phone, Mail } from "lucide-react";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaTwitter,
+} from "react-icons/fa";
+import { Phone, Mail, MapPin } from "lucide-react";
 import icon from "../assets/images/logo.png";
 
 export default function UserFooter() {
   return (
-    <footer className="bg-white text-gray-600 pb-5 relative overflow-hidden border-t border-gray-100">
+    <footer className="bg-white border-t border-gray-200">
 
-      {/* Top Contact Bar */}
-      <div className="w-full bg-gray-900 py-4 px-4 sm:px-6 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-3 sm:gap-4 text-center sm:text-left">
-        <div className="flex items-center gap-2">
-          <Phone size={18} className="text-red-500 shrink-0" />
-          <p className="text-sm font-medium text-white">+91 7219213732</p>
-        </div>
-        <div className="flex items-center gap-2 min-w-0">
-          <Mail size={18} className="text-red-500 shrink-0" />
-          <p className="text-sm font-medium text-white break-all sm:break-normal">
-            seedtoservewebapplication@gmail.com
-          </p>
+      {/* Contact Bar */}
+      <div className="bg-gray-900">
+        <div className="max-w-7xl mx-auto px-5 py-3 flex flex-col md:flex-row justify-between items-center gap-3 text-sm">
+
+          <div className="flex items-center gap-2 text-white">
+            <Phone size={16} className="text-red-500" />
+            <span>+91 7219213732</span>
+          </div>
+
+          <div className="flex items-center gap-2 text-white break-all md:break-normal">
+            <Mail size={16} className="text-red-500" />
+            <span>seedtoservewebapplication@gmail.com</span>
+          </div>
+
         </div>
       </div>
 
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mt-10 sm:mt-12 text-center sm:text-left">
+      {/* Main Footer */}
 
-        {/* Brand */}
-        <div className="sm:col-span-2 lg:col-span-1 flex flex-col items-center sm:items-start">
-          <div className="flex items-center gap-3">
-            <img src={icon} alt="logo" className="w-10 h-10 rounded-full" />
-            <h1 className="text-2xl font-bold text-gray-900">
+      <div className="max-w-7xl mx-auto px-5 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        {/* Logo */}
+
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <img
+              src={icon}
+              alt="logo"
+              className="w-11 h-11 rounded-full"
+            />
+
+            <h2 className="text-xl font-bold text-gray-900">
               SeedToServe
-            </h1>
+            </h2>
           </div>
 
-          <p className="text-gray-500 mt-4 text-sm leading-relaxed max-w-sm">
-            🌱 Empowering Farmers, Connecting Communities.
-            A platform where Indian farmers sell directly to consumers,
-            ensuring freshness and fair pricing.
+          <p className="text-sm text-gray-500 leading-6">
+            Empowering farmers by connecting them directly with customers,
+            ensuring fresh produce, better prices, and a sustainable future.
           </p>
 
-          {/* Social Icons */}
-          <div className="flex items-center gap-4 mt-6">
-            {[FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram].map(
-              (Icon, i) => (
-                <div
-                  key={i}
-                  className="bg-gray-100 text-gray-600 p-3 rounded-full 
-                             hover:bg-red-500 hover:text-white transition duration-300 
-                             cursor-pointer"
-                >
-                  <Icon size={14} />
-                </div>
-              )
-            )}
+          <div className="flex gap-3 mt-5">
+
+            <a
+              href="#"
+              className="w-9 h-9 rounded-full border flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition"
+            >
+              <FaFacebookF size={15} />
+            </a>
+
+            <a
+              href="#"
+              className="w-9 h-9 rounded-full border flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition"
+            >
+              <FaInstagram size={15} />
+            </a>
+
+            <a
+              href="#"
+              className="w-9 h-9 rounded-full border flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition"
+            >
+              <FaLinkedinIn size={15} />
+            </a>
+
+            <a
+              href="#"
+              className="w-9 h-9 rounded-full border flex items-center justify-center hover:bg-red-500 hover:text-white hover:border-red-500 transition"
+            >
+              <FaTwitter size={15} />
+            </a>
+
           </div>
         </div>
 
         {/* Quick Links */}
+
         <div>
-          <h3 className="text-lg font-semibold mb-4 text-gray-900">
+          <h3 className="text-gray-900 font-semibold mb-4">
             Quick Links
           </h3>
-          <ul className="space-y-2 text-gray-500 text-sm">
-            <li className="hover:text-red-500 cursor-pointer transition">
-              Buy
+
+          <ul className="space-y-3 text-sm text-gray-500">
+
+            <li>
+              <a href="/" className="hover:text-red-500 transition">
+                Home
+              </a>
             </li>
-            <li className="hover:text-red-500 cursor-pointer transition">
-              Products
+
+            <li>
+              <a href="/products" className="hover:text-red-500 transition">
+                Products
+              </a>
             </li>
-            <li className="hover:text-red-500 cursor-pointer transition">
-              About Us
+
+            <li>
+              <a href="/about" className="hover:text-red-500 transition">
+                About Us
+              </a>
             </li>
+
+            <li>
+              <a href="/contact" className="hover:text-red-500 transition">
+                Contact
+              </a>
+            </li>
+
           </ul>
         </div>
 
-        {/* Working Time */}
+        {/* Working Hours */}
+
         <div>
-          <h3 className="text-lg font-semibold mb-4 text-gray-900">
-            Working Time
+          <h3 className="text-gray-900 font-semibold mb-4">
+            Working Hours
           </h3>
-          <ul className="space-y-2 text-gray-500 text-sm">
-            <li>Mon - Fri: 9.00am - 5.00pm</li>
-            <li>Saturday: 10.00am - 6.00pm</li>
-            <li>Sunday Closed</li>
+
+          <ul className="space-y-3 text-sm text-gray-500">
+
+            <li>Monday - Friday</li>
+            <li>9:00 AM - 5:00 PM</li>
+
+            <li>Saturday</li>
+            <li>10:00 AM - 6:00 PM</li>
+
+            <li>Sunday : Closed</li>
+
           </ul>
         </div>
 
         {/* Address */}
+
         <div>
-          <h3 className="text-lg font-semibold mb-4 text-gray-900">
-            Our Address
+
+          <h3 className="text-gray-900 font-semibold mb-4">
+            Contact
           </h3>
-          <p className="text-gray-500 text-sm leading-relaxed">
-            Shivajinagar, Pune <br />
-            411001, India
-          </p>
+
+          <div className="flex items-start gap-2 text-sm text-gray-500">
+
+            <MapPin
+              size={18}
+              className="text-red-500 mt-1 flex-shrink-0"
+            />
+
+            <p>
+              Shivajinagar,
+              <br />
+              Pune - 411001,
+              <br />
+              Maharashtra, India
+            </p>
+
+          </div>
+
         </div>
+
       </div>
 
-      {/* Bottom Section */}
-      <div className="border-t border-gray-100 mt-10 sm:mt-12 pt-6 pb-2"></div>
+      {/* Bottom */}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 text-sm text-gray-400 text-center">
-        <div className="flex gap-6">
-          <p className="hover:text-red-500 cursor-pointer transition">
-            Terms & Conditions
+      <div className="border-t border-gray-200">
+
+        <div className="max-w-7xl mx-auto px-5 py-4 flex flex-col md:flex-row justify-between items-center gap-3 text-sm">
+
+          <div className="flex gap-6 text-gray-500">
+
+            <a href="#" className="hover:text-red-500 transition">
+              Privacy Policy
+            </a>
+
+            <a href="#" className="hover:text-red-500 transition">
+              Terms & Conditions
+            </a>
+
+          </div>
+
+          <p className="text-gray-500 text-center">
+            © 2025{" "}
+            <span className="font-semibold text-red-500">
+              SeedToServe
+            </span>{" "}
+            All Rights Reserved.
           </p>
-          <p className="hover:text-red-500 cursor-pointer transition">
-            Privacy Policy
-          </p>
+
         </div>
 
-        <p className="mt-0">
-          © 2025 <span className="text-red-500 font-medium">SeedToServe</span>. All Rights Reserved.
-        </p>
       </div>
     </footer>
   );
