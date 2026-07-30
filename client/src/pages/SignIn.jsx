@@ -55,47 +55,59 @@ const SignIn = () => {
     },
   });
 
-  const onSubmit = async (values) => {
-    setLoading(true);
-    try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+const onSubmit = async (values) => {
+  setLoading(true);
+
+  try {
+    const response = await fetch(
+      "http://localhost:8080/api/auth/login",
+      {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(values),
-      });
-
-      const result = await response.json();
-      console.log("LOGIN RESPONSE:", result);
-      console.log(response);
-
-      if (!response.ok) {
-        return showToast("error", "Login failed");
       }
+    );
 
-      const { token, username, role } = result;
+    const result = await response.json();
 
-      dispatch(
-        setUser({
-          user: { username },
-          role,
-          token,
-        }),
-      );
-      localStorage.setItem("token", token);
+    console.log("LOGIN RESPONSE:", result);
 
-      showToast("success", result.message || "Login successful!");
-
-      if (role === "FARMER") {
-        navigate("/farmer-popup");
-      } else {
-        navigate("/dashboard");
-      }
-    } catch (err) {
-      showToast("error", err.message || "Server error");
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      return showToast("error", "Login failed");
     }
-  };
+
+    const { token, username, role } = result;
+
+    dispatch(
+      setUser({
+        user: { username },
+        role,
+        token,
+      })
+    );
+
+    showToast(
+      "success",
+      result.message || "Login successful!"
+    );
+
+    if (role === "FARMER") {
+      navigate("/farmer-popup");
+    } else {
+      navigate("/dashboard");
+    }
+
+  } catch (err) {
+    showToast(
+      "error",
+      err.message || "Server error"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white">

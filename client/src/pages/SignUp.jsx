@@ -69,21 +69,40 @@ const SignUp = () => {
 
   const onSubmit = async (values) => {
     setLoading(true);
+
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
 
       const data = await response.json();
+
       if (!response.ok) {
-        return showToast("error", data.message || "Registration failed");
+        return showToast(
+          "error",
+          data.message || "Registration failed"
+        );
       }
-      showToast("success", data.message || "Registration successful!");
+
+      showToast(
+        "success",
+        data.message || "Registration successful!"
+      );
+
       navigate("/login");
+
     } catch (err) {
-      showToast("error", err.message || "Server error");
+      showToast(
+        "error",
+        err.message || "Server error"
+      );
     } finally {
       setLoading(false);
     }
@@ -213,11 +232,10 @@ const SignUp = () => {
                                   type="button"
                                   key={type}
                                   onClick={() => field.onChange(type)}
-                                  className={`flex-1 rounded-lg border py-2.5 text-sm font-medium transition-all ${
-                                    selected
+                                  className={`flex-1 rounded-lg border py-2.5 text-sm font-medium transition-all ${selected
                                       ? "bg-[#E24A3B] border-[#E24A3B] text-white shadow-sm"
                                       : "bg-white border-gray-300 text-gray-600 hover:border-[#E24A3B]/50"
-                                  }`}
+                                    }`}
                                 >
                                   {type}
                                 </button>
