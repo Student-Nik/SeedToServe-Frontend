@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Heart, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +10,7 @@ const badgeColors = {
 
 export default function ProductCard({ item }) {
   const navigate = useNavigate();
+  const [imageLoading, setImageLoading] = useState(true);
 
   const goToProducts = () => {
     navigate("/dashboard/products");
@@ -24,33 +26,43 @@ export default function ProductCard({ item }) {
     : null;
 
   return (
-    <div
-      onClick={goToProducts}
-      className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition cursor-pointer"
-    >
-      <div className="relative">
+    <div className="group overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-lg transition-all duration-300">
+      {/* Image */}
+      <div className="relative h-48 overflow-hidden bg-gray-100">
         {imageSrc ? (
-          <img
-            src={imageSrc}
-            alt={item.name}
-            className="w-full h-36 sm:h-40 object-cover"
-          />
+          <>
+            {/* Skeleton */}
+            {imageLoading && (
+              <div className="absolute inset-0 animate-pulse bg-gray-200" />
+            )}
+
+            <img
+              src={imageSrc}
+              alt={item.name}
+              loading="lazy"
+              onLoad={() => setImageLoading(false)}
+              onError={() => setImageLoading(false)}
+              className={`h-full w-full object-cover transition-all duration-300 group-hover:scale-105 ${imageLoading ? "opacity-0" : "opacity-100"
+                }`}
+            />
+          </>
         ) : (
-          <div className="w-full h-36 sm:h-40 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
+          <div className="flex h-full items-center justify-center bg-gray-100 text-gray-400 text-sm">
             No Image
           </div>
         )}
 
+        {/* Badge */}
         {badge && (
           <span
-            className={`absolute top-2 left-2 text-[11px] font-medium text-white px-2 py-0.5 rounded-full ${
-              badgeColors[badge] || "bg-gray-700"
-            }`}
+            className={`absolute top-2 left-2 text-[11px] font-medium text-white px-2 py-0.5 rounded-full ${badgeColors[badge] || "bg-gray-700"
+              }`}
           >
             {badge}
           </span>
         )}
 
+        {/* Wishlist */}
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -63,17 +75,18 @@ export default function ProductCard({ item }) {
         </button>
       </div>
 
+      {/* Content */}
       <div className="p-3">
         <h3 className="text-sm font-semibold text-gray-900 truncate">
           {item.name}
         </h3>
 
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="mt-1 text-xs text-gray-500">
           {item.categoryName}
         </p>
 
         {item.unit && (
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="mt-1 text-xs text-gray-400">
             {item.unit}
           </p>
         )}
@@ -88,7 +101,7 @@ export default function ProductCard({ item }) {
               e.stopPropagation();
               goToProducts();
             }}
-            className="bg-red-500 hover:bg-red-600 transition text-white p-2 rounded-full"
+            className="rounded-full bg-red-500 p-2 text-white transition hover:bg-red-600"
             aria-label={`Add ${item.name}`}
           >
             <Plus size={16} />

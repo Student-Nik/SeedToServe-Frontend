@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import ProductSearch from "@/components/Products/ProductSearch";
-import ProductFilters from "@/components/Products/roductFilters";
 import ProductSort from "@/components/Products/ProductSort";
 import ProductSkeleton from "@/components/Products/ProductSkeleton";
 import EmptyProducts from "@/components/Products/EmptyProducts";
 import ProductGrid from "@/components/Products/ProductGrid";
 import { getToken } from "@/utils/auth";
+import ProductFilters from "@/components/Products/ProductFilters";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
