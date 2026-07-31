@@ -42,6 +42,8 @@ const Cart = () => {
       const data = await res.json();
 
       console.log("Cart Response:", data);
+      console.log("Items:", data.items);
+      console.log("Total Items:", data.totalItems);
 
       setCartItems(data.items || []);
       setTotals({
@@ -50,7 +52,6 @@ const Cart = () => {
       });
     } catch (err) {
       console.error(err);
-      showToast("error", "Failed to load cart");
     } finally {
       setLoading(false);
     }
@@ -71,8 +72,8 @@ const Cart = () => {
               quantity: newQuantity,
               subtotal: item.price * newQuantity,
             }
-          : item
-      )
+          : item,
+      ),
     );
 
     try {
@@ -83,9 +84,9 @@ const Cart = () => {
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!res.ok) throw new Error("Failed to update quantity");
@@ -110,15 +111,12 @@ const Cart = () => {
     try {
       console.log("Deleting Item:", itemId);
 
-      const res = await fetch(
-        `${API_BASE}/delete/item?itemId=${itemId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const res = await fetch(`${API_BASE}/delete/item?itemId=${itemId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!res.ok) throw new Error("Failed to remove item");
 
@@ -141,7 +139,7 @@ const Cart = () => {
       const res = await fetch(`${API_BASE}/clear`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -149,7 +147,7 @@ const Cart = () => {
 
       showToast("success", "Cart cleared");
 
-      fetchCart();
+      await fetchCart();
     } catch (err) {
       console.error(err);
       showToast("error", "Failed to clear cart");
@@ -188,8 +186,8 @@ const Cart = () => {
         </h1>
 
         <p className="text-sm text-gray-500 mt-1">
-          {totals.totalItems}{" "}
-          {totals.totalItems === 1 ? "item" : "items"} in your cart
+          {totals.totalItems} {totals.totalItems === 1 ? "item" : "items"} in
+          your cart
         </p>
 
         {cartItems.length === 0 ? (

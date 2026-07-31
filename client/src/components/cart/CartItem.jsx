@@ -40,7 +40,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, updating }) => {
       </div>
 
       <button
-        onClick={() => onRemove(item.productId)}
+        onClick={() => onRemove(item.id)}
         disabled={updating}
         className="text-gray-400 hover:text-red-500 transition flex-shrink-0"
       >

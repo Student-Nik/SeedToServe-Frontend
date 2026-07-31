@@ -8,7 +8,6 @@ import EmptyProducts from "@/components/Products/EmptyProducts";
 import ProductGrid from "@/components/Products/ProductGrid";
 import { getToken } from "@/utils/auth";
 
-
 export default function Products() {
   const [products, setProducts] = useState([]);
 
@@ -37,19 +36,10 @@ export default function Products() {
 
       const data = await res.json();
 
-      console.log("Products Response:", data);
-
-      // Flatten grouped products into one array
-      const allProducts = [
-        ...(data?.Vegetables || []),
-        ...(data?.Fruits || []),
-        ...(data?.Dairy || []),
-        ...(data?.Grains || []),
-        ...(data?.Bakery || []),
-        ...(data?.Organic || []),
-      ];
+      const allProducts = Object.values(data).flat();
 
       setProducts(allProducts);
+
     } catch (err) {
       console.error(err);
       setError("Couldn't load products.");
@@ -72,7 +62,7 @@ export default function Products() {
       list = list.filter(
         (product) =>
           product.name?.toLowerCase().includes(value) ||
-          product.categoryName?.toLowerCase().includes(value)
+          product.categoryName?.toLowerCase().includes(value),
       );
     }
 
@@ -80,8 +70,7 @@ export default function Products() {
     if (category !== "All") {
       list = list.filter(
         (product) =>
-          product.categoryName?.toLowerCase() ===
-          category.toLowerCase()
+          product.categoryName?.toLowerCase() === category.toLowerCase(),
       );
     }
 
@@ -112,11 +101,7 @@ export default function Products() {
 
   const categories = useMemo(() => {
     const uniqueCategories = [
-      ...new Set(
-        products
-          .map((item) => item.categoryName)
-          .filter(Boolean)
-      ),
+      ...new Set(products.map((item) => item.categoryName).filter(Boolean)),
     ];
 
     return ["All", ...uniqueCategories];
@@ -130,7 +115,6 @@ export default function Products() {
       className="min-h-screen bg-gray-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-
         {/* Heading */}
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
@@ -144,39 +128,26 @@ export default function Products() {
 
         {/* Search + Filters */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-5">
-
-          <ProductSearch
-            value={search}
-            onChange={setSearch}
-          />
+          <ProductSearch value={search} onChange={setSearch} />
 
           <div className="flex flex-col lg:flex-row justify-between gap-4">
-
             <ProductFilters
               categories={categories}
               selectedCategory={category}
               onCategoryChange={setCategory}
             />
 
-            <ProductSort
-              value={sort}
-              onChange={setSort}
-            />
-
+            <ProductSort value={sort} onChange={setSort} />
           </div>
         </div>
 
         {/* Product Count */}
         <div className="flex items-center justify-between mt-6">
-
-          <h2 className="text-lg font-semibold text-gray-900">
-            Products
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900">Products</h2>
 
           <span className="text-sm text-gray-500">
             {filteredProducts.length} Products
           </span>
-
         </div>
 
         {/* Error */}
@@ -188,17 +159,13 @@ export default function Products() {
 
         {/* Product Grid */}
         <div className="mt-6">
-
           {loading ? (
             <ProductSkeleton />
           ) : filteredProducts.length === 0 ? (
             <EmptyProducts />
           ) : (
-            <ProductGrid
-              products={filteredProducts}
-            />
+            <ProductGrid products={filteredProducts} />
           )}
-
         </div>
       </div>
     </motion.div>
