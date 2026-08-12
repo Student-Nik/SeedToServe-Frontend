@@ -5,13 +5,15 @@ import ProductSort from "@/components/Products/ProductSort";
 import ProductSkeleton from "@/components/Products/ProductSkeleton";
 import EmptyProducts from "@/components/Products/EmptyProducts";
 import ProductGrid from "@/components/Products/ProductGrid";
-import { getToken } from "@/utils/auth";
 import ProductFilters from "@/components/Products/ProductFilters";
+import { getToken } from "@/utils/auth";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState("");
@@ -35,11 +37,10 @@ export default function Products() {
       }
 
       const data = await res.json();
-
       const allProducts = Object.values(data).flat();
 
       setProducts(allProducts);
-
+      setFilteredProducts(allProducts);
     } catch (err) {
       console.error(err);
       setError("Couldn't load products.");
@@ -52,51 +53,58 @@ export default function Products() {
     fetchProducts();
   }, []);
 
-  const filteredProducts = useMemo(() => {
-    let list = [...products];
+  useEffect(() => {
+    setFilterLoading(true);
 
-    // Search
-    if (search.trim()) {
-      const value = search.toLowerCase();
+    const timer = setTimeout(() => {
+      let list = [...products];
 
-      list = list.filter(
-        (product) =>
-          product.name?.toLowerCase().includes(value) ||
-          product.categoryName?.toLowerCase().includes(value),
-      );
-    }
+      // Search
+      if (search.trim()) {
+        const value = search.toLowerCase();
 
-    // Category
-    if (category !== "All") {
-      list = list.filter(
-        (product) =>
-          product.categoryName?.toLowerCase() === category.toLowerCase(),
-      );
-    }
+        list = list.filter(
+          (product) =>
+            product.name?.toLowerCase().includes(value) ||
+            product.categoryName?.toLowerCase().includes(value),
+        );
+      }
 
-    // Sorting
-    switch (sort) {
-      case "priceLow":
-        list.sort((a, b) => a.price - b.price);
-        break;
+      // Category
+      if (category !== "All") {
+        list = list.filter(
+          (product) =>
+            product.categoryName?.toLowerCase() === category.toLowerCase(),
+        );
+      }
 
-      case "priceHigh":
-        list.sort((a, b) => b.price - a.price);
-        break;
+      // Sort
+      switch (sort) {
+        case "priceLow":
+          list.sort((a, b) => a.price - b.price);
+          break;
 
-      case "az":
-        list.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+        case "priceHigh":
+          list.sort((a, b) => b.price - a.price);
+          break;
 
-      case "za":
-        list.sort((a, b) => b.name.localeCompare(a.name));
-        break;
+        case "az":
+          list.sort((a, b) => a.name.localeCompare(b.name));
+          break;
 
-      default:
-        break;
-    }
+        case "za":
+          list.sort((a, b) => b.name.localeCompare(a.name));
+          break;
 
-    return list;
+        default:
+          break;
+      }
+
+      setFilteredProducts(list);
+      setFilterLoading(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [products, search, category, sort]);
 
   const categories = useMemo(() => {
@@ -115,7 +123,6 @@ export default function Products() {
       className="min-h-screen bg-gray-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* Heading */}
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
             Our Products
@@ -126,7 +133,6 @@ export default function Products() {
           </p>
         </div>
 
-        {/* Search + Filters */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-5">
           <ProductSearch value={search} onChange={setSearch} />
 
@@ -141,7 +147,6 @@ export default function Products() {
           </div>
         </div>
 
-        {/* Product Count */}
         <div className="flex items-center justify-between mt-6">
           <h2 className="text-lg font-semibold text-gray-900">Products</h2>
 
@@ -150,16 +155,14 @@ export default function Products() {
           </span>
         </div>
 
-        {/* Error */}
         {error && (
           <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-600">
             {error}
           </div>
         )}
 
-        {/* Product Grid */}
         <div className="mt-6">
-          {loading ? (
+          {loading || filterLoading ? (
             <ProductSkeleton />
           ) : filteredProducts.length === 0 ? (
             <EmptyProducts />

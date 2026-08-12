@@ -27,7 +27,7 @@ const CartSummary = ({ itemCount, subtotal, onCheckout }) => {
         disabled={itemCount === 0}
         className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-semibold py-3 rounded-lg transition"
       >
-        Proceed to Checkout
+        Proceed to Order
       </button>
 
       <p className="flex items-center justify-center gap-1.5 text-xs text-gray-400">

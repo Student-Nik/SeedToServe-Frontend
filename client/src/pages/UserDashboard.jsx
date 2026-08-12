@@ -47,17 +47,17 @@ const UserDashboard = () => {
   }, []);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen w-full overflow-x-hidden">
       {/* Hero */}
       <HeroSection />
 
       {/* Categories */}
-      <div id="categories">
+      <div id="categories" className="px-4 sm:px-6 lg:px-8">
         <CategoryGrid />
       </div>
 
       {/* Seasonal Banner */}
-      <div className="px-4 sm:px-6">
+      <div className="px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10">
         <PromoBanner
           tag="Seasonal Picks"
           title="Seasonal Products, Handpicked Fresh"
@@ -68,34 +68,26 @@ const UserDashboard = () => {
 
       {/* Error */}
       {error && (
-        <p className="text-center text-sm text-red-500 py-4">
-          {error}
-        </p>
+        <p className="text-center text-sm text-red-500 py-4 px-4">{error}</p>
       )}
 
       {/* Products */}
-      {loading ? (
-        <p className="text-center text-sm text-gray-400 py-10">
-          Loading fresh picks...
-        </p>
-      ) : (
-        <>
-          <ProductSection
-            title="Fresh Vegetables"
-            subtitle="Straight from the farm, picked this morning"
-            products={vegetables}
-          />
+      <ProductSection
+        title="Fresh Vegetables"
+        subtitle="Straight from the farm, picked this morning"
+        products={vegetables}
+        isLoading={loading}
+      />
 
-          <ProductSection
-            title="Fresh Fruits"
-            subtitle="Naturally sweet and packed with nutrients"
-            products={fruits}
-          />
-        </>
-      )}
+      <ProductSection
+        title="Fresh Fruits"
+        subtitle="Naturally sweet and packed with nutrients"
+        products={fruits}
+        isLoading={loading}
+      />
 
       {/* Bottom Banners */}
-      <div className="px-4 sm:px-6 pb-14 grid sm:grid-cols-2 gap-5">
+      <div className="px-4 sm:px-6 lg:px-8 pb-14 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mt-4">
         <PromoBanner
           tag="100% Certified Organic"
           tagColor="bg-green-600"
