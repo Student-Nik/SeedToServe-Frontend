@@ -20,6 +20,7 @@ import Products from "./pages/dashboard/Products";
 import ProductDetails from "./pages/dashboard/ProductDetails";
 import Cart from "./pages/Cart";
 import ProtectedRoute from "./components/ProtectedRoute";
+import OrderPage from "./pages/OrderPage";
 
 const App = () => {
   return (
@@ -50,6 +51,7 @@ const App = () => {
           <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="order" element={<OrderPage />} />
         </Route>
 
       </Route>
