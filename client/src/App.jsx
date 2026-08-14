@@ -51,7 +51,11 @@ const App = () => {
           <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
+<<<<<<< HEAD
           <Route path="order" element={<OrderPage />} />
+=======
+          <Route path="orders" element={<OrderPage />} />
+>>>>>>> 1bba982 (Cart Updated)
         </Route>
 
       </Route>

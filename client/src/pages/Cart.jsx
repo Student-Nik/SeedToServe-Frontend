@@ -448,12 +448,26 @@ const Cart = () => {
         responseText
       );
 
+<<<<<<< HEAD
       if (!res.ok) {
         throw new Error(
           responseText ||
           "Failed to fetch address"
         );
       }
+=======
+      if (res.status === 404) {
+    console.log("No address found. Opening address modal.");
+    setShowAddressModal(true);
+    return;
+}
+
+if (!res.ok) {
+    throw new Error(
+        responseText || "Failed to fetch address"
+    );
+}
+>>>>>>> 1bba982 (Cart Updated)
 
       let data;
 
