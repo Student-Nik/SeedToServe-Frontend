@@ -182,12 +182,12 @@ const Cart = () => {
       prev.map((item) =>
         item.id === itemId
           ? {
-            ...item,
-            quantity: newQuantity,
-            subtotal:
-              Number(item.price) *
-              newQuantity,
-          }
+              ...item,
+              quantity: newQuantity,
+              subtotal:
+                Number(item.price) *
+                newQuantity,
+            }
           : item
       )
     );
@@ -448,12 +448,17 @@ const Cart = () => {
         responseText
       );
 
-      if (!res.ok) {
-        throw new Error(
-          responseText ||
-          "Failed to fetch address"
-        );
-      }
+      if (res.status === 404) {
+    console.log("No address found. Opening address modal.");
+    setShowAddressModal(true);
+    return;
+}
+
+if (!res.ok) {
+    throw new Error(
+        responseText || "Failed to fetch address"
+    );
+}
 
       let data;
 
@@ -514,7 +519,7 @@ const Cart = () => {
       if (addresses.length > 0) {
         const selectedAddress =
           addresses[
-          addresses.length - 1
+            addresses.length - 1
           ];
 
         console.log(
@@ -588,7 +593,7 @@ const Cart = () => {
       showToast(
         "error",
         err.message ||
-        "Could not load your delivery address"
+          "Could not load your delivery address"
       );
 
       /*
@@ -824,6 +829,8 @@ const Cart = () => {
           }
         />
       )}
+
+      
 
     </div>
   );
