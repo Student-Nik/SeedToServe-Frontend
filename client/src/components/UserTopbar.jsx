@@ -4,12 +4,6 @@ import { ShoppingCart, User, Search, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/images/logo.png";
 
-const navLinks = [
-  { label: "Home", path: "/dashboard" },
-  { label: "Products", path: "/dashboard/products" },
-  { label: "Orders", path: "/dashboard/orders" },
-];
-
 const categories = ["Vegetables", "Fruits", "Dairy", "Grains", "Organic"];
 
 const UserTopbar = () => {
@@ -113,20 +107,6 @@ const UserTopbar = () => {
             className="w-full bg-transparent text-sm text-[#1C1C1C] placeholder:text-gray-400 outline-none"
           />
         </div>
-      </div>
-
-      {/* ---------------- Category / Nav row (desktop) ---------------- */}
-      <div className="hidden md:flex justify-center gap-8 text-sm font-medium border-t border-gray-100 py-2.5">
-        {navLinks.map((link) => (
-          <span
-            key={link.label}
-            onClick={() => navigate(link.path)}
-            className="text-gray-600 hover:text-[#E24A3B] cursor-pointer transition-colors"
-          >
-            {link.label}
-          </span>
-        ))}
-        <span className="w-px bg-gray-200" />
       </div>
 
       {/* ---------------- Mobile dropdown menu ---------------- */}

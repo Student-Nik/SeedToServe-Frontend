@@ -21,6 +21,7 @@ import ProductDetails from "./pages/dashboard/ProductDetails";
 import Cart from "./pages/Cart";
 import ProtectedRoute from "./components/ProtectedRoute";
 import OrderPage from "./pages/OrderPage";
+import PaymentPage from "./pages/PaymentPage";
 
 const App = () => {
   return (
@@ -51,11 +52,8 @@ const App = () => {
           <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
-<<<<<<< HEAD
-          <Route path="order" element={<OrderPage />} />
-=======
           <Route path="orders" element={<OrderPage />} />
->>>>>>> 1bba982 (Cart Updated)
+          <Route path="payment" element={<PaymentPage />} />
         </Route>
 
       </Route>
