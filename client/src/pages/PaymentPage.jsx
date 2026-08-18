@@ -11,20 +11,16 @@ import { showToast } from "@/helpers/showToast";
 import { getToken } from "@/utils/auth";
 
 const CREATE_ORDER_API = "http://localhost:8080/create/order";
-
-const CREATE_PAYMENT_API = "http://localhost:8080/api/payment/create-payment";
-
-const VERIFY_PAYMENT_API = "http://localhost:8080/api/payment/verify-payment";
+const CREATE_PAYMENT_API =
+  "http://localhost:8080/api/payment/create-payment";
+const VERIFY_PAYMENT_API =
+  "http://localhost:8080/api/payment/verify-payment";
 
 const PaymentPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const token = getToken();
-
-  // =====================================================
-  // DATA RECEIVED FROM ORDER PAGE
-  // =====================================================
 
   const {
     address,
@@ -36,21 +32,10 @@ const PaymentPage = () => {
     deliveryFee = 0,
   } = location.state || {};
 
-  // =====================================================
-  // STATE
-  // =====================================================
-
   const [paymentMethod, setPaymentMethod] = useState("");
-
   const [loading, setLoading] = useState(false);
-
   const [orderSuccess, setOrderSuccess] = useState(false);
-
   const [createdOrderId, setCreatedOrderId] = useState(null);
-
-  // =====================================================
-  // VALIDATE PAGE DATA
-  // =====================================================
 
   if (!location.state) {
     return (
@@ -76,212 +61,115 @@ const PaymentPage = () => {
     );
   }
 
-  // =====================================================
-  // CREATE ORDER
-  // =====================================================
-
-const createOrder = async () => {
-  // =====================================================
-  // VALIDATION
-  // =====================================================
-
-  if (!token) {
-    throw new Error(
-      "Your session has expired. Please login again."
-    );
-  }
-
-  if (!address?.id) {
-    throw new Error(
-      "Delivery address not found."
-    );
-  }
-
-  if (!cartItems || cartItems.length === 0) {
-    throw new Error(
-      "Your cart is empty."
-    );
-  }
-
-  if (!paymentMethod) {
-    throw new Error(
-      "Please select a payment method."
-    );
-  }
-
-
-  // =====================================================
-  // PREPARE CART ITEMS
-  // =====================================================
-
-  const items = cartItems.map((item) => {
-
-    const price =
-      Number(item?.price || 0);
-
-    const quantity =
-      Number(item?.quantity || 0);
-
-    const totalPrice =
-      Number(item?.totalPrice || item?.subtotal || 0) ||
-      price * quantity;
-
-
-    return {
-      productId:
-        Number(
-          item?.productId ||
-          item?.product?.id
-        ),
-
-      productName:
-        item?.productName ||
-        item?.name ||
-        item?.product?.name ||
-        "Product",
-
-      quantity,
-
-      price,
-
-      totalPrice,
-
-      // Your cart response is using imageBase64
-      productImage:
-        item?.productImage ||
-        item?.imageBase64 ||
-        item?.image ||
-        "",
-    };
-  });
-
-
-  // =====================================================
-  // REQUEST BODY
-  // =====================================================
-
-  const requestBody = {
-
-    addressId:
-      Number(address.id),
-
-    paymentMethod:
-      paymentMethod,
-
-    items:
-      items,
-  };
-
-
-  console.log(
-    "================================="
-  );
-
-  console.log(
-    "CREATE ORDER REQUEST"
-  );
-
-  console.log(
-    JSON.stringify(
-      requestBody,
-      null,
-      2
-    )
-  );
-
-  console.log(
-    "================================="
-  );
-
-
-  // =====================================================
-  // API CALL
-  // =====================================================
-
-  const response = await fetch(
-    CREATE_ORDER_API,
-    {
-      method: "POST",
-
-      headers: {
-        "Content-Type":
-          "application/json",
-
-        Authorization:
-          `Bearer ${token}`,
-      },
-
-      body:
-        JSON.stringify(
-          requestBody
-        ),
-    }
-  );
-
-
-  // =====================================================
-  // RESPONSE
-  // =====================================================
-
-  const responseText =
-    await response.text();
-
-
-  console.log(
-    "Create Order Response:",
-    responseText
-  );
-
-
-  if (!response.ok) {
-
-    throw new Error(
-      responseText ||
-      "Failed to create order"
-    );
-  }
-
-
-  // =====================================================
-  // PARSE RESPONSE
-  // =====================================================
-
-  let data;
-
-  try {
-
-    data =
-      JSON.parse(
-        responseText
+  const createOrder = async () => {
+    if (!token) {
+      throw new Error(
+        "Your session has expired. Please login again."
       );
+    }
 
-  } catch {
+    if (!address?.id) {
+      throw new Error("Delivery address not found.");
+    }
 
-    data =
-      responseText;
-  }
+    if (!cartItems.length) {
+      throw new Error("Your cart is empty.");
+    }
 
+    if (!paymentMethod) {
+      throw new Error("Please select a payment method.");
+    }
 
-  console.log(
-    "Created Order:",
-    data
-  );
+    const items = cartItems.map((item) => {
+      const price = Number(item?.price || 0);
+      const quantity = Number(item?.quantity || 0);
 
+      const totalPrice =
+        Number(
+          item?.totalPrice ||
+            item?.subtotal ||
+            0
+        ) || price * quantity;
 
-  return data;
-};
+      return {
+        productId: Number(
+          item?.productId ||
+            item?.product?.id
+        ),
+        productName:
+          item?.productName ||
+          item?.name ||
+          item?.product?.name ||
+          "Product",
+        quantity,
+        price,
+        totalPrice,
+        productImage:
+          item?.productImage ||
+          item?.imageBase64 ||
+          item?.image ||
+          "",
+      };
+    });
 
-  // =====================================================
-  // EXTRACT ORDER ID
-  // =====================================================
+    const requestBody = {
+      addressId: Number(address.id),
+      paymentMethod,
+      items,
+    };
+
+    console.log(
+      "CREATE ORDER REQUEST:",
+      JSON.stringify(requestBody, null, 2)
+    );
+
+    const response = await fetch(CREATE_ORDER_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const responseText = await response.text();
+
+    console.log(
+      "Create Order Response:",
+      responseText
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        responseText || "Failed to create order"
+      );
+    }
+
+    let data;
+
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      data = responseText;
+    }
+
+    console.log("Created Order:", data);
+
+    return data;
+  };
 
   const extractOrderId = (data) => {
     if (!data) {
       return null;
     }
 
+    if (typeof data === "number") {
+      return data;
+    }
+
     if (typeof data === "string") {
-      return null;
+      const match = data.match(/\d+/);
+      return match ? match[0] : null;
     }
 
     return (
@@ -294,57 +182,54 @@ const createOrder = async () => {
     );
   };
 
-  // =====================================================
-  // LOAD RAZORPAY SCRIPT
-  // =====================================================
-
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       if (window.Razorpay) {
         resolve(true);
-
         return;
       }
 
       const script = document.createElement("script");
 
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.src =
+        "https://checkout.razorpay.com/v1/checkout.js";
 
-      script.onload = () => {
-        resolve(true);
-      };
-
-      script.onerror = () => {
-        resolve(false);
-      };
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
 
       document.body.appendChild(script);
     });
   };
 
-  // =====================================================
-  // CREATE RAZORPAY PAYMENT
-  // =====================================================
-
   const createRazorpayPayment = async (orderId) => {
-    console.log("Creating Razorpay payment for order:", orderId);
+    console.log(
+      "Creating Razorpay payment for order:",
+      orderId
+    );
 
-    const response = await fetch(`${CREATE_PAYMENT_API}/${orderId}`, {
-      method: "POST",
-
-      headers: {
-        Accept: "*/*",
-
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `${CREATE_PAYMENT_API}/${orderId}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     const responseText = await response.text();
 
-    console.log("Create Payment Response:", responseText);
+    console.log(
+      "Create Payment Response:",
+      responseText
+    );
 
     if (!response.ok) {
-      throw new Error(responseText || "Failed to create Razorpay payment");
+      throw new Error(
+        responseText ||
+          "Failed to create Razorpay payment"
+      );
     }
 
     let data;
@@ -357,10 +242,6 @@ const createOrder = async () => {
 
     return data;
   };
-
-  // =====================================================
-  // EXTRACT RAZORPAY DETAILS
-  // =====================================================
 
   const extractRazorpayDetails = (paymentData) => {
     const razorpayOrderId =
@@ -379,7 +260,9 @@ const createOrder = async () => {
       Number(grandTotal) * 100;
 
     const currency =
-      paymentData?.currency || paymentData?.data?.currency || "INR";
+      paymentData?.currency ||
+      paymentData?.data?.currency ||
+      "INR";
 
     const key =
       paymentData?.key ||
@@ -391,18 +274,11 @@ const createOrder = async () => {
 
     return {
       razorpayOrderId,
-
       amount,
-
       currency,
-
       key,
     };
   };
-
-  // =====================================================
-  // VERIFY PAYMENT
-  // =====================================================
 
   const verifyPayment = async ({
     razorpayOrderId,
@@ -411,32 +287,39 @@ const createOrder = async () => {
   }) => {
     const requestBody = {
       razorpayOrderId,
-
       razorpayPaymentId,
-
       razorpaySignature,
     };
 
-    console.log("Verify Payment Request:", requestBody);
+    console.log(
+      "Verify Payment Request:",
+      requestBody
+    );
 
-    const response = await fetch(VERIFY_PAYMENT_API, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-
-        Authorization: `Bearer ${token}`,
-      },
-
-      body: JSON.stringify(requestBody),
-    });
+    const response = await fetch(
+      VERIFY_PAYMENT_API,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestBody),
+      }
+    );
 
     const responseText = await response.text();
 
-    console.log("Verify Payment Response:", responseText);
+    console.log(
+      "Verify Payment Response:",
+      responseText
+    );
 
     if (!response.ok) {
-      throw new Error(responseText || "Payment verification failed");
+      throw new Error(
+        responseText ||
+          "Payment verification failed"
+      );
     }
 
     let data;
@@ -450,332 +333,362 @@ const createOrder = async () => {
     return data;
   };
 
-  // =====================================================
-  // OPEN RAZORPAY
-  // =====================================================
-
   const openRazorpay = async (orderId) => {
-    const scriptLoaded = await loadRazorpayScript();
+    const scriptLoaded =
+      await loadRazorpayScript();
 
     if (!scriptLoaded) {
-      throw new Error("Razorpay SDK failed to load.");
+      throw new Error(
+        "Razorpay SDK failed to load."
+      );
     }
 
-    // ================================================
-    // Create Razorpay payment
-    // ================================================
+    const paymentData =
+      await createRazorpayPayment(orderId);
 
-    const paymentData = await createRazorpayPayment(orderId);
+    console.log(
+      "Razorpay Data:",
+      paymentData
+    );
 
-    console.log("Razorpay Data:", paymentData);
-
-    // ================================================
-    // Extract Razorpay details
-    // ================================================
-
-    const { razorpayOrderId, amount, currency, key } =
-      extractRazorpayDetails(paymentData);
+    const {
+      razorpayOrderId,
+      amount,
+      currency,
+      key,
+    } = extractRazorpayDetails(paymentData);
 
     if (!razorpayOrderId) {
-      throw new Error("Razorpay Order ID not received from server.");
+      throw new Error(
+        "Razorpay Order ID not received from server."
+      );
     }
 
     if (!key) {
-      throw new Error("Razorpay Key not received from server.");
+      throw new Error(
+        "Razorpay Key not received from server."
+      );
     }
-
-    // ================================================
-    // Razorpay Options
-    // ================================================
 
     const options = {
       key,
-
       amount,
-
       currency,
-
       name: "SeedToServe",
-
       description: `Payment for Order #${orderId}`,
-
       order_id: razorpayOrderId,
 
-      // ==============================================
-      // SUCCESS
-      // ==============================================
-
-      handler: async function (response) {
+      handler: async (response) => {
         try {
           setLoading(true);
 
-          console.log("Razorpay Success:", response);
+          console.log(
+            "Razorpay Success:",
+            response
+          );
 
           await verifyPayment({
-            razorpayOrderId: response.razorpay_order_id,
-
-            razorpayPaymentId: response.razorpay_payment_id,
-
-            razorpaySignature: response.razorpay_signature,
+            razorpayOrderId:
+              response.razorpay_order_id,
+            razorpayPaymentId:
+              response.razorpay_payment_id,
+            razorpaySignature:
+              response.razorpay_signature,
           });
 
-          // ========================================
-          // Payment verified
-          // ========================================
-
           setCreatedOrderId(orderId);
-
           setOrderSuccess(true);
 
-          showToast("success", "Payment successful and order confirmed!");
+          showToast(
+            "success",
+            "Payment successful and order confirmed!"
+          );
         } catch (error) {
-          console.error("Payment verification error:", error);
+          console.error(
+            "Payment verification error:",
+            error
+          );
 
-          showToast("error", error.message || "Payment verification failed");
+          showToast(
+            "error",
+            error.message ||
+              "Payment verification failed"
+          );
         } finally {
           setLoading(false);
         }
       },
 
-      // ==============================================
-      // PREFILL
-      // ==============================================
-
       prefill: {
         name: address?.fullName || "",
-
         contact: address?.mobileNo || "",
       },
-
-      // ==============================================
-      // NOTES
-      // ==============================================
 
       notes: {
         orderId: String(orderId),
       },
 
-      // ==============================================
-      // THEME
-      // ==============================================
-
       theme: {
         color: "#000000",
       },
 
-      // ==============================================
-      // MODAL
-      // ==============================================
-
       modal: {
-        ondismiss: function () {
+        ondismiss: () => {
           setLoading(false);
 
-          showToast("error", "Payment cancelled");
+          showToast(
+            "error",
+            "Payment cancelled"
+          );
         },
       },
     };
 
-    // ================================================
-    // Razorpay object
-    // ================================================
+    const razorpay =
+      new window.Razorpay(options);
 
-    const razorpay = new window.Razorpay(options);
+    razorpay.on(
+      "payment.failed",
+      (response) => {
+        console.error(
+          "Razorpay payment failed:",
+          response
+        );
 
-    // ================================================
-    // PAYMENT FAILED
-    // ================================================
+        setLoading(false);
 
-    razorpay.on("payment.failed", function (response) {
-      console.error("Razorpay payment failed:", response);
-
-      setLoading(false);
-
-      showToast("error", response?.error?.description || "Payment failed");
-    });
-
-    // ================================================
-    // OPEN RAZORPAY
-    // ================================================
+        showToast(
+          "error",
+          response?.error?.description ||
+            "Payment failed"
+        );
+      }
+    );
 
     razorpay.open();
   };
-
-  // =====================================================
-  // HANDLE CASH ON DELIVERY
-  // =====================================================
 
   const handleCashOnDelivery = async () => {
     try {
       setLoading(true);
 
-      const orderData = await createOrder();
+      const orderData =
+        await createOrder();
 
-      console.log("COD Order Created:", orderData);
+      console.log(
+        "COD Order Created:",
+        orderData
+      );
 
-      const orderId = extractOrderId(orderData);
+      const orderId =
+        extractOrderId(orderData);
+
+      if (!orderId) {
+        throw new Error(
+          "Order was created, but Order ID was not returned by the server."
+        );
+      }
 
       setCreatedOrderId(orderId);
-
       setOrderSuccess(true);
 
-      showToast("success", "Order placed successfully!");
+      showToast(
+        "success",
+        "Order placed successfully!"
+      );
     } catch (error) {
-      console.error("COD order error:", error);
+      console.error(
+        "COD order error:",
+        error
+      );
 
-      showToast("error", error.message || "Failed to place order");
+      showToast(
+        "error",
+        error.message ||
+          "Failed to place order"
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  // =====================================================
-  // HANDLE ONLINE PAYMENT
-  // =====================================================
-
   const handleOnlinePayment = async () => {
     try {
       setLoading(true);
 
-      // ===============================================
-      // STEP 1
-      // Create application order
-      // ===============================================
+      const orderData =
+        await createOrder();
 
-      const orderData = await createOrder();
+      console.log(
+        "Online Order Created:",
+        orderData
+      );
 
-      console.log("Online Order Created:", orderData);
-
-      // ===============================================
-      // STEP 2
-      // Get order ID
-      // ===============================================
-
-      const orderId = extractOrderId(orderData);
+      const orderId =
+        extractOrderId(orderData);
 
       if (!orderId) {
-        throw new Error("Order ID was not returned by create order API.");
+        throw new Error(
+          "Order ID was not returned by create order API."
+        );
       }
-
-      // ===============================================
-      // STEP 3
-      // Open Razorpay
-      // ===============================================
 
       await openRazorpay(orderId);
     } catch (error) {
-      console.error("Online payment error:", error);
+      console.error(
+        "Online payment error:",
+        error
+      );
 
-      showToast("error", error.message || "Unable to start online payment");
+      showToast(
+        "error",
+        error.message ||
+          "Unable to start online payment"
+      );
 
       setLoading(false);
     }
   };
 
-  // =====================================================
-  // HANDLE PAYMENT
-  // =====================================================
-
   const handlePayment = async () => {
     if (!token) {
-      showToast("error", "Your session has expired. Please login again.");
-
+      showToast(
+        "error",
+        "Your session has expired. Please login again."
+      );
       return;
     }
 
     if (!paymentMethod) {
-      showToast("error", "Please select a payment method");
-
+      showToast(
+        "error",
+        "Please select a payment method"
+      );
       return;
     }
 
     if (!address?.id) {
-      showToast("error", "Delivery address not found.");
-
+      showToast(
+        "error",
+        "Delivery address not found."
+      );
       return;
     }
 
     if (!cartItems.length) {
-      showToast("error", "Your cart is empty.");
-
+      showToast(
+        "error",
+        "Your cart is empty."
+      );
       return;
     }
 
-    // ================================================
-    // COD
-    // ================================================
-
-    if (paymentMethod === "CASH_ON_DELIVERY") {
+    if (
+      paymentMethod ===
+      "CASH_ON_DELIVERY"
+    ) {
       await handleCashOnDelivery();
-
       return;
     }
-
-    // ================================================
-    // ONLINE
-    // ================================================
 
     if (paymentMethod === "ONLINE") {
       await handleOnlinePayment();
-
-      return;
     }
   };
 
-  // =====================================================
-  // ORDER SUCCESS SCREEN
-  // =====================================================
+  const handleViewOrder = () => {
+    if (!createdOrderId) {
+      showToast(
+        "error",
+        "Order ID is not available."
+      );
+      return;
+    }
+
+    navigate(
+      "/dashboard/order-details",
+      {
+        state: {
+          orderId: createdOrderId,
+          paymentMethod,
+          paymentStatus:
+            paymentMethod ===
+            "CASH_ON_DELIVERY"
+              ? "Pending"
+              : "Paid",
+          address,
+          cartItems,
+          totals,
+          grandTotal,
+          mrpTotal,
+          savings,
+          deliveryFee,
+          orderDate:
+            new Date().toLocaleDateString(
+              "en-IN",
+              {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              }
+            ),
+        },
+      }
+    );
+  };
 
   if (orderSuccess) {
     return (
       <PaymentSuccess
         orderId={createdOrderId}
         paymentMethod={paymentMethod}
-        onContinue={() => navigate("/dashboard")}
+        onViewOrder={handleViewOrder}
+        onContinueShopping={() =>
+          navigate("/dashboard")
+        }
       />
     );
   }
 
-  // =====================================================
-  // PAGE
-  // =====================================================
-
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
       <div className="max-w-6xl mx-auto px-4 pt-6">
-        {/* ============================================ */}
-        {/* HEADER */}
-        {/* ============================================ */}
 
-        <PaymentHeader onBack={() => navigate(-1)} />
+        <PaymentHeader
+          onBack={() => navigate(-1)}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-          {/* ========================================== */}
-          {/* LEFT SECTION */}
-          {/* ========================================== */}
 
           <div className="lg:col-span-2 space-y-5">
-            {/* ORDER SUMMARY */}
 
-            <PaymentOrderSummary cartItems={cartItems} />
-
-            {/* DELIVERY ADDRESS */}
-            {/* DELIVERY ADDRESS */}
+            <PaymentOrderSummary
+              cartItems={cartItems}
+            />
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+
               <h2 className="text-lg font-semibold text-black mb-3">
                 Delivery Address
               </h2>
 
               <div className="text-sm text-gray-600 space-y-1">
-                <p className="font-medium text-black">{address?.fullName}</p>
 
-                <p>{address?.mobileNo}</p>
-
-                <p>{address?.houseNoOrStreet}</p>
+                <p className="font-medium text-black">
+                  {address?.fullName}
+                </p>
 
                 <p>
-                  {address?.villageOrTown}, {address?.district}
+                  {address?.mobileNo}
+                </p>
+
+                <p>
+                  {address?.houseNoOrStreet}
+                </p>
+
+                <p>
+                  {address?.villageOrTown},{" "}
+                  {address?.district}
                 </p>
 
                 <p>
@@ -784,20 +697,16 @@ const createOrder = async () => {
                     {address?.pincode}
                   </span>
                 </p>
+
               </div>
             </div>
-
-            {/* PAYMENT METHOD */}
 
             <PaymentMethod
               paymentMethod={paymentMethod}
               setPaymentMethod={setPaymentMethod}
             />
-          </div>
 
-          {/* ========================================== */}
-          {/* RIGHT SECTION */}
-          {/* ========================================== */}
+          </div>
 
           <div>
             <PaymentPriceDetails
@@ -810,6 +719,7 @@ const createOrder = async () => {
               loading={loading}
             />
           </div>
+
         </div>
       </div>
     </div>

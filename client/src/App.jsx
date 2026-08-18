@@ -22,6 +22,7 @@ import Cart from "./pages/Cart";
 import ProtectedRoute from "./components/ProtectedRoute";
 import OrderPage from "./pages/OrderPage";
 import PaymentPage from "./pages/PaymentPage";
+import OrderDetailsPage from "./pages/OrderDetailsPage";
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ const App = () => {
           <Route path="cart" element={<Cart />} />
           <Route path="orders" element={<OrderPage />} />
           <Route path="payment" element={<PaymentPage />} />
+          <Route path="order-details" element={<OrderDetailsPage />} />
         </Route>
 
       </Route>
