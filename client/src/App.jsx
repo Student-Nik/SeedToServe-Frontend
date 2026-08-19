@@ -57,7 +57,6 @@ const App = () => {
           <Route path="payment" element={<PaymentPage />} />
           <Route path="order-details" element={<OrderDetailsPage />} />
         </Route>
-
       </Route>
     </Routes>
   );
