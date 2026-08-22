@@ -1,4 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Carrot, Apple, Milk, Wheat, Sprout, Cookie } from "lucide-react";
+
+const iconMap = {
+  Vegetables: Carrot,
+  Fruits: Apple,
+  Dairy: Milk,
+  Grains: Wheat,
+  Organic: Sprout,
+  Bakery: Cookie,
+};
 
 const categories = [
   {
@@ -33,12 +44,18 @@ const categories = [
   },
 ];
 
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
+
 export default function CategoryGrid() {
   const navigate = useNavigate();
-
-  const goToProducts = () => {
-    navigate("/dashboard/products");
-  };
+  const goToProducts = () => navigate("/dashboard/products");
 
   return (
     <section className="py-10 px-4 sm:px-6">
@@ -54,37 +71,61 @@ export default function CategoryGrid() {
 
         <button
           onClick={goToProducts}
-          className="hidden sm:block text-sm font-medium text-red-500 hover:text-red-600 whitespace-nowrap"
+          className="hidden sm:flex items-center gap-1 text-sm font-medium text-red-500 hover:text-red-600 whitespace-nowrap transition-colors"
         >
           View All Categories →
         </button>
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5">
-        {categories.map((cat, i) => (
-          <button
-            key={i}
-            onClick={goToProducts}
-            className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition text-left"
-          >
-            <img
-              src={cat.img}
-              alt={cat.name}
-              className="w-full h-20 sm:h-24 object-cover"
-            />
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5"
+      >
+        {categories.map((cat, i) => {
+          const Icon = iconMap[cat.name];
+          return (
+            <motion.button
+              key={i}
+              variants={item}
+              onClick={goToProducts}
+              whileHover={{ y: -4 }}
+              whileTap={{ scale: 0.97 }}
+              className="group bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg hover:border-red-100 transition-shadow text-left"
+            >
+              <div className="relative h-20 sm:h-24 overflow-hidden">
+                <img
+                  src={cat.img}
+                  alt={cat.name}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+                {Icon && (
+                  <span className="absolute top-1.5 left-1.5 bg-white/95 text-red-500 rounded-full p-1 sm:p-1.5 shadow-sm">
+                    <Icon size={13} strokeWidth={2.25} />
+                  </span>
+                )}
+              </div>
 
-            <div className="p-2 sm:p-3">
-              <p className="text-xs sm:text-sm font-semibold text-gray-900">
-                {cat.name}
-              </p>
+              <div className="p-2 sm:p-3">
+                <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
+                  {cat.name}
+                </p>
+                <p className="text-[11px] text-gray-400">{cat.count}</p>
+              </div>
+            </motion.button>
+          );
+        })}
+      </motion.div>
 
-              <p className="text-[11px] text-gray-400">
-                {cat.count}
-              </p>
-            </div>
-          </button>
-        ))}
-      </div>
+      <button
+        onClick={goToProducts}
+        className="sm:hidden mt-5 w-full text-center text-sm font-medium text-red-500 hover:text-red-600 transition-colors"
+      >
+        View All Categories →
+      </button>
     </section>
   );
 }
