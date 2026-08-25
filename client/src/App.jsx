@@ -38,14 +38,14 @@ const App = () => {
       </Route>
 
       {/* Protected Routes */}
-      {/* <Route element={<ProtectedRoute />}> */}
+      <Route element={<ProtectedRoute />}>
 
         {/* Farmer Routes */}
-        {/* <Route element={<OnlyFarmerAllowed />}> */}
+        <Route element={<OnlyFarmerAllowed />}>
           <Route path="/farmer-popup" element={<FarmerPopup />} />
           <Route path="/addcategory" element={<AddCategory />} />
           <Route path="/addproducts" element={<AddProduct />} />
-        {/* </Route> */}
+        </Route>
 
         {/* User Dashboard */}
         <Route path="/dashboard" element={<UserLayout />}>
@@ -57,7 +57,7 @@ const App = () => {
           <Route path="payment" element={<PaymentPage />} />
           <Route path="order-details" element={<OrderDetailsPage />} />
         </Route>
-      {/* </Route> */}
+      </Route>
     </Routes>
   );
 };
