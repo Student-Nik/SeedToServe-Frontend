@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { FiEdit, FiTrash2, FiCheck, FiX, FiArrowLeft } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiCheck, FiX, FiArrowLeft, FiPackage, FiImage } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { showToast } from "@/helpers/showToast";
@@ -272,12 +272,15 @@ const AddProduct = () => {
 
   // ------------------ UI ------------------ //
 
+  const fieldClass =
+    "h-12 rounded-xl border-neutral-300 bg-neutral-50 px-4 text-[15px] placeholder:text-neutral-400 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[#E24A3B] focus-visible:ring-offset-0 focus-visible:border-[#E24A3B] transition-colors";
+
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen p-4 sm:p-8">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
         <Button
           variant="outline"
-          className="flex items-center gap-2 mb-4"
+          className="flex items-center gap-2 border-neutral-300 text-[#1C1C1C] hover:bg-neutral-100 hover:text-[#1C1C1C]"
           onClick={() => navigate("/farmer-popup")}
         >
           <FiArrowLeft size={18} /> Back
@@ -288,70 +291,79 @@ const AddProduct = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-white p-6 rounded-xl shadow-md"
+          className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden"
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Add New Product
-          </h2>
+          <div className="flex items-center gap-3 px-6 sm:px-8 py-6 border-b border-neutral-100 bg-neutral-50/60">
+            <div className="w-11 h-11 rounded-xl bg-[#E24A3B] flex items-center justify-center shrink-0 shadow-sm shadow-[#E24A3B]/30">
+              <FiPackage className="text-white" size={20} />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-[#1C1C1C]">Add New Product</h2>
+              <p className="text-sm text-neutral-500">List a product under one of your categories</p>
+            </div>
+          </div>
 
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-5 px-6 sm:px-8 py-6"
             >
-              {/* CATEGORY SELECT (shadcn) */}
-              <FormField
-                control={form.control}
-                name="categoryId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={(value) => {
-                          field.onChange(value);
+              <div className="grid sm:grid-cols-2 gap-5">
+                {/* CATEGORY SELECT (shadcn) */}
+                <FormField
+                  control={form.control}
+                  name="categoryId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[#1C1C1C] font-semibold text-sm">Category</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(value) => {
+                            field.onChange(value);
 
-                          const selectedCategory = categoriesList.find(
-                            (cat) => String(cat.id) === value,
-                          );
-                          form.setValue(
-                            "categoryName",
-                            selectedCategory?.name || "",
-                          );
-                        }}
-                        value={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="-- Select Category --" />
-                        </SelectTrigger>
+                            const selectedCategory = categoriesList.find(
+                              (cat) => String(cat.id) === value,
+                            );
+                            form.setValue(
+                              "categoryName",
+                              selectedCategory?.name || "",
+                            );
+                          }}
+                          value={field.value}
+                        >
+                          <SelectTrigger className={fieldClass}>
+                            <SelectValue placeholder="-- Select Category --" />
+                          </SelectTrigger>
 
-                        <SelectContent>
-                          {categoriesList.map((cat) => (
-                            <SelectItem key={cat.id} value={String(cat.id)}>
-                              {cat.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* NAME */}
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Product Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Product Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                          <SelectContent>
+                            {categoriesList.map((cat) => (
+                              <SelectItem key={cat.id} value={String(cat.id)}>
+                                {cat.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* NAME */}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[#1C1C1C] font-semibold text-sm">Product Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Organic Tomatoes" className={fieldClass} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               {/* DESCRIPTION */}
               <FormField
@@ -359,47 +371,51 @@ const AddProduct = () => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel className="text-[#1C1C1C] font-semibold text-sm">
+                      Description <span className="text-neutral-400 font-normal">(optional)</span>
+                    </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Product Description" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              {/* PRICE */}
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="Price" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* STOCK */}
-              <FormField
-                control={form.control}
-                name="stock"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Stock</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Stock / Quantity"
+                      <Textarea
+                        placeholder="A short description buyers will see on the product page"
+                        className="min-h-[96px] rounded-xl border-neutral-300 bg-neutral-50 px-4 py-3 text-[15px] placeholder:text-neutral-400 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[#E24A3B] focus-visible:ring-offset-0 focus-visible:border-[#E24A3B] transition-colors resize-none"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
+
+              <div className="grid sm:grid-cols-2 gap-5">
+                {/* PRICE */}
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[#1C1C1C] font-semibold text-sm">Price (₹)</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="0.00" className={fieldClass} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* STOCK */}
+                <FormField
+                  control={form.control}
+                  name="stock"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[#1C1C1C] font-semibold text-sm">Stock / Quantity</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="0" className={fieldClass} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               {/* IMAGE */}
               <FormField
@@ -407,28 +423,39 @@ const AddProduct = () => {
                 name="image"
                 render={() => (
                   <FormItem>
-                    <FormLabel>Product Image</FormLabel>
+                    <FormLabel className="text-[#1C1C1C] font-semibold text-sm">Product Image</FormLabel>
                     <FormControl>
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>
-                          form.setValue("image", e.target.files[0])
-                        }
-                      />
+                      <label
+                        htmlFor="product-image-input"
+                        className="flex items-center gap-3 h-12 rounded-xl border border-dashed border-neutral-300 bg-neutral-50 px-4 text-[15px] text-neutral-400 cursor-pointer hover:border-[#E24A3B] hover:text-[#E24A3B] transition-colors"
+                      >
+                        <FiImage size={18} />
+                        <span>Click to upload an image</span>
+                        <Input
+                          id="product-image-input"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) =>
+                            form.setValue("image", e.target.files[0])
+                          }
+                        />
+                      </label>
                     </FormControl>
                   </FormItem>
                 )}
               />
 
               {/* SUBMIT BUTTON */}
-              <Button
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700 w-full text-white"
-                disabled={loading}
-              >
-                {loading ? "Adding..." : "Add Product"}
-              </Button>
+              <div className="flex justify-end pt-1">
+                <Button
+                  type="submit"
+                  className="bg-[#E24A3B] hover:bg-[#c93e30] text-white w-full sm:w-auto px-10 h-11 rounded-xl font-medium shadow-md shadow-[#E24A3B]/20"
+                  disabled={loading}
+                >
+                  {loading ? "Adding..." : "Add Product"}
+                </Button>
+              </div>
             </form>
           </Form>
         </motion.div>
@@ -442,7 +469,7 @@ const AddProduct = () => {
         >
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Products</h2>
 
-          <Table>
+          <Table className="min-w-[900px]">
             <TableHeader>
               <TableRow className="bg-gray-100">
                 <TableHead>Category</TableHead>

@@ -24,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FiEdit, FiTrash2, FiCheck, FiX, FiArrowLeft } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiCheck, FiX, FiArrowLeft, FiTag, FiFolderPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "@/helpers/showToast";
 import { getToken } from "@/utils/auth";
@@ -164,12 +164,12 @@ const AddCategory = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen p-4 sm:p-8">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
         {/* Back Button */}
         <Button
           variant="outline"
-          className="flex items-center gap-2 mb-4"
+          className="flex items-center gap-2 border-neutral-300 text-[#1C1C1C] hover:bg-neutral-100 hover:text-[#1C1C1C]"
           onClick={() => navigate("/farmer-popup")}
         >
           <FiArrowLeft size={18} /> Back
@@ -180,23 +180,37 @@ const AddCategory = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-white p-6 rounded-xl shadow-md"
+          className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden"
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Add New Category</h2>
+          <div className="flex items-center gap-3 px-6 sm:px-8 py-6 border-b border-neutral-100 bg-neutral-50/60">
+            <div className="w-11 h-11 rounded-xl bg-[#E24A3B] flex items-center justify-center shrink-0 shadow-sm shadow-[#E24A3B]/30">
+              <FiFolderPlus className="text-white" size={20} />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-[#1C1C1C]">Add New Category</h2>
+              <p className="text-sm text-neutral-500">Organize your products so customers can find them faster</p>
+            </div>
+          </div>
 
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-5 px-6 sm:px-8 py-6"
             >
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category Name</FormLabel>
+                    <FormLabel className="text-[#1C1C1C] font-semibold text-sm">
+                      Category Name
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Category Name" {...field} />
+                      <Input
+                        placeholder="e.g. Fresh Vegetables"
+                        className="h-12 rounded-xl border-neutral-300 bg-neutral-50 px-4 text-[15px] placeholder:text-neutral-400 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[#E24A3B] focus-visible:ring-offset-0 focus-visible:border-[#E24A3B] transition-colors"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -208,22 +222,31 @@ const AddCategory = () => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel className="text-[#1C1C1C] font-semibold text-sm">
+                      Description{" "}
+                      <span className="text-neutral-400 font-normal">(optional)</span>
+                    </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Category Description" {...field} />
+                      <Textarea
+                        placeholder="A short line describing what belongs in this category"
+                        className="min-h-[96px] rounded-xl border-neutral-300 bg-neutral-50 px-4 py-3 text-[15px] placeholder:text-neutral-400 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[#E24A3B] focus-visible:ring-offset-0 focus-visible:border-[#E24A3B] transition-colors resize-none"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <Button
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white w-full"
-                disabled={loading}
-              >
-                {loading ? "Adding..." : "Add Category"}
-              </Button>
+              <div className="flex justify-end pt-1">
+                <Button
+                  type="submit"
+                  className="bg-[#E24A3B] hover:bg-[#c93e30] text-white w-full sm:w-auto px-10 h-11 rounded-xl font-medium shadow-md shadow-[#E24A3B]/20"
+                  disabled={loading}
+                >
+                  {loading ? "Adding..." : "Add Category"}
+                </Button>
+              </div>
             </form>
           </Form>
         </motion.div>
