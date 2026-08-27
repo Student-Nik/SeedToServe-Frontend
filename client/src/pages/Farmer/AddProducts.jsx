@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { FiEdit, FiTrash2, FiCheck, FiX, FiArrowLeft, FiPackage, FiImage } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiCheck, FiX, FiArrowLeft, FiPackage, FiImage, FiCheckCircle } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { showToast } from "@/helpers/showToast";
@@ -62,6 +62,9 @@ const AddProduct = () => {
   const [editDescription, setEditDescription] = useState("");
   const [editPrice, setEditPrice] = useState(0);
   const [editStock, setEditStock] = useState(0);
+
+  // NEW: track selected image filename for user feedback
+  const [selectedImageName, setSelectedImageName] = useState("");
 
   const form = useForm({
     resolver: zodResolver(categorySchema),
@@ -184,8 +187,15 @@ const AddProduct = () => {
         stock: "",
         image: null,
       });
+      setSelectedImageName("");
       console.log(newProduct);
       showToast("success", "Product added successfully");
+
+      // NEW: refresh the full page after a successful add
+      // small delay so the toast is visible before reload wipes the DOM
+      setTimeout(() => {
+        window.location.reload();
+      }, 800);
     } catch (err) {
       console.error(err);
       showToast("error", "Failed to add product");
@@ -425,22 +435,46 @@ const AddProduct = () => {
                   <FormItem>
                     <FormLabel className="text-[#1C1C1C] font-semibold text-sm">Product Image</FormLabel>
                     <FormControl>
-                      <label
-                        htmlFor="product-image-input"
-                        className="flex items-center gap-3 h-12 rounded-xl border border-dashed border-neutral-300 bg-neutral-50 px-4 text-[15px] text-neutral-400 cursor-pointer hover:border-[#E24A3B] hover:text-[#E24A3B] transition-colors"
-                      >
-                        <FiImage size={18} />
-                        <span>Click to upload an image</span>
-                        <Input
-                          id="product-image-input"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) =>
-                            form.setValue("image", e.target.files[0])
-                          }
-                        />
-                      </label>
+                      <div className="flex flex-col gap-2">
+                        <label
+                          htmlFor="product-image-input"
+                          className={`flex items-center gap-3 h-12 rounded-xl border border-dashed px-4 text-[15px] cursor-pointer transition-colors ${
+                            selectedImageName
+                              ? "border-green-500 bg-green-50 text-green-700"
+                              : "border-neutral-300 bg-neutral-50 text-neutral-400 hover:border-[#E24A3B] hover:text-[#E24A3B]"
+                          }`}
+                        >
+                          {selectedImageName ? (
+                            <FiCheckCircle size={18} />
+                          ) : (
+                            <FiImage size={18} />
+                          )}
+                          <span className="truncate">
+                            {selectedImageName
+                              ? selectedImageName
+                              : "Click to upload an image"}
+                          </span>
+                          <Input
+                            id="product-image-input"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files[0];
+                              form.setValue("image", file);
+                              setSelectedImageName(file ? file.name : "");
+                            }}
+                          />
+                        </label>
+
+                        {/* Confirmation message under the upload box */}
+                        {selectedImageName && (
+                          <p className="flex items-center gap-1.5 text-sm text-green-600 font-medium">
+                            <FiCheckCircle size={14} />
+                            Image "{selectedImageName}" uploaded
+                          </p>
+                        )}
+                      </div>
                     </FormControl>
                   </FormItem>
                 )}
