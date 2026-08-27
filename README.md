@@ -132,3 +132,247 @@ Customers can quickly find the products they need.
 ↕️ Sort Products
         ↓
 🛒 Add To Cart
+
+🛒 Shopping Cart
+
+The shopping cart provides a complete purchasing experience.
+
+Customers Can
+➕ Add products
+➕ Increase quantity
+➖ Decrease quantity
+❌ Remove products
+💰 View product prices
+🧮 Calculate total amount
+💳 Proceed to checkout
+
+💳 Checkout & Payment Interface
+
+SeedToServe provides a simple and user-friendly checkout experience.
+
+Payment Flow
+🛒 Add Product
+      ↓
+🛍️ Open Cart
+      ↓
+📋 Review Order
+      ↓
+💳 Checkout
+      ↓
+💰 Payment
+      ↓
+✅ Payment Successful
+      ↓
+📦 Order Created
+
+🔐 Authentication
+
+SeedToServe provides separate authentication experiences for farmers and customers.
+
+Authentication Features
+📝 Registration
+🔑 Login
+🚪 Logout
+🔒 Protected Routes
+👤 Role-based Navigation
+💾 Session Management
+⚠️ Form Validation
+🚫 Error Handling
+
+👨‍🌾 Farmer Dashboard
+
+The farmer dashboard provides a centralized interface for managing products and customer orders.
+                👨‍🌾 FARMER DASHBOARD
+                         │
+          ┌──────────────┼──────────────┐
+          │              │              │
+          ↓              ↓              ↓
+      📊 Overview     📦 Products     📋 Orders
+                         │
+                  ┌──────┼──────┐
+                  │      │      │
+                  ↓      ↓      ↓
+                ➕ Add  ✏️ Edit  🗑️ Delete
+                         │
+                         ↓
+                     👤 Profile
+
+👤 Customer Dashboard
+
+Customers can manage their complete shopping experience from their dashboard.
+                👤 CUSTOMER DASHBOARD
+                         │
+          ┌──────────────┼──────────────┐
+          │              │              │
+          ↓              ↓              ↓
+       🏠 Home       🌾 Products      🛒 Cart
+                                         │
+                                         ↓
+                                    💳 Checkout
+                                         │
+                                         ↓
+                                     💰 Payment
+                                         │
+                                         ↓
+                                      📦 Orders
+                                         │
+                                         ↓
+                                      ⚙️ Profile
+
+🌐 Application Flow
+                         🌱 SEEDTOSERVE
+                              │
+              ┌───────────────┴───────────────┐
+              │                               │
+         🧑‍🌾 FARMER                      🛒 CUSTOMER
+              │                               │
+       🔐 Login/Register               🔐 Login/Register
+              │                               │
+       📊 Dashboard                    🏠 Home
+              │                               │
+       📦 Products                     🔍 Browse Products
+              │                               │
+       ➕ Add Product                  🌾 Product Details
+              │                               │
+       ✏️ Manage Product               🛒 Add To Cart
+              │                               │
+       📋 Manage Orders                💳 Checkout
+                                              │
+                                              ↓
+                                         💰 Payment
+                                              │
+                                              ↓
+                                         📦 Orders
+
+🛠️ Tech Stack
+| Category             | Technology                     |
+| -------------------- | ------------------------------ |
+| 🎨 Frontend          | **React.js**                   |
+| 💻 Language          | **JavaScript**                 |
+| 🎨 Styling           | **Tailwind CSS**               |
+| 🧩 UI Components     | **Shadcn UI**                  |
+| 🎬 Animation         | **Framer Motion / Animate UI** |
+| 🧭 Routing           | **React Router**               |
+| 🗃️ State Management | **Redux / React State**        |
+| 🌐 API Requests      | **Axios**                      |
+| ⚡ Build Tool         | **Vite**                       |
+| 💳 Payment Interface | **Razorpay Checkout**          |
+| 🔧 Version Control   | **Git & GitHub**               |
+
+🧩 Frontend Architecture
+
+The frontend follows a component-based architecture with reusable UI components.
+src/
+│
+├── 📁 assets/
+│
+├── 📁 components/
+│   ├── Navbar/
+│   ├── Footer/
+│   ├── ProductCard/
+│   ├── ProductGrid/
+│   ├── ProductSearch/
+│   ├── ProductFilters/
+│   ├── ProductSort/
+│   ├── ProductSkeleton/
+│   └── EmptyProducts/
+│
+├── 📁 pages/
+│   ├── Home/
+│   ├── Login/
+│   ├── Register/
+│   ├── Products/
+│   ├── ProductDetails/
+│   ├── Cart/
+│   ├── Checkout/
+│   ├── Orders/
+│   ├── FarmerDashboard/
+│   └── CustomerDashboard/
+│
+├── 📁 routes/
+│
+├── 📁 store/
+│
+├── 📁 services/
+│
+├── 📁 utils/
+│
+├── App.jsx
+└── main.jsx
+
+📂 Project Structure
+SeedToServe-Frontend/
+│
+├── 📁 public/
+│
+├── 📁 src/
+│   ├── 📁 assets/
+│   ├── 📁 components/
+│   ├── 📁 pages/
+│   ├── 📁 routes/
+│   ├── 📁 services/
+│   ├── 📁 store/
+│   ├── 📁 utils/
+│   │
+│   ├── App.jsx
+│   └── main.jsx
+│
+├── 📄 .env
+├── 📄 .gitignore
+├── 📄 index.html
+├── 📄 package.json
+├── 📄 vite.config.js
+└── 📄 README.md
+
+⚙️ Installation & Setup
+🧱 Prerequisites
+
+Make sure the following are installed:
+
+Node.js 18+
+npm
+Git
+
+1️⃣ Clone the Repository
+git clone https://github.com/your-username/SeedToServe-Frontend.git
+
+2️⃣ Navigate to the Project
+cd SeedToServe-Frontend
+
+3️⃣ Install Dependencies
+npm install
+
+🧠 Key Frontend Learnings
+
+Through the development of SeedToServe, the project demonstrates practical experience with:
+
+⚛️ React.js component development
+🧩 Reusable components
+🎨 Tailwind CSS
+📱 Responsive web design
+🧭 React Router
+🔐 Protected routes
+👤 Role-based interfaces
+🗃️ State management
+🌐 API integration
+🛒 E-commerce cart functionality
+🔎 Search and filtering
+💳 Checkout interfaces
+🎬 UI animations
+⚠️ Error handling
+⏳ Loading states
+
+🚀 Future Enhancements
+📍 Location-based product discovery
+🚚 Order tracking interface
+⭐ Product ratings and reviews
+❤️ Wishlist functionality
+🔔 Real-time notifications
+📊 Advanced farmer analytics dashboard
+🌐 Marathi and Hindi language support
+🤖 AI-powered product recommendations
+📱 Progressive Web App (PWA)
+
+⭐ Show Your Support
+
+If you like SeedToServe, please consider giving this project a ⭐ on GitHub.
