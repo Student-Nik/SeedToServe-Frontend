@@ -9,13 +9,6 @@
 </p>
 
 <p align="center">
-  <img
-    src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=24&duration=3000&pause=1000&color=2E7D32&center=true&vCenter=true&width=850&lines=🌱+Empowering+Farmers;🚜+Connecting+Farmers+Directly+With+Customers;🛒+From+Farm+To+Your+Doorstep;🌾+Building+A+Better+Agricultural+Marketplace"
-    alt="Typing Animation"
-  />
-</p>
-
-<p align="center">
   <strong>🌾 Connecting Farmers Directly With Customers 🌾</strong>
 </p>
 
