@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/images/logo.png";
+import Logout from "@/pages/Logout";
 
 const categories = [
   "Vegetables",
@@ -48,8 +49,10 @@ const UserTopbar = () => {
       }}
       className="w-full bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50"
     >
+      {/* ================= TOPBAR ================= */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
 
+        {/* ================= LOGO ================= */}
         <motion.div
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
@@ -79,6 +82,7 @@ const UserTopbar = () => {
           </h1>
         </motion.div>
 
+        {/* ================= SEARCH ================= */}
         <div className="hidden md:flex flex-1 max-w-xl">
           <div className="w-full flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-4 py-2 focus-within:border-[#E24A3B]/50 focus-within:ring-2 focus-within:ring-[#E24A3B]/15 transition">
             <Search
@@ -94,8 +98,10 @@ const UserTopbar = () => {
           </div>
         </div>
 
+        {/* ================= RIGHT ACTIONS ================= */}
         <div className="flex items-center gap-2 sm:gap-4 shrink-0">
 
+          {/* CART */}
           <motion.div
             whileHover={{ scale: 1.12 }}
             whileTap={{ scale: 0.9 }}
@@ -103,6 +109,7 @@ const UserTopbar = () => {
               navigate("/dashboard/cart")
             }
             className="relative p-2 rounded-full bg-gray-50 hover:bg-[#E24A3B]/10 text-[#1C1C1C] transition cursor-pointer"
+            title="Cart"
           >
             <ShoppingCart size={18} />
 
@@ -117,6 +124,7 @@ const UserTopbar = () => {
             )}
           </motion.div>
 
+          {/* MY ORDERS */}
           <motion.div
             whileHover={{ scale: 1.12 }}
             whileTap={{ scale: 0.9 }}
@@ -129,6 +137,12 @@ const UserTopbar = () => {
             <Package size={18} />
           </motion.div>
 
+          {/* LOGOUT - DESKTOP */}
+          <div className="hidden md:block">
+            <Logout />
+          </div>
+
+          {/* MOBILE MENU BUTTON */}
           <motion.button
             type="button"
             whileTap={{ scale: 0.9 }}
@@ -147,6 +161,7 @@ const UserTopbar = () => {
         </div>
       </div>
 
+      {/* ================= MOBILE SEARCH ================= */}
       <div className="md:hidden px-4 pb-3">
         <div className="w-full flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-4 py-2 focus-within:border-[#E24A3B]/50 focus-within:ring-2 focus-within:ring-[#E24A3B]/15 transition">
           <Search
@@ -162,6 +177,7 @@ const UserTopbar = () => {
         </div>
       </div>
 
+      {/* ================= MOBILE MENU ================= */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -185,6 +201,7 @@ const UserTopbar = () => {
           >
             <div className="flex flex-col px-4 py-3 gap-1">
 
+              {/* NAVIGATION LINKS */}
               {navLinks.map((link) => (
                 <motion.span
                   key={link.label}
@@ -199,8 +216,10 @@ const UserTopbar = () => {
                 </motion.span>
               ))}
 
+              {/* DIVIDER */}
               <div className="h-px bg-gray-100 my-1" />
 
+              {/* CATEGORIES */}
               <div className="flex flex-wrap gap-x-4 gap-y-2 py-1">
                 {categories.map((cat) => (
                   <span
@@ -215,6 +234,11 @@ const UserTopbar = () => {
                 ))}
               </div>
 
+              {/* DIVIDER */}
+              <div className="h-px bg-gray-100 my-2" />
+
+              {/* LOGOUT - MOBILE */}
+              <Logout />
             </div>
           </motion.div>
         )}

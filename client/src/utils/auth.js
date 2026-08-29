@@ -17,11 +17,6 @@ export const getCustomerId = () => {
   const state = store.getState();
   const userState = state.user;
 
-  console.log("========== AUTH DEBUG ==========");
-  console.log("User Redux State:", userState);
-  console.log("User Object:", userState?.user);
-  console.log("Token:", userState?.token);
-
   const user = userState?.user;
 
   if (!user) {

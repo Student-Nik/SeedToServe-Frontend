@@ -99,11 +99,8 @@ const onSubmit = async (values) => {
       navigate("/dashboard");
     }
 
-  } catch (err) {
-    showToast(
-      "error",
-      err.message || "Server error"
-    );
+  } catch(err) {
+    showToast("invalid credentials");
   } finally {
     setLoading(false);
   }
