@@ -10,13 +10,8 @@ const Logout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear user authentication data from Redux
     dispatch(removeUser());
-
-    // Show logout message
     showToast("success", "Logged out successfully!");
-
-    // Redirect to login page
     navigate("/login", { replace: true });
   };
 
