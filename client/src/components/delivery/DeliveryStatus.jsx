@@ -42,28 +42,28 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
   const getStatusStyle = () => {
     switch (order.orderStatus) {
       case "ASSIGNED":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-[#E8A33D]/15 text-[#E8A33D]";
 
       case "OUT_FOR_DELIVERY":
-        return "bg-blue-100 text-blue-700";
+        return "bg-[#E24A3B]/10 text-[#E24A3B]";
 
       case "DELIVERED":
-        return "bg-green-100 text-green-700";
+        return "bg-[#2F4C3B]/10 text-[#2F4C3B]";
 
       case "CANCELLED":
         return "bg-red-100 text-red-700";
 
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-[#2F4C3B]/10 text-black";
     }
   };
 
   return (
-    <div className="border-t pt-4 mt-4">
+    <div className="border-t border-[#2F4C3B]/10 pt-4 mt-4">
 
       {/* Current Status */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-gray-600 font-medium">
+        <span className="text-black/70 font-medium">
           Order Status
         </span>
 
@@ -90,7 +90,7 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
             handleStatusUpdate("OUT_FOR_DELIVERY")
           }
           disabled={updating}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium disabled:opacity-50"
+          className="w-full bg-[#E24A3B] hover:bg-[#c73f31] text-white py-3 rounded-lg font-medium disabled:opacity-50 transition"
         >
           {updating
             ? "Updating..."
@@ -105,7 +105,7 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
             handleStatusUpdate("DELIVERED")
           }
           disabled={updating}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium disabled:opacity-50"
+          className="w-full bg-[#2F4C3B] hover:bg-[#243b2f] text-white py-3 rounded-lg font-medium disabled:opacity-50 transition"
         >
           {updating
             ? "Updating..."
@@ -115,7 +115,7 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
 
       {/* DELIVERED */}
       {order.orderStatus === "DELIVERED" && (
-        <div className="text-center text-green-600 font-medium">
+        <div className="text-center text-[#2F4C3B] font-medium">
           ✓ Order Delivered
         </div>
       )}

@@ -106,10 +106,10 @@ const DeliveryBoyOrdersPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+      <div className="min-h-screen bg-[#FDF8F3] p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-center items-center py-20">
-            <p className="text-gray-500 text-lg">
+            <p className="text-black text-lg">
               Loading orders...
             </p>
           </div>
@@ -120,24 +120,24 @@ const DeliveryBoyOrdersPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+      <div className="min-h-screen bg-[#FDF8F3] p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
 
           <button
             onClick={() => navigate("/delivery/dashboard")}
-            className="mb-6 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg"
+            className="mb-6 px-4 py-2 bg-[#2F4C3B]/10 hover:bg-[#2F4C3B]/15 text-[#2F4C3B] rounded-lg font-medium transition"
           >
             ← Back to Dashboard
           </button>
 
-          <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+          <div className="bg-white rounded-xl shadow-sm border border-[#2F4C3B]/10 p-8 text-center">
             <p className="text-red-500 text-lg mb-4">
               {error}
             </p>
 
             <button
               onClick={fetchOrders}
-              className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+              className="px-5 py-2 bg-[#E24A3B] hover:bg-[#c73f31] text-white rounded-lg font-medium transition"
             >
               Try Again
             </button>
@@ -149,7 +149,7 @@ const DeliveryBoyOrdersPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-[#FDF8F3] p-4 sm:p-6 lg:p-8">
 
       <div className="max-w-7xl mx-auto">
 
@@ -157,11 +157,11 @@ const DeliveryBoyOrdersPage = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
 
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">
+            <h1 className="text-3xl font-bold text-[#2F4C3B]">
               My Orders
             </h1>
 
-            <p className="text-gray-500 mt-1">
+            <p className="text-black/70 mt-1">
               View and manage all your assigned delivery orders.
             </p>
           </div>
@@ -170,14 +170,14 @@ const DeliveryBoyOrdersPage = () => {
 
             <button
               onClick={() => navigate("/delivery/dashboard")}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium"
+              className="px-4 py-2 bg-[#2F4C3B]/10 hover:bg-[#2F4C3B]/15 text-[#2F4C3B] rounded-lg font-medium transition"
             >
               ← Dashboard
             </button>
 
             <button
               onClick={fetchOrders}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium"
+              className="px-4 py-2 bg-[#E24A3B] hover:bg-[#c73f31] text-white rounded-lg font-medium transition"
             >
               ↻ Refresh
             </button>
@@ -186,14 +186,14 @@ const DeliveryBoyOrdersPage = () => {
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border border-[#2F4C3B]/10 p-5 mb-6">
 
           <div className="flex flex-col lg:flex-row gap-4">
 
             {/* Search Input */}
             <div className="flex-1">
 
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-black mb-2">
                 Search Orders
               </label>
 
@@ -202,7 +202,7 @@ const DeliveryBoyOrdersPage = () => {
                 placeholder="Search by Order ID or Customer Name"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-3 border border-[#2F4C3B]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2F4C3B]/40"
               />
 
             </div>
@@ -212,7 +212,7 @@ const DeliveryBoyOrdersPage = () => {
           {/* Status Filters */}
           <div className="mt-5">
 
-            <p className="text-sm font-medium text-gray-700 mb-3">
+            <p className="text-sm font-medium text-black mb-3">
               Filter by Status
             </p>
 
@@ -220,10 +220,10 @@ const DeliveryBoyOrdersPage = () => {
 
               <button
                 onClick={() => setStatusFilter("ALL")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "ALL"
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#2F4C3B] text-white"
+                    : "bg-[#2F4C3B]/10 text-black hover:bg-[#2F4C3B]/15"
                 }`}
               >
                 All
@@ -231,10 +231,10 @@ const DeliveryBoyOrdersPage = () => {
 
               <button
                 onClick={() => setStatusFilter("ASSIGNED")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "ASSIGNED"
-                    ? "bg-yellow-500 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#E8A33D] text-white"
+                    : "bg-[#2F4C3B]/10 text-black hover:bg-[#2F4C3B]/15"
                 }`}
               >
                 Assigned
@@ -242,10 +242,10 @@ const DeliveryBoyOrdersPage = () => {
 
               <button
                 onClick={() => setStatusFilter("OUT_FOR_DELIVERY")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "OUT_FOR_DELIVERY"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#E24A3B] text-white"
+                    : "bg-[#2F4C3B]/10 text-black hover:bg-[#2F4C3B]/15"
                 }`}
               >
                 Out for Delivery
@@ -253,10 +253,10 @@ const DeliveryBoyOrdersPage = () => {
 
               <button
                 onClick={() => setStatusFilter("DELIVERED")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "DELIVERED"
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#2F4C3B] text-white"
+                    : "bg-[#2F4C3B]/10 text-black hover:bg-[#2F4C3B]/15"
                 }`}
               >
                 Delivered
@@ -264,10 +264,10 @@ const DeliveryBoyOrdersPage = () => {
 
               <button
                 onClick={() => setStatusFilter("CANCELLED")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "CANCELLED"
                     ? "bg-red-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-[#2F4C3B]/10 text-black hover:bg-[#2F4C3B]/15"
                 }`}
               >
                 Cancelled
@@ -281,9 +281,9 @@ const DeliveryBoyOrdersPage = () => {
         {/* Order Count */}
         <div className="mb-5">
 
-          <p className="text-gray-600">
+          <p className="text-black/70">
             Showing{" "}
-            <span className="font-semibold">
+            <span className="font-semibold text-black">
               {filteredOrders.length}
             </span>{" "}
             order{filteredOrders.length !== 1 ? "s" : ""}
@@ -305,25 +305,25 @@ const DeliveryBoyOrdersPage = () => {
 
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-10 text-center">
+          <div className="bg-white rounded-xl shadow-sm border border-[#2F4C3B]/10 p-10 text-center">
 
             {orders.length === 0 ? (
               <>
-                <h2 className="text-xl font-semibold text-gray-700">
+                <h2 className="text-xl font-semibold text-[#2F4C3B]">
                   No Orders Assigned
                 </h2>
 
-                <p className="text-gray-500 mt-2">
+                <p className="text-black/70 mt-2">
                   You currently don't have any orders assigned to you.
                 </p>
               </>
             ) : (
               <>
-                <h2 className="text-xl font-semibold text-gray-700">
+                <h2 className="text-xl font-semibold text-[#2F4C3B]">
                   No Matching Orders
                 </h2>
 
-                <p className="text-gray-500 mt-2">
+                <p className="text-black/70 mt-2">
                   No orders match your current search or status filter.
                 </p>
 
@@ -332,7 +332,7 @@ const DeliveryBoyOrdersPage = () => {
                     setSearchTerm("");
                     setStatusFilter("ALL");
                   }}
-                  className="mt-4 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                  className="mt-4 px-5 py-2 bg-[#2F4C3B] hover:bg-[#243b2f] text-white rounded-lg transition"
                 >
                   Clear Filters
                 </button>
@@ -346,7 +346,7 @@ const DeliveryBoyOrdersPage = () => {
         {totalPages > 1 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
 
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-black/60">
               Page {currentPage} of {totalPages}
             </p>
 
@@ -355,7 +355,7 @@ const DeliveryBoyOrdersPage = () => {
               <button
                 onClick={handlePrevious}
                 disabled={currentPage === 1}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-white border border-[#2F4C3B]/20 rounded-lg text-black hover:bg-[#2F4C3B]/5 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 Previous
               </button>
@@ -368,10 +368,10 @@ const DeliveryBoyOrdersPage = () => {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`w-10 h-10 rounded-lg font-medium ${
+                  className={`w-10 h-10 rounded-lg font-medium transition ${
                     currentPage === page
-                      ? "bg-green-600 text-white"
-                      : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                      ? "bg-[#2F4C3B] text-white"
+                      : "bg-white border border-[#2F4C3B]/20 text-black hover:bg-[#2F4C3B]/5"
                   }`}
                 >
                   {page}
@@ -381,7 +381,7 @@ const DeliveryBoyOrdersPage = () => {
               <button
                 onClick={handleNext}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-white border border-[#2F4C3B]/20 rounded-lg text-black hover:bg-[#2F4C3B]/5 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 Next
               </button>

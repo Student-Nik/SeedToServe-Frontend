@@ -6,7 +6,7 @@ const DeliveryBoyDashboardPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-[#FDF8F3] p-4 sm:p-6 lg:p-8">
 
       <div className="max-w-7xl mx-auto space-y-8">
 
@@ -14,16 +14,16 @@ const DeliveryBoyDashboardPage = () => {
         <DeliveryBoyDashboard />
 
         {/* Orders Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-[#2F4C3B]/10 p-6">
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-[#2F4C3B]">
                 My Orders
               </h2>
 
-              <p className="text-gray-500 mt-1">
+              <p className="text-black/70 mt-1">
                 View and manage all your assigned delivery orders.
               </p>
             </div>
@@ -32,7 +32,7 @@ const DeliveryBoyDashboardPage = () => {
               onClick={() =>
                 navigate("/delivery/dashboard/orders")
               }
-              className="px-5 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium"
+              className="px-5 py-3 bg-[#E24A3B] hover:bg-[#c73f31] text-white rounded-lg font-medium transition"
             >
               View All Orders →
             </button>

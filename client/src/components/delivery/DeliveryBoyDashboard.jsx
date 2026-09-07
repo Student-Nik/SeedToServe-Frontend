@@ -2,6 +2,12 @@ import { getDeliveryBoyOrders } from "@/services/deliveryBoyService";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
+const STATUS_STYLES = {
+  ASSIGNED: "bg-[#E8A33D]/15 text-[#E8A33D]",
+  OUT_FOR_DELIVERY: "bg-[#E24A3B]/10 text-[#E24A3B]",
+  DELIVERED: "bg-[#2F4C3B]/10 text-[#2F4C3B]",
+};
+
 const DeliveryBoyDashboard = () => {
   // Get JWT token from Redux
   const { token } = useSelector((state) => state.user);
@@ -56,10 +62,14 @@ const DeliveryBoyDashboard = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-10">
-        <p className="text-gray-500">
-          Loading dashboard...
-        </p>
+      <div className="min-h-[70vh] flex items-center justify-center bg-[#FDF8F3]">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin mx-auto mb-4"></div>
+
+          <p className="text-black text-sm">
+            Loading dashboard...
+          </p>
+        </div>
       </div>
     );
   }
@@ -67,153 +77,178 @@ const DeliveryBoyDashboard = () => {
   // Error state
   if (error) {
     return (
-      <div className="text-center py-10">
-        <p className="text-red-500 mb-4">
-          {error}
-        </p>
+      <div className="min-h-[70vh] flex items-center justify-center bg-[#FDF8F3]">
+        <div className="text-center">
+          <p className="text-black mb-4">
+            {error}
+          </p>
 
-        <button
-          onClick={fetchOrders}
-          className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
-        >
-          Try Again
-        </button>
+          <button
+            onClick={fetchOrders}
+            className="px-5 py-2 bg-[#E24A3B] text-white rounded-lg font-medium hover:bg-[#c73f31] transition"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-[calc(100vh-64px)] bg-[#FDF8F3]">
 
-      {/* Dashboard Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-800">
-          Delivery Dashboard
-        </h1>
+      {/* ================= HEADER ================= */}
+      <div className="border-b border-[#2F4C3B]/10 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
 
-        <p className="text-gray-500 mt-1">
-          Overview of your assigned orders
-        </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+            <div>
+              <p className="text-sm font-semibold text-[#E24A3B] mb-1 tracking-wide">
+                DELIVERY PANEL
+              </p>
+
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2F4C3B]">
+                Dashboard
+              </h1>
+
+              <p className="text-black text-sm mt-1">
+                Overview of your assigned orders
+              </p>
+            </div>
+
+          </div>
+
+        </div>
       </div>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {/* ================= CONTENT ================= */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-        {/* Total Orders */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-          <p className="text-sm text-gray-500">
-            Total Orders
-          </p>
+        {/* ================= STATISTICS ================= */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
-          <h2 className="text-3xl font-bold text-gray-800 mt-2">
-            {totalOrders}
-          </h2>
-        </div>
+          {/* Total Orders */}
+          <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
+            <p className="text-sm font-medium text-black">
+              Total Orders
+            </p>
 
-        {/* Assigned */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-          <p className="text-sm text-gray-500">
-            Assigned
-          </p>
-
-          <h2 className="text-3xl font-bold text-yellow-600 mt-2">
-            {assignedOrders}
-          </h2>
-        </div>
-
-        {/* Out for Delivery */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-          <p className="text-sm text-gray-500">
-            Out for Delivery
-          </p>
-
-          <h2 className="text-3xl font-bold text-blue-600 mt-2">
-            {outForDeliveryOrders}
-          </h2>
-        </div>
-
-        {/* Delivered */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-          <p className="text-sm text-gray-500">
-            Delivered
-          </p>
-
-          <h2 className="text-3xl font-bold text-green-600 mt-2">
-            {deliveredOrders}
-          </h2>
-        </div>
-
-      </div>
-
-      {/* Recent Orders */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-
-        <div className="flex justify-between items-center mb-5">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-800">
-              Recent Orders
+            <h2 className="text-3xl font-extrabold text-[#2F4C3B] mt-2">
+              {totalOrders}
             </h2>
-
-            <p className="text-sm text-gray-500 mt-1">
-              Your latest assigned orders
-            </p>
           </div>
 
-          <button
-            onClick={fetchOrders}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50"
-          >
-            Refresh
-          </button>
+          {/* Assigned */}
+          <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
+            <p className="text-sm font-medium text-black">
+              Assigned
+            </p>
+
+            <h2 className="text-3xl font-extrabold text-[#E8A33D] mt-2">
+              {assignedOrders}
+            </h2>
+          </div>
+
+          {/* Out for Delivery */}
+          <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
+            <p className="text-sm font-medium text-black">
+              Out for Delivery
+            </p>
+
+            <h2 className="text-3xl font-extrabold text-[#E24A3B] mt-2">
+              {outForDeliveryOrders}
+            </h2>
+          </div>
+
+          {/* Delivered */}
+          <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
+            <p className="text-sm font-medium text-black">
+              Delivered
+            </p>
+
+            <h2 className="text-3xl font-extrabold text-[#2F4C3B] mt-2">
+              {deliveredOrders}
+            </h2>
+          </div>
+
         </div>
 
-        {orders.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-gray-500">
-              No orders assigned to you.
-            </p>
+        {/* ================= RECENT ORDERS ================= */}
+        <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-6 shadow-sm">
+
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-5">
+            <div>
+              <h2 className="text-lg font-bold text-[#2F4C3B]">
+                Recent Orders
+              </h2>
+
+              <p className="text-sm text-black mt-1">
+                Your latest assigned orders
+              </p>
+            </div>
+
+            <button
+              onClick={fetchOrders}
+              className="px-4 py-2 border border-[#2F4C3B]/20 rounded-lg text-sm font-medium text-[#2F4C3B] hover:bg-[#FDF8F3] transition"
+            >
+              Refresh
+            </button>
           </div>
-        ) : (
-          <div className="space-y-3">
 
-            {orders.slice(0, 5).map((order) => (
-              <div
-                key={order.orderId}
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b last:border-b-0 pb-3 last:pb-0"
-              >
+          {orders.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-black">
+                No orders assigned to you.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
 
-                {/* Order Information */}
-                <div>
-                  <p className="font-medium text-gray-800">
-                    Order #{order.orderId}
-                  </p>
+              {orders.slice(0, 5).map((order) => (
+                <div
+                  key={order.orderId}
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#2F4C3B]/10 last:border-b-0 pb-3 last:pb-0"
+                >
 
-                  <p className="text-sm text-gray-500">
-                    {order.customerName}
-                  </p>
+                  {/* Order Information */}
+                  <div>
+                    <p className="font-medium text-black">
+                      Order #{order.orderId}
+                    </p>
+
+                    <p className="text-sm text-black/60">
+                      {order.customerName}
+                    </p>
+                  </div>
+
+                  {/* Amount and Status */}
+                  <div className="flex items-center gap-4">
+
+                    <span className="font-medium text-[#2F4C3B]">
+                      ₹{order.totalAmount}
+                    </span>
+
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        STATUS_STYLES[order.orderStatus] ||
+                        "bg-[#2F4C3B]/10 text-[#2F4C3B]"
+                      }`}
+                    >
+                      {order.orderStatus}
+                    </span>
+
+                  </div>
+
                 </div>
+              ))}
 
-                {/* Amount and Status */}
-                <div className="flex items-center gap-4">
+            </div>
+          )}
 
-                  <span className="font-medium text-gray-700">
-                    ₹{order.totalAmount}
-                  </span>
-
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                    {order.orderStatus}
-                  </span>
-
-                </div>
-
-              </div>
-            ))}
-
-          </div>
-        )}
+        </div>
 
       </div>
-
     </div>
   );
 };

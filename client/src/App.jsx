@@ -54,20 +54,20 @@ const App = () => {
 
         {/*Admin Routes*/}
         <Route element={<OnlyAdminAllowed />}>
-          <Route element={<AdminLayout />}>
-            <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
 
             {/* <Route
               path="/admin/profile"
               element={<AdminProfile />}
             /> */}
 
-            <Route path="/admin/orders" element={<AdminOrders />} />
+            <Route path="orders" element={<AdminOrders />} />
 
-            <Route path="/admin/orders/:id" element={<AdminOrderDetails />} />
+            <Route path="orders/:id" element={<AdminOrderDetails />} />
 
             <Route
-              path="/admin/delivery-boys"
+              path="delivery-boys"
               element={<AdminDeliveryBoys />}
             />
           </Route>

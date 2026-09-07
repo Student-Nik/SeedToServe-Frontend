@@ -5,33 +5,33 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
   const getStatusClass = (status) => {
     switch (status) {
       case "ASSIGNED":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-[#E8A33D]/15 text-[#E8A33D]";
 
       case "OUT_FOR_DELIVERY":
-        return "bg-blue-100 text-blue-700";
+        return "bg-[#E24A3B]/10 text-[#E24A3B]";
 
       case "DELIVERED":
-        return "bg-green-100 text-green-700";
+        return "bg-[#2F4C3B]/10 text-[#2F4C3B]";
 
       case "CANCELLED":
         return "bg-red-100 text-red-700";
 
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-[#2F4C3B]/10 text-black";
     }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-[#2F4C3B]/10 p-6">
 
       {/* Header */}
       <div className="flex justify-between items-center mb-5">
         <div>
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-[#2F4C3B]">
             Order #{order.orderId}
           </h2>
 
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-black/60 mt-1">
             {new Date(order.orderDate).toLocaleString()}
           </p>
         </div>
@@ -47,16 +47,16 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
 
       {/* Customer Details */}
       <div className="mb-5">
-        <h3 className="font-semibold text-gray-700 mb-2">
+        <h3 className="font-semibold text-[#2F4C3B] mb-2">
           Customer Details
         </h3>
 
-        <p className="text-gray-600">
+        <p className="text-black">
           <span className="font-medium">Name:</span>{" "}
           {order.customerName}
         </p>
 
-        <p className="text-gray-600 mt-1">
+        <p className="text-black mt-1">
           <span className="font-medium">Address:</span>{" "}
           {order.address}
         </p>
@@ -64,7 +64,7 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
 
       {/* Products */}
       <div className="mb-5">
-        <h3 className="font-semibold text-gray-700 mb-3">
+        <h3 className="font-semibold text-[#2F4C3B] mb-3">
           Order Items
         </h3>
 
@@ -72,18 +72,18 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
           {order.items?.map((item, index) => (
             <div
               key={index}
-              className="flex items-center gap-4 border-b pb-3"
+              className="flex items-center gap-4 border-b border-[#2F4C3B]/10 pb-3"
             >
               {/* Product Image */}
               {item.productImage ? (
                 <img
                   src={`data:image/jpeg;base64,${item.productImage}`}
                   alt={item.productName}
-                  className="w-16 h-16 object-cover rounded-lg border"
+                  className="w-16 h-16 object-cover rounded-lg border border-[#2F4C3B]/10"
                 />
               ) : (
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-xs text-gray-400">
+                <div className="w-16 h-16 bg-[#FDF8F3] rounded-lg flex items-center justify-center">
+                  <span className="text-xs text-black/40">
                     No Image
                   </span>
                 </div>
@@ -91,17 +91,17 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
 
               {/* Product Information */}
               <div className="flex-1">
-                <p className="font-medium text-gray-800">
+                <p className="font-medium text-black">
                   {item.productName}
                 </p>
 
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-black/60">
                   Quantity: {item.quantity}
                 </p>
               </div>
 
               {/* Product Price */}
-              <p className="font-medium text-gray-700">
+              <p className="font-medium text-[#2F4C3B]">
                 ₹{item.price}
               </p>
             </div>
@@ -110,28 +110,28 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
       </div>
 
       {/* Payment Details */}
-      <div className="border-t pt-4 mb-5">
+      <div className="border-t border-[#2F4C3B]/10 pt-4 mb-5">
 
         <div className="flex justify-between mb-2">
-          <span className="text-gray-600">
+          <span className="text-black/70">
             Payment Method
           </span>
 
-          <span className="font-medium">
+          <span className="font-medium text-black">
             {order.paymentMethod}
           </span>
         </div>
 
         <div className="flex justify-between mb-2">
-          <span className="text-gray-600">
+          <span className="text-black/70">
             Payment Status
           </span>
 
           <span
             className={
               order.paymentStatus === "PAID"
-                ? "text-green-600 font-medium"
-                : "text-orange-600 font-medium"
+                ? "text-[#2F4C3B] font-medium"
+                : "text-[#E8A33D] font-medium"
             }
           >
             {order.paymentStatus}
@@ -139,7 +139,7 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
         </div>
 
         {/* Total */}
-        <div className="flex justify-between text-lg font-semibold mt-3">
+        <div className="flex justify-between text-lg font-semibold mt-3 text-[#2F4C3B]">
           <span>Total</span>
 
           <span>
