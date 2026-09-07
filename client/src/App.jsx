@@ -23,6 +23,12 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import OrderPage from "./pages/OrderPage";
 import PaymentPage from "./pages/PaymentPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
+import OnlyAdminAllowed from "./components/OnlyAdminAllowed";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminOrderDetails from "./pages/admin/AdminOrderDetails";
+import AdminDeliveryBoys from "./pages/admin/AdminDeliveryBoys";
 
 const App = () => {
   return (
@@ -39,12 +45,22 @@ const App = () => {
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
-
         {/* Farmer Routes */}
         <Route element={<OnlyFarmerAllowed />}>
           <Route path="/farmer-popup" element={<FarmerPopup />} />
           <Route path="/addcategory" element={<AddCategory />} />
           <Route path="/addproducts" element={<AddProduct />} />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route element={<OnlyAdminAllowed />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+            {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
+            <Route path="/admin/orders" element={<AdminOrders />} />
+            <Route path="/admin/orders/:id" element={<AdminOrderDetails />} />
+            <Route path="/admin/delivery-boys" element={<AdminDeliveryBoys />} />
+          </Route>
         </Route>
 
         {/* User Dashboard */}

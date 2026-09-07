@@ -75,7 +75,7 @@ const onSubmit = async (values) => {
     console.log("LOGIN RESPONSE:", result);
 
     if (!response.ok) {
-      return showToast("error", "Login failed");
+      return showToast("error", result.message || "Login failed");
     }
 
     const { token, username, role } = result;
@@ -93,14 +93,20 @@ const onSubmit = async (values) => {
       result.message || "Login successful!"
     );
 
+    // ROLE-BASED REDIRECTION
     if (role === "FARMER") {
       navigate("/farmer-popup");
-    } else {
+    } else if (role === "ADMIN") {
+      navigate("/admin");
+    } else if (role === "BUYER") {
       navigate("/dashboard");
+    } else {
+      showToast("error", "Invalid user role");
     }
 
-  } catch(err) {
-    showToast("invalid credentials");
+  } catch (err) {
+    console.error("Login error:", err);
+    showToast("error", "Invalid credentials");
   } finally {
     setLoading(false);
   }
