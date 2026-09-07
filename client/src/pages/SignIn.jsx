@@ -55,6 +55,7 @@ const SignIn = () => {
     },
   });
 
+
 const onSubmit = async (values) => {
   setLoading(true);
 
@@ -78,11 +79,15 @@ const onSubmit = async (values) => {
       return showToast("error", result.message || "Login failed");
     }
 
-    const { token, username, role } = result;
+    const { token, username, role, userId } = result;
 
+    // Store logged-in user in Redux
     dispatch(
       setUser({
-        user: { username },
+        user: {
+          username,
+          userId,
+        },
         role,
         token,
       })
@@ -98,6 +103,8 @@ const onSubmit = async (values) => {
       navigate("/farmer-popup");
     } else if (role === "ADMIN") {
       navigate("/admin");
+    } else if (role === "DELIVERY_BOY") {
+      navigate("/delivery/dashboard");
     } else if (role === "BUYER") {
       navigate("/dashboard");
     } else {
@@ -111,6 +118,8 @@ const onSubmit = async (values) => {
     setLoading(false);
   }
 };
+
+
 
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white">
