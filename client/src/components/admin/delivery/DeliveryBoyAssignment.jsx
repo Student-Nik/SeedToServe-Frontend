@@ -263,11 +263,11 @@ const DeliveryBoyAssignment = ({ orderId }) => {
 
   if (loading) {
     return (
-      <div className="mt-6 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+      <div className="mt-6 bg-[#FDF8F3] rounded-2xl border border-[#2F4C3B]/10 shadow-sm p-6">
         <div className="flex items-center justify-center py-8">
-          <div className="w-8 h-8 border-4 border-gray-200 border-t-[#E24A3B] rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin"></div>
 
-          <span className="ml-3 text-sm text-gray-500">
+          <span className="ml-3 text-sm text-[#2F4C3B]/60">
             Loading delivery boys...
           </span>
         </div>
@@ -280,31 +280,31 @@ const DeliveryBoyAssignment = ({ orderId }) => {
   // =========================================
 
   return (
-    <div className="mt-6 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="mt-6 bg-[#FDF8F3] rounded-2xl border border-[#2F4C3B]/10 shadow-sm overflow-hidden">
 
       {/* HEADER */}
-      <div className="px-5 sm:px-6 py-5 border-b border-gray-100">
+      <div className="px-5 sm:px-6 py-5 border-b border-[#2F4C3B]/10">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
           <div className="flex items-center gap-3">
 
-            <div className="w-11 h-11 rounded-xl bg-orange-100 flex items-center justify-center">
-              <FaTruck className="text-orange-600" />
+            <div className="w-11 h-11 rounded-xl bg-[#E8A33D]/15 flex items-center justify-center">
+              <FaTruck className="text-[#E8A33D]" />
             </div>
 
             <div>
-              <h2 className="text-lg font-bold text-[#1C1C1C]">
+              <h2 className="text-lg font-bold text-[#2F4C3B]">
                 Delivery Assignment
               </h2>
 
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-[#2F4C3B]/60">
                 Select a delivery boy for Order #{orderId}
               </p>
             </div>
 
           </div>
 
-          <span className="text-xs font-medium text-gray-500">
+          <span className="text-xs font-medium text-[#2F4C3B]/60">
             {deliveryBoys.length} Delivery Boy
             {deliveryBoys.length !== 1 ? "s" : ""}
           </span>
@@ -319,13 +319,13 @@ const DeliveryBoyAssignment = ({ orderId }) => {
 
           <div className="text-center py-8">
 
-            <FaTruck className="mx-auto text-4xl text-gray-300" />
+            <FaTruck className="mx-auto text-4xl text-[#2F4C3B]/20" />
 
-            <h3 className="mt-4 text-base font-semibold text-[#1C1C1C]">
+            <h3 className="mt-4 text-base font-semibold text-[#2F4C3B]">
               No Delivery Boys Found
             </h3>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-[#2F4C3B]/60">
               Please add a delivery boy before assigning an order.
             </p>
 
@@ -365,10 +365,10 @@ const DeliveryBoyAssignment = ({ orderId }) => {
                     }}
                     className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
                       isSelected
-                        ? "border-[#E24A3B] bg-red-50 cursor-pointer"
+                        ? "border-[#E24A3B] bg-[#E24A3B]/5 cursor-pointer"
                         : isAvailable
-                        ? "border-gray-100 bg-gray-50 hover:border-[#E24A3B]/60 hover:bg-red-50 cursor-pointer"
-                        : "border-gray-100 bg-gray-100 opacity-60 cursor-not-allowed"
+                        ? "border-[#2F4C3B]/10 bg-[#2F4C3B]/[0.03] hover:border-[#E24A3B]/60 hover:bg-[#E24A3B]/5 cursor-pointer"
+                        : "border-[#2F4C3B]/10 bg-[#2F4C3B]/5 opacity-60 cursor-not-allowed"
                     }`}
                   >
 
@@ -381,7 +381,7 @@ const DeliveryBoyAssignment = ({ orderId }) => {
                           className={`w-11 h-11 flex-shrink-0 rounded-full flex items-center justify-center ${
                             isAvailable
                               ? "bg-[#E24A3B]/10 text-[#E24A3B]"
-                              : "bg-gray-200 text-gray-400"
+                              : "bg-[#2F4C3B]/10 text-[#2F4C3B]/40"
                           }`}
                         >
                           <FaUser />
@@ -389,22 +389,22 @@ const DeliveryBoyAssignment = ({ orderId }) => {
 
                         <div className="min-w-0">
 
-                          <h3 className="font-semibold text-[#1C1C1C] truncate">
+                          <h3 className="font-semibold text-[#2F4C3B] truncate">
                             {boy.firstName} {boy.lastName}
                           </h3>
 
                           <div className="flex items-center gap-2 mt-1">
-                            <FaPhone className="text-xs text-gray-400" />
+                            <FaPhone className="text-xs text-[#2F4C3B]/40" />
 
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-[#2F4C3B]/60">
                               {boy.mobileNo || "N/A"}
                             </span>
                           </div>
 
                           <div className="flex items-center gap-2 mt-1">
-                            <FaEnvelope className="text-xs text-gray-400" />
+                            <FaEnvelope className="text-xs text-[#2F4C3B]/40" />
 
-                            <span className="text-xs text-gray-500 truncate">
+                            <span className="text-xs text-[#2F4C3B]/60 truncate">
                               {boy.email || "N/A"}
                             </span>
                           </div>
@@ -418,14 +418,14 @@ const DeliveryBoyAssignment = ({ orderId }) => {
 
                         {isAvailable ? (
 
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-semibold">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#2F4C3B]/10 text-[#2F4C3B] text-[10px] font-semibold">
                             <FaCheckCircle />
                             Available
                           </span>
 
                         ) : (
 
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-200 text-gray-500 text-[10px] font-semibold">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#2F4C3B]/10 text-[#2F4C3B]/50 text-[10px] font-semibold">
                             <FaTimesCircle />
                             Busy
                           </span>
@@ -439,7 +439,7 @@ const DeliveryBoyAssignment = ({ orderId }) => {
                     {/* SELECTED */}
                     {isSelected && (
 
-                      <div className="mt-3 pt-3 border-t border-red-200">
+                      <div className="mt-3 pt-3 border-t border-[#E24A3B]/20">
 
                         <span className="text-xs font-semibold text-[#E24A3B]">
                           ✓ Selected for this order
@@ -460,7 +460,7 @@ const DeliveryBoyAssignment = ({ orderId }) => {
             {/* ASSIGN BUTTON */}
             <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
-              <p className="text-xs sm:text-sm text-gray-500">
+              <p className="text-xs sm:text-sm text-[#2F4C3B]/60">
                 Select an available delivery boy and assign them to this order.
               </p>
 

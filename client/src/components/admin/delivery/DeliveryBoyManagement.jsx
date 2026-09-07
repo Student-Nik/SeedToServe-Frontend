@@ -152,20 +152,20 @@ const DeliveryBoyManagement = () => {
       {/* =========================
           ADD DELIVERY BOY FORM
       ========================= */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-[#FDF8F3] rounded-2xl border border-[#2F4C3B]/10 shadow-sm overflow-hidden">
         {/* Header */}
-        <div className="px-5 sm:px-6 py-5 border-b border-gray-100">
+        <div className="px-5 sm:px-6 py-5 border-b border-[#2F4C3B]/10">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-red-100 flex items-center justify-center">
+            <div className="w-11 h-11 rounded-xl bg-[#E24A3B]/10 flex items-center justify-center">
               <FaUserPlus className="text-[#E24A3B] text-lg" />
             </div>
 
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-[#1C1C1C]">
+              <h2 className="text-lg sm:text-xl font-bold text-[#2F4C3B]">
                 Add Delivery Boy
               </h2>
 
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-[#2F4C3B]/60 mt-1">
                 Add a new delivery boy to your delivery team
               </p>
             </div>
@@ -177,12 +177,12 @@ const DeliveryBoyManagement = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* First Name */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#2F4C3B] mb-2">
                 First Name
               </label>
 
               <div className="relative">
-                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2F4C3B]/40" />
 
                 <input
                   type="text"
@@ -190,19 +190,19 @@ const DeliveryBoyManagement = () => {
                   value={formData.firstName}
                   onChange={handleChange}
                   placeholder="Enter first name"
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E24A3B]/20 focus:border-[#E24A3B] transition"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#2F4C3B]/15 rounded-lg text-sm text-[#2F4C3B] placeholder:text-[#2F4C3B]/35 focus:outline-none focus:ring-2 focus:ring-[#E24A3B]/20 focus:border-[#E24A3B] transition"
                 />
               </div>
             </div>
 
             {/* Last Name */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#2F4C3B] mb-2">
                 Last Name
               </label>
 
               <div className="relative">
-                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2F4C3B]/40" />
 
                 <input
                   type="text"
@@ -210,19 +210,19 @@ const DeliveryBoyManagement = () => {
                   value={formData.lastName}
                   onChange={handleChange}
                   placeholder="Enter last name"
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E24A3B]/20 focus:border-[#E24A3B] transition"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#2F4C3B]/15 rounded-lg text-sm text-[#2F4C3B] placeholder:text-[#2F4C3B]/35 focus:outline-none focus:ring-2 focus:ring-[#E24A3B]/20 focus:border-[#E24A3B] transition"
                 />
               </div>
             </div>
 
             {/* Mobile Number */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#2F4C3B] mb-2">
                 Mobile Number
               </label>
 
               <div className="relative">
-                <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2F4C3B]/40" />
 
                 <input
                   type="tel"
@@ -230,19 +230,19 @@ const DeliveryBoyManagement = () => {
                   value={formData.mobileNo}
                   onChange={handleChange}
                   placeholder="Enter mobile number"
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E24A3B]/20 focus:border-[#E24A3B] transition"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#2F4C3B]/15 rounded-lg text-sm text-[#2F4C3B] placeholder:text-[#2F4C3B]/35 focus:outline-none focus:ring-2 focus:ring-[#E24A3B]/20 focus:border-[#E24A3B] transition"
                 />
               </div>
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#2F4C3B] mb-2">
                 Email
               </label>
 
               <div className="relative">
-                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2F4C3B]/40" />
 
                 <input
                   type="email"
@@ -250,7 +250,7 @@ const DeliveryBoyManagement = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter email address"
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E24A3B]/20 focus:border-[#E24A3B] transition"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-[#2F4C3B]/15 rounded-lg text-sm text-[#2F4C3B] placeholder:text-[#2F4C3B]/35 focus:outline-none focus:ring-2 focus:ring-[#E24A3B]/20 focus:border-[#E24A3B] transition"
                 />
               </div>
             </div>
@@ -282,27 +282,27 @@ const DeliveryBoyManagement = () => {
       {/* =========================
           ALL DELIVERY BOYS
       ========================= */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-[#FDF8F3] rounded-2xl border border-[#2F4C3B]/10 shadow-sm overflow-hidden">
         {/* Header */}
-        <div className="px-5 sm:px-6 py-5 border-b border-gray-100">
+        <div className="px-5 sm:px-6 py-5 border-b border-[#2F4C3B]/10">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-orange-100 flex items-center justify-center">
-                <FaTruck className="text-orange-600 text-lg" />
+              <div className="w-11 h-11 rounded-xl bg-[#E8A33D]/15 flex items-center justify-center">
+                <FaTruck className="text-[#E8A33D] text-lg" />
               </div>
 
               <div>
-                <h2 className="text-lg sm:text-xl font-bold text-[#1C1C1C]">
+                <h2 className="text-lg sm:text-xl font-bold text-[#2F4C3B]">
                   All Delivery Boys
                 </h2>
 
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-[#2F4C3B]/60 mt-1">
                   Manage your delivery team
                 </p>
               </div>
             </div>
 
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-[#2F4C3B]/60">
               {deliveryBoys.length} member
               {deliveryBoys.length !== 1 ? "s" : ""}
             </span>
@@ -312,24 +312,24 @@ const DeliveryBoyManagement = () => {
         {/* Loading */}
         {loading ? (
           <div className="py-12 flex flex-col items-center justify-center">
-            <div className="w-9 h-9 border-4 border-gray-200 border-t-[#E24A3B] rounded-full animate-spin"></div>
+            <div className="w-9 h-9 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin"></div>
 
-            <p className="mt-4 text-sm text-gray-500">
+            <p className="mt-4 text-sm text-[#2F4C3B]/60">
               Loading delivery boys...
             </p>
           </div>
         ) : deliveryBoys.length === 0 ? (
           /* Empty State */
           <div className="py-12 px-5 text-center">
-            <div className="w-16 h-16 mx-auto rounded-full bg-gray-100 flex items-center justify-center">
-              <FaTruck className="text-2xl text-gray-400" />
+            <div className="w-16 h-16 mx-auto rounded-full bg-[#2F4C3B]/10 flex items-center justify-center">
+              <FaTruck className="text-2xl text-[#2F4C3B]/40" />
             </div>
 
-            <h3 className="mt-4 text-lg font-semibold text-[#1C1C1C]">
+            <h3 className="mt-4 text-lg font-semibold text-[#2F4C3B]">
               No Delivery Boys Found
             </h3>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-[#2F4C3B]/60">
               Add your first delivery boy using the form above.
             </p>
           </div>
@@ -339,24 +339,24 @@ const DeliveryBoyManagement = () => {
             <div className="overflow-x-auto">
               <table className="w-full min-w-[850px]">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <tr className="bg-[#2F4C3B]/5 border-b border-[#2F4C3B]/10">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
                       ID
                     </th>
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
                       Name
                     </th>
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
                       Mobile
                     </th>
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
                       Email
                     </th>
 
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
                       Status
                     </th>
                   </tr>
@@ -366,11 +366,11 @@ const DeliveryBoyManagement = () => {
                   {deliveryBoys.map((boy) => (
                     <tr
                       key={boy.id}
-                      className="border-b border-gray-100 hover:bg-gray-50 transition"
+                      className="border-b border-[#2F4C3B]/10 hover:bg-[#2F4C3B]/5 transition"
                     >
                       {/* ID */}
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="font-semibold text-[#1C1C1C]">
+                        <span className="font-semibold text-[#2F4C3B]">
                           #{boy.id}
                         </span>
                       </td>
@@ -381,19 +381,19 @@ const DeliveryBoyManagement = () => {
                           <div
                             className={`w-10 h-10 rounded-full flex items-center justify-center ${
                               boy.available
-                                ? "bg-red-100 text-[#E24A3B]"
-                                : "bg-gray-100 text-gray-400"
+                                ? "bg-[#E24A3B]/10 text-[#E24A3B]"
+                                : "bg-[#2F4C3B]/10 text-[#2F4C3B]/40"
                             }`}
                           >
                             <FaUser />
                           </div>
 
                           <div>
-                            <p className="font-semibold text-[#1C1C1C]">
+                            <p className="font-semibold text-[#2F4C3B]">
                               {boy.firstName} {boy.lastName}
                             </p>
 
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-[#2F4C3B]/50">
                               Delivery Boy
                             </p>
                           </div>
@@ -403,16 +403,16 @@ const DeliveryBoyManagement = () => {
 
                       {/* Mobile */}
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <FaPhone className="text-gray-400 text-xs" />
+                        <div className="flex items-center gap-2 text-sm text-[#2F4C3B]/70">
+                          <FaPhone className="text-[#2F4C3B]/40 text-xs" />
                           {boy.mobileNo || "N/A"}
                         </div>
                       </td>
 
                       {/* Email */}
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <FaEnvelope className="text-gray-400 text-xs" />
+                        <div className="flex items-center gap-2 text-sm text-[#2F4C3B]/70">
+                          <FaEnvelope className="text-[#2F4C3B]/40 text-xs" />
                           {boy.email || "N/A"}
                         </div>
                       </td>
@@ -420,12 +420,12 @@ const DeliveryBoyManagement = () => {
                       {/* Status */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         {boy.available ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#2F4C3B]/10 text-[#2F4C3B] text-xs font-semibold">
                             <FaCheckCircle />
                             Available
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#2F4C3B]/10 text-[#2F4C3B]/50 text-xs font-semibold">
                             <FaTimesCircle />
                             Busy
                           </span>
@@ -438,8 +438,8 @@ const DeliveryBoyManagement = () => {
             </div>
 
             {/* Mobile hint */}
-            <div className="block sm:hidden px-4 py-3 bg-gray-50 border-t border-gray-100">
-              <p className="text-xs text-gray-500 text-center">
+            <div className="block sm:hidden px-4 py-3 bg-[#2F4C3B]/5 border-t border-[#2F4C3B]/10">
+              <p className="text-xs text-[#2F4C3B]/60 text-center">
                 ← Swipe horizontally to view all delivery boy details →
               </p>
             </div>

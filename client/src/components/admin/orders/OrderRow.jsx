@@ -22,31 +22,31 @@ const OrderRow = ({ order }) => {
   };
 
   return (
-    <tr className="border-b border-gray-100 hover:bg-gray-50 transition">
+    <tr className="border-b border-[#2F4C3B]/10 hover:bg-[#2F4C3B]/5 transition">
       {/* Order ID */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="font-semibold text-[#1C1C1C]">
+        <span className="font-semibold text-[#2F4C3B]">
           #{order.orderId}
         </span>
       </td>
 
       {/* Customer */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-gray-700 font-medium">
+        <span className="text-[#2F4C3B]/80 font-medium">
           {order.customerName || "N/A"}
         </span>
       </td>
 
       {/* Amount */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="font-semibold text-[#1C1C1C]">
+        <span className="font-semibold text-[#2F4C3B]">
           ₹{Number(order.totalAmount || 0).toFixed(2)}
         </span>
       </td>
 
       {/* Payment Method */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-[#2F4C3B]/70">
           {order.paymentMethod === "CASH_ON_DELIVERY"
             ? "Cash on Delivery"
             : order.paymentMethod || "N/A"}
@@ -58,10 +58,10 @@ const OrderRow = ({ order }) => {
         <span
           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
             order.paymentStatus === "PAID"
-              ? "bg-green-100 text-green-700"
+              ? "bg-[#2F4C3B]/10 text-[#2F4C3B]"
               : order.paymentStatus === "PENDING"
-              ? "bg-yellow-100 text-yellow-700"
-              : "bg-gray-100 text-gray-700"
+              ? "bg-[#E8A33D]/15 text-[#E8A33D]"
+              : "bg-[#2F4C3B]/10 text-[#2F4C3B]/60"
           }`}
         >
           {order.paymentStatus || "UNKNOWN"}
@@ -75,7 +75,7 @@ const OrderRow = ({ order }) => {
 
       {/* Order Date */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-[#2F4C3B]/60">
           {formatDate(order.orderDate)}
         </span>
       </td>

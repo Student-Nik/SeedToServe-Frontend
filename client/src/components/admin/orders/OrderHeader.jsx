@@ -5,11 +5,11 @@ const OrderHeader = ({ onRefresh, loading }) => {
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       {/* Page Title */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#1C1C1C]">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#2F4C3B]">
           Orders
         </h1>
 
-        <p className="text-sm sm:text-base text-gray-500 mt-1">
+        <p className="text-sm sm:text-base text-[#2F4C3B]/60 mt-1">
           Manage and monitor all customer orders
         </p>
       </div>

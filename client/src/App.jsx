@@ -44,7 +44,7 @@ const App = () => {
       </Route>
 
       {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
+      {/* <Route element={<ProtectedRoute />}> */}
         {/* Farmer Routes */}
         <Route element={<OnlyFarmerAllowed />}>
           <Route path="/farmer-popup" element={<FarmerPopup />} />
@@ -53,7 +53,7 @@ const App = () => {
         </Route>
 
         {/* Admin Routes */}
-        <Route element={<OnlyAdminAllowed />}>
+        {/* <Route element={<OnlyAdminAllowed />}> */}
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminDashboard />} />
             {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
@@ -61,7 +61,7 @@ const App = () => {
             <Route path="/admin/orders/:id" element={<AdminOrderDetails />} />
             <Route path="/admin/delivery-boys" element={<AdminDeliveryBoys />} />
           </Route>
-        </Route>
+        {/* </Route> */}
 
         {/* User Dashboard */}
         <Route path="/dashboard" element={<UserLayout />}>
@@ -73,7 +73,7 @@ const App = () => {
           <Route path="payment" element={<PaymentPage />} />
           <Route path="order-details" element={<OrderDetailsPage />} />
         </Route>
-      </Route>
+      {/* </Route> */}
     </Routes>
   );
 };

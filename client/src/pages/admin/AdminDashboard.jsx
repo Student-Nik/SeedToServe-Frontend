@@ -59,11 +59,11 @@ const AdminDashboard = () => {
   // ================= LOADING =================
   if (loading) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50">
+      <div className="min-h-[70vh] flex items-center justify-center bg-[#FDF8F3]">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-gray-200 border-t-[#E24A3B] rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-10 h-10 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin mx-auto mb-4"></div>
 
-          <p className="text-gray-500 text-sm">
+          <p className="text-[#2F4C3B]/60 text-sm">
             Loading dashboard...
           </p>
         </div>
@@ -74,9 +74,9 @@ const AdminDashboard = () => {
   // ================= ERROR / NO DATA =================
   if (!dashboard) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50">
+      <div className="min-h-[70vh] flex items-center justify-center bg-[#FDF8F3]">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">
+          <p className="text-[#2F4C3B]/70 mb-4">
             Unable to load dashboard data.
           </p>
 
@@ -141,29 +141,29 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gray-50">
+    <div className="min-h-[calc(100vh-64px)] bg-[#FDF8F3]">
 
       {/* ================= HEADER ================= */}
-      <div className="border-b border-gray-200 bg-white">
+      <div className="border-b border-[#2F4C3B]/10 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
             <div>
-              <p className="text-sm font-semibold text-[#E24A3B] mb-1">
+              <p className="text-sm font-semibold text-[#E24A3B] mb-1 tracking-wide">
                 ADMIN PANEL
               </p>
 
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1C1C1C]">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2F4C3B]">
                 Dashboard
               </h1>
 
-              <p className="text-gray-500 text-sm mt-1">
+              <p className="text-[#2F4C3B]/60 text-sm mt-1">
                 Overview of your SeedToServe platform
               </p>
             </div>
 
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm font-medium text-[#2F4C3B]/70">
               <FaSeedling className="text-[#E24A3B]" />
               SeedToServe
             </div>
@@ -185,16 +185,16 @@ const AdminDashboard = () => {
             return (
               <div
                 key={item.title}
-                className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition duration-200"
+                className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200"
               >
                 <div className="flex items-start justify-between">
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500">
+                    <p className="text-sm font-medium text-[#2F4C3B]/60">
                       {item.title}
                     </p>
 
-                    <h2 className="text-3xl font-extrabold text-[#1C1C1C] mt-2">
+                    <h2 className="text-3xl font-extrabold text-[#2F4C3B] mt-2">
                       {item.value}
                     </h2>
                   </div>
@@ -205,7 +205,7 @@ const AdminDashboard = () => {
 
                 </div>
 
-                <p className="text-xs text-gray-400 mt-4">
+                <p className="text-xs text-[#2F4C3B]/40 mt-4">
                   {item.description}
                 </p>
               </div>
@@ -218,11 +218,11 @@ const AdminDashboard = () => {
         <div className="mt-8">
 
           <div className="mb-4">
-            <h2 className="text-xl font-bold text-[#1C1C1C]">
+            <h2 className="text-xl font-bold text-[#2F4C3B]">
               Order Overview
             </h2>
 
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-[#2F4C3B]/60 mt-1">
               Current order status across the platform
             </p>
           </div>
@@ -235,27 +235,27 @@ const AdminDashboard = () => {
               return (
                 <div
                   key={item.title}
-                  className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition duration-200"
+                  className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200"
                 >
                   <div className="flex items-center gap-4">
 
-                    <div className="w-12 h-12 rounded-full bg-[#E24A3B]/10 flex items-center justify-center">
-                      <Icon className="text-[#E24A3B] text-lg" />
+                    <div className="w-12 h-12 rounded-full bg-[#E8A33D]/15 flex items-center justify-center">
+                      <Icon className="text-[#E8A33D] text-lg" />
                     </div>
 
                     <div>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-[#2F4C3B]/60">
                         {item.title}
                       </p>
 
-                      <p className="text-2xl font-extrabold text-[#1C1C1C]">
+                      <p className="text-2xl font-extrabold text-[#2F4C3B]">
                         {item.value}
                       </p>
                     </div>
 
                   </div>
 
-                  <p className="text-xs text-gray-400 mt-4">
+                  <p className="text-xs text-[#2F4C3B]/40 mt-4">
                     {item.description}
                   </p>
                 </div>
@@ -269,12 +269,12 @@ const AdminDashboard = () => {
         {/* ================= REVENUE ================= */}
         <div className="mt-8">
 
-          <div className="bg-[#1C1C1C] rounded-2xl p-6 sm:p-8 text-white shadow-md">
+          <div className="bg-[#2F4C3B] rounded-2xl p-6 sm:p-8 text-white shadow-md">
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 
               <div>
-                <p className="text-sm text-gray-400 font-medium">
+                <p className="text-sm text-white/60 font-medium tracking-wide">
                   TOTAL REVENUE
                 </p>
 
@@ -282,7 +282,7 @@ const AdminDashboard = () => {
                   ₹{Number(dashboard.totalRevenue || 0).toFixed(2)}
                 </h2>
 
-                <p className="text-sm text-gray-400 mt-2">
+                <p className="text-sm text-white/60 mt-2">
                   Revenue generated from completed orders
                 </p>
               </div>

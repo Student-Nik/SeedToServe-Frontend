@@ -4,28 +4,28 @@ const OrderStatusBadge = ({ status }) => {
   const getStatusStyle = () => {
     switch (status) {
       case "PLACED":
-        return "bg-blue-100 text-blue-700";
+        return "bg-[#2F4C3B]/10 text-[#2F4C3B]";
 
       case "CONFIRMED":
-        return "bg-indigo-100 text-indigo-700";
+        return "bg-[#2F4C3B]/15 text-[#2F4C3B] border border-[#2F4C3B]/20";
 
       case "SHIPPED":
-        return "bg-purple-100 text-purple-700";
+        return "bg-[#E8A33D]/15 text-[#E8A33D]";
 
       case "OUT_FOR_DELIVERY":
-        return "bg-orange-100 text-orange-700";
+        return "bg-[#E8A33D]/25 text-[#b9791f] border border-[#E8A33D]/30";
 
       case "DELIVERED":
-        return "bg-green-100 text-green-700";
+        return "bg-[#2F4C3B] text-white";
 
       case "CANCELLED":
-        return "bg-red-100 text-red-700";
+        return "bg-[#E24A3B]/10 text-[#E24A3B]";
 
       case "PENDING":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-[#E8A33D]/10 text-[#b9791f]";
 
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-[#2F4C3B]/10 text-[#2F4C3B]/60";
     }
   };
 

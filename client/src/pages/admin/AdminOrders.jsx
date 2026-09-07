@@ -55,7 +55,7 @@ const AdminOrders = () => {
   }, [fetchOrders]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FDF8F3]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
         {/* Header */}
@@ -72,13 +72,13 @@ const AdminOrders = () => {
         {/* Orders Table */}
         <div className="mt-6">
           {loading ? (
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 sm:p-12">
+            <div className="bg-white rounded-2xl border border-[#2F4C3B]/10 shadow-sm p-8 sm:p-12">
               <div className="flex flex-col items-center justify-center">
 
                 {/* Loading Spinner */}
-                <div className="w-10 h-10 border-4 border-gray-200 border-t-[#E24A3B] rounded-full animate-spin"></div>
+                <div className="w-10 h-10 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin"></div>
 
-                <p className="mt-4 text-sm text-gray-500">
+                <p className="mt-4 text-sm text-[#2F4C3B]/60">
                   Loading orders...
                 </p>
               </div>

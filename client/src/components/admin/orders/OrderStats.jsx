@@ -38,7 +38,7 @@ const OrderStats = ({ orders = [] }) => {
           />
         </svg>
       ),
-      iconBg: "bg-red-100",
+      iconBg: "bg-[#E24A3B]/10",
       iconColor: "text-[#E24A3B]",
     },
     {
@@ -59,8 +59,8 @@ const OrderStats = ({ orders = [] }) => {
           />
         </svg>
       ),
-      iconBg: "bg-yellow-100",
-      iconColor: "text-yellow-600",
+      iconBg: "bg-[#E8A33D]/15",
+      iconColor: "text-[#E8A33D]",
     },
     {
       title: "Completed Orders",
@@ -80,8 +80,8 @@ const OrderStats = ({ orders = [] }) => {
           />
         </svg>
       ),
-      iconBg: "bg-green-100",
-      iconColor: "text-green-600",
+      iconBg: "bg-[#2F4C3B]/10",
+      iconColor: "text-[#2F4C3B]",
     },
     {
       title: "Cancelled Orders",
@@ -101,8 +101,8 @@ const OrderStats = ({ orders = [] }) => {
           />
         </svg>
       ),
-      iconBg: "bg-gray-100",
-      iconColor: "text-gray-600",
+      iconBg: "bg-[#2F4C3B]/10",
+      iconColor: "text-[#2F4C3B]/60",
     },
   ];
 
@@ -111,15 +111,15 @@ const OrderStats = ({ orders = [] }) => {
       {stats.map((stat) => (
         <div
           key={stat.title}
-          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow duration-200"
+          className="bg-[#FDF8F3] rounded-2xl border border-[#2F4C3B]/10 shadow-sm p-5 hover:shadow-md transition-shadow duration-200"
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">
+              <p className="text-sm font-medium text-[#2F4C3B]/60">
                 {stat.title}
               </p>
 
-              <h3 className="text-2xl sm:text-3xl font-bold text-[#1C1C1C] mt-2">
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#2F4C3B] mt-2">
                 {stat.value}
               </h3>
             </div>
