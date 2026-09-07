@@ -25,7 +25,7 @@ const OrderStatusBadge = ({ status }) => {
         return "bg-[#E8A33D]/10 text-[#b9791f]";
 
       default:
-        return "bg-[#2F4C3B]/10 text-[#2F4C3B]/60";
+        return "bg-[#2F4C3B]/10 text-black";
     }
   };
 

@@ -267,7 +267,7 @@ const DeliveryBoyAssignment = ({ orderId }) => {
         <div className="flex items-center justify-center py-8">
           <div className="w-8 h-8 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin"></div>
 
-          <span className="ml-3 text-sm text-[#2F4C3B]/60">
+          <span className="ml-3 text-sm text-black">
             Loading delivery boys...
           </span>
         </div>
@@ -293,18 +293,18 @@ const DeliveryBoyAssignment = ({ orderId }) => {
             </div>
 
             <div>
-              <h2 className="text-lg font-bold text-[#2F4C3B]">
+              <h2 className="text-lg font-bold text-black">
                 Delivery Assignment
               </h2>
 
-              <p className="text-sm text-[#2F4C3B]/60">
+              <p className="text-sm text-black">
                 Select a delivery boy for Order #{orderId}
               </p>
             </div>
 
           </div>
 
-          <span className="text-xs font-medium text-[#2F4C3B]/60">
+          <span className="text-xs font-medium text-black">
             {deliveryBoys.length} Delivery Boy
             {deliveryBoys.length !== 1 ? "s" : ""}
           </span>
@@ -321,11 +321,11 @@ const DeliveryBoyAssignment = ({ orderId }) => {
 
             <FaTruck className="mx-auto text-4xl text-[#2F4C3B]/20" />
 
-            <h3 className="mt-4 text-base font-semibold text-[#2F4C3B]">
+            <h3 className="mt-4 text-base font-semibold text-black">
               No Delivery Boys Found
             </h3>
 
-            <p className="mt-1 text-sm text-[#2F4C3B]/60">
+            <p className="mt-1 text-sm text-black">
               Please add a delivery boy before assigning an order.
             </p>
 
@@ -389,22 +389,22 @@ const DeliveryBoyAssignment = ({ orderId }) => {
 
                         <div className="min-w-0">
 
-                          <h3 className="font-semibold text-[#2F4C3B] truncate">
+                          <h3 className="font-semibold text-black truncate">
                             {boy.firstName} {boy.lastName}
                           </h3>
 
                           <div className="flex items-center gap-2 mt-1">
-                            <FaPhone className="text-xs text-[#2F4C3B]/40" />
+                            <FaPhone className="text-xs text-black" />
 
-                            <span className="text-xs text-[#2F4C3B]/60">
+                            <span className="text-xs text-black">
                               {boy.mobileNo || "N/A"}
                             </span>
                           </div>
 
                           <div className="flex items-center gap-2 mt-1">
-                            <FaEnvelope className="text-xs text-[#2F4C3B]/40" />
+                            <FaEnvelope className="text-xs text-black" />
 
-                            <span className="text-xs text-[#2F4C3B]/60 truncate">
+                            <span className="text-xs text-black truncate">
                               {boy.email || "N/A"}
                             </span>
                           </div>
@@ -418,14 +418,14 @@ const DeliveryBoyAssignment = ({ orderId }) => {
 
                         {isAvailable ? (
 
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#2F4C3B]/10 text-[#2F4C3B] text-[10px] font-semibold">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#2F4C3B]/10 text-black text-[10px] font-semibold">
                             <FaCheckCircle />
                             Available
                           </span>
 
                         ) : (
 
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#2F4C3B]/10 text-[#2F4C3B]/50 text-[10px] font-semibold">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#2F4C3B]/10 text-black text-[10px] font-semibold">
                             <FaTimesCircle />
                             Busy
                           </span>
@@ -460,7 +460,7 @@ const DeliveryBoyAssignment = ({ orderId }) => {
             {/* ASSIGN BUTTON */}
             <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
-              <p className="text-xs sm:text-sm text-[#2F4C3B]/60">
+              <p className="text-xs sm:text-sm text-black">
                 Select an available delivery boy and assign them to this order.
               </p>
 

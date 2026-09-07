@@ -32,7 +32,7 @@ const OrderRow = ({ order }) => {
 
       {/* Customer */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-[#2F4C3B]/80 font-medium">
+        <span className="text-black font-medium">
           {order.customerName || "N/A"}
         </span>
       </td>
@@ -46,7 +46,7 @@ const OrderRow = ({ order }) => {
 
       {/* Payment Method */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-sm text-[#2F4C3B]/70">
+        <span className="text-sm text-black">
           {order.paymentMethod === "CASH_ON_DELIVERY"
             ? "Cash on Delivery"
             : order.paymentMethod || "N/A"}
@@ -58,10 +58,10 @@ const OrderRow = ({ order }) => {
         <span
           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
             order.paymentStatus === "PAID"
-              ? "bg-[#2F4C3B]/10 text-[#2F4C3B]"
+              ? "bg-green-100 text-green-600"
               : order.paymentStatus === "PENDING"
-              ? "bg-[#E8A33D]/15 text-[#E8A33D]"
-              : "bg-[#2F4C3B]/10 text-[#2F4C3B]/60"
+              ? "bg-orange-100 text-orange-500"
+              : "bg-red-100 text-red-600"
           }`}
         >
           {order.paymentStatus || "UNKNOWN"}
@@ -75,7 +75,7 @@ const OrderRow = ({ order }) => {
 
       {/* Order Date */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <span className="text-sm text-[#2F4C3B]/60">
+        <span className="text-sm text-black">
           {formatDate(order.orderDate)}
         </span>
       </td>

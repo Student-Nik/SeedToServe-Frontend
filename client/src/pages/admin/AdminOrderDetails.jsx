@@ -95,16 +95,16 @@ const AdminOrderDetails = () => {
   const getPaymentStatusStyle = (status) => {
     switch (status) {
       case "PAID":
-        return "bg-[#2F4C3B]/10 text-[#2F4C3B]";
+        return "bg-green-100 text-green-600";
 
       case "PENDING":
-        return "bg-[#E8A33D]/15 text-[#b9791f]";
+        return "bg-orange-100 text-orange-500";
 
       case "FAILED":
-        return "bg-[#E24A3B]/10 text-[#E24A3B]";
+        return "bg-red-100 text-red-600";
 
       default:
-        return "bg-[#2F4C3B]/10 text-[#2F4C3B]/60";
+        return "bg-[#2F4C3B]/10 text-black";
     }
   };
 
@@ -136,7 +136,7 @@ const AdminOrderDetails = () => {
             <div className="flex flex-col items-center justify-center">
               <div className="w-10 h-10 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin"></div>
 
-              <p className="mt-4 text-sm text-[#2F4C3B]/60">
+              <p className="mt-4 text-sm text-black">
                 Loading order details...
               </p>
             </div>
@@ -163,7 +163,7 @@ const AdminOrderDetails = () => {
               Order Not Found
             </h2>
 
-            <p className="mt-2 text-sm text-[#2F4C3B]/60">
+            <p className="mt-2 text-sm text-black">
               We couldn't find the requested order.
             </p>
 
@@ -192,7 +192,7 @@ const AdminOrderDetails = () => {
           <div>
             <button
               onClick={() => navigate("/admin/orders")}
-              className="inline-flex items-center gap-2 text-sm font-medium text-[#2F4C3B]/60 hover:text-[#E24A3B] transition mb-3"
+              className="inline-flex items-center gap-2 text-sm font-medium text-black hover:text-[#E24A3B] transition mb-3"
             >
               <FaArrowLeft />
               Back to Orders
@@ -202,7 +202,7 @@ const AdminOrderDetails = () => {
               Order #{order.orderId}
             </h1>
 
-            <p className="text-sm text-[#2F4C3B]/60 mt-1">
+            <p className="text-sm text-black mt-1">
               View complete information about this order
             </p>
           </div>
@@ -226,7 +226,7 @@ const AdminOrderDetails = () => {
               </div>
 
               <div className="min-w-0">
-                <p className="text-xs text-[#2F4C3B]/60 font-medium">
+                <p className="text-xs text-black font-medium">
                   Customer
                 </p>
 
@@ -245,7 +245,7 @@ const AdminOrderDetails = () => {
               </div>
 
               <div>
-                <p className="text-xs text-[#2F4C3B]/60 font-medium">
+                <p className="text-xs text-black font-medium">
                   Total Amount
                 </p>
 
@@ -264,7 +264,7 @@ const AdminOrderDetails = () => {
               </div>
 
               <div className="min-w-0">
-                <p className="text-xs text-[#2F4C3B]/60 font-medium">
+                <p className="text-xs text-black font-medium">
                   Payment
                 </p>
 
@@ -291,7 +291,7 @@ const AdminOrderDetails = () => {
               </div>
 
               <div className="min-w-0">
-                <p className="text-xs text-[#2F4C3B]/60 font-medium">
+                <p className="text-xs text-black font-medium">
                   Order Date
                 </p>
 
@@ -326,7 +326,7 @@ const AdminOrderDetails = () => {
                     Order Items
                   </h2>
 
-                  <p className="text-sm text-[#2F4C3B]/60">
+                  <p className="text-sm text-black">
                     Products included in this order
                   </p>
                 </div>
@@ -363,7 +363,7 @@ const AdminOrderDetails = () => {
                           {item.productName || "Product"}
                         </h3>
 
-                        <p className="text-sm text-[#2F4C3B]/60 mt-1">
+                        <p className="text-sm text-black mt-1">
                           Product included in order
                         </p>
                       </div>
@@ -374,7 +374,7 @@ const AdminOrderDetails = () => {
                 <div className="text-center py-8">
                   <FaBoxOpen className="mx-auto text-3xl text-[#2F4C3B]/20" />
 
-                  <p className="mt-3 text-sm text-[#2F4C3B]/60">
+                  <p className="mt-3 text-sm text-black">
                     No items found for this order.
                   </p>
                 </div>
@@ -399,7 +399,7 @@ const AdminOrderDetails = () => {
                     Delivery Address
                   </h2>
 
-                  <p className="text-sm text-[#2F4C3B]/60">
+                  <p className="text-sm text-black">
                     Customer delivery location
                   </p>
                 </div>
@@ -413,7 +413,7 @@ const AdminOrderDetails = () => {
 
                   {/* Name */}
                   <div>
-                    <p className="text-xs font-medium text-[#2F4C3B]/60 uppercase tracking-wide">
+                    <p className="text-xs font-medium text-black uppercase tracking-wide">
                       Name
                     </p>
 
@@ -424,7 +424,7 @@ const AdminOrderDetails = () => {
 
                   {/* Mobile */}
                   <div>
-                    <p className="text-xs font-medium text-[#2F4C3B]/60 uppercase tracking-wide">
+                    <p className="text-xs font-medium text-black uppercase tracking-wide">
                       Mobile
                     </p>
 
@@ -439,11 +439,11 @@ const AdminOrderDetails = () => {
 
                   {/* Address */}
                   <div>
-                    <p className="text-xs font-medium text-[#2F4C3B]/60 uppercase tracking-wide">
+                    <p className="text-xs font-medium text-black uppercase tracking-wide">
                       Address
                     </p>
 
-                    <p className="mt-1 text-sm text-[#2F4C3B]/80 leading-6">
+                    <p className="mt-1 text-sm text-black leading-6">
                       {order.address.houseNoOrStreet},{" "}
                       {order.address.villageOrTown},{" "}
                       {order.address.district},{" "}
@@ -454,7 +454,7 @@ const AdminOrderDetails = () => {
 
                 </div>
               ) : (
-                <p className="text-sm text-[#2F4C3B]/60">
+                <p className="text-sm text-black">
                   Delivery address not available.
                 </p>
               )}

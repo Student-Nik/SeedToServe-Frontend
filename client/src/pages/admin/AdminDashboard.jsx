@@ -63,7 +63,7 @@ const AdminDashboard = () => {
         <div className="text-center">
           <div className="w-10 h-10 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin mx-auto mb-4"></div>
 
-          <p className="text-[#2F4C3B]/60 text-sm">
+          <p className="text-black text-sm">
             Loading dashboard...
           </p>
         </div>
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
     return (
       <div className="min-h-[70vh] flex items-center justify-center bg-[#FDF8F3]">
         <div className="text-center">
-          <p className="text-[#2F4C3B]/70 mb-4">
+          <p className="text-black mb-4">
             Unable to load dashboard data.
           </p>
 
@@ -158,12 +158,12 @@ const AdminDashboard = () => {
                 Dashboard
               </h1>
 
-              <p className="text-[#2F4C3B]/60 text-sm mt-1">
+              <p className="text-black text-sm mt-1">
                 Overview of your SeedToServe platform
               </p>
             </div>
 
-            <div className="flex items-center gap-2 text-sm font-medium text-[#2F4C3B]/70">
+            <div className="flex items-center gap-2 text-sm font-medium text-black">
               <FaSeedling className="text-[#E24A3B]" />
               SeedToServe
             </div>
@@ -190,7 +190,7 @@ const AdminDashboard = () => {
                 <div className="flex items-start justify-between">
 
                   <div>
-                    <p className="text-sm font-medium text-[#2F4C3B]/60">
+                    <p className="text-sm font-medium text-black">
                       {item.title}
                     </p>
 
@@ -205,7 +205,7 @@ const AdminDashboard = () => {
 
                 </div>
 
-                <p className="text-xs text-[#2F4C3B]/40 mt-4">
+                <p className="text-xs text-black mt-4">
                   {item.description}
                 </p>
               </div>
@@ -222,7 +222,7 @@ const AdminDashboard = () => {
               Order Overview
             </h2>
 
-            <p className="text-sm text-[#2F4C3B]/60 mt-1">
+            <p className="text-sm text-black mt-1">
               Current order status across the platform
             </p>
           </div>
@@ -244,7 +244,7 @@ const AdminDashboard = () => {
                     </div>
 
                     <div>
-                      <p className="text-sm text-[#2F4C3B]/60">
+                      <p className="text-sm text-black">
                         {item.title}
                       </p>
 
@@ -255,7 +255,7 @@ const AdminDashboard = () => {
 
                   </div>
 
-                  <p className="text-xs text-[#2F4C3B]/40 mt-4">
+                  <p className="text-xs text-black mt-4">
                     {item.description}
                   </p>
                 </div>

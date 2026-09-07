@@ -115,7 +115,7 @@ const OrderStats = ({ orders = [] }) => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#2F4C3B]/60">
+              <p className="text-sm font-medium text-black">
                 {stat.title}
               </p>
 

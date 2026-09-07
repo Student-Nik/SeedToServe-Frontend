@@ -25,7 +25,7 @@ const OrderTable = ({ orders }) => {
           No Orders Found
         </h3>
 
-        <p className="text-sm text-[#2F4C3B]/60 mt-1">
+        <p className="text-sm text-black mt-1">
           There are currently no orders to display.
         </p>
       </div>
@@ -40,7 +40,7 @@ const OrderTable = ({ orders }) => {
           All Orders
         </h2>
 
-        <p className="text-sm text-[#2F4C3B]/60 mt-1">
+        <p className="text-sm text-black mt-1">
           Manage and view all customer orders
         </p>
       </div>
@@ -50,35 +50,35 @@ const OrderTable = ({ orders }) => {
         <table className="w-full min-w-[1000px]">
           <thead>
             <tr className="bg-[#2F4C3B]/5 border-b border-[#2F4C3B]/10">
-              <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">
                 Order
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">
                 Customer
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">
                 Amount
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">
                 Payment
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">
                 Payment Status
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">
                 Order Status
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">
                 Date
               </th>
 
-              <th className="px-6 py-4 text-left text-xs font-semibold text-[#2F4C3B]/60 uppercase tracking-wider">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">
                 Action
               </th>
             </tr>
@@ -94,7 +94,7 @@ const OrderTable = ({ orders }) => {
 
       {/* Mobile scroll hint */}
       <div className="block sm:hidden px-4 py-3 bg-[#2F4C3B]/5 border-t border-[#2F4C3B]/10">
-        <p className="text-xs text-[#2F4C3B]/60 text-center">
+        <p className="text-xs text-black text-center">
           ← Swipe horizontally to view all order details →
         </p>
       </div>

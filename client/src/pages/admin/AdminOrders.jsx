@@ -78,7 +78,7 @@ const AdminOrders = () => {
                 {/* Loading Spinner */}
                 <div className="w-10 h-10 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin"></div>
 
-                <p className="mt-4 text-sm text-[#2F4C3B]/60">
+                <p className="mt-4 text-sm text-black">
                   Loading orders...
                 </p>
               </div>

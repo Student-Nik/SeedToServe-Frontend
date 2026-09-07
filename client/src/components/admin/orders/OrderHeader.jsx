@@ -9,7 +9,7 @@ const OrderHeader = ({ onRefresh, loading }) => {
           Orders
         </h1>
 
-        <p className="text-sm sm:text-base text-[#2F4C3B]/60 mt-1">
+        <p className="text-sm sm:text-base text-black mt-1">
           Manage and monitor all customer orders
         </p>
       </div>
