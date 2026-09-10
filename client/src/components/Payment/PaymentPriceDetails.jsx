@@ -30,18 +30,13 @@ const PaymentPriceDetails = ({
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 sticky top-5">
 
-      {/* ================================================= */}
       {/* HEADER */}
-      {/* ================================================= */}
 
       <h2 className="text-lg font-semibold text-black mb-5">
         Price Details
       </h2>
 
-
-      {/* ================================================= */}
       {/* PRICE DETAILS */}
-      {/* ================================================= */}
 
       <div className="space-y-3 text-sm">
 
@@ -123,9 +118,7 @@ const PaymentPriceDetails = ({
       </div>
 
 
-      {/* ================================================= */}
       {/* SAVINGS MESSAGE */}
-      {/* ================================================= */}
 
       {totalSavings > 0 && (
 
@@ -139,10 +132,7 @@ const PaymentPriceDetails = ({
 
       )}
 
-
-      {/* ================================================= */}
       {/* SELECTED PAYMENT METHOD */}
-      {/* ================================================= */}
 
       {paymentMethod && (
 
@@ -195,10 +185,7 @@ const PaymentPriceDetails = ({
 
       )}
 
-
-      {/* ================================================= */}
       {/* PAYMENT BUTTON */}
-      {/* ================================================= */}
 
       <button
         type="button"
@@ -245,10 +232,7 @@ const PaymentPriceDetails = ({
 
       </button>
 
-
-      {/* ================================================= */}
       {/* SECURITY MESSAGE */}
-      {/* ================================================= */}
 
       <p className="text-xs text-center text-gray-400 mt-4">
         Your payment information is secure and protected.

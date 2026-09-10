@@ -21,10 +21,6 @@ const OrderPage = () => {
   const location = useLocation();
   const token = getToken();
 
-  // =====================================================
-  // CART
-  // =====================================================
-
   const [cartItems, setCartItems] = useState(
     location.state?.cartItems || []
   );
@@ -34,11 +30,8 @@ const OrderPage = () => {
       totalAmount: 0,
       totalItems: 0,
     }
-  );
+  )
 
-  // =====================================================
-  // ADDRESS
-  // =====================================================
 
   const [address, setAddress] = useState(
     location.state?.address || {
@@ -55,20 +48,12 @@ const OrderPage = () => {
   const [editingAddress, setEditingAddress] =
     useState(false);
 
-  // =====================================================
-  // LOADING
-  // =====================================================
-
   const [loading, setLoading] = useState(
     !location.state?.cartItems
   );
 
   const [savingAddress, setSavingAddress] =
     useState(false);
-
-  // =====================================================
-  // INITIAL LOAD
-  // =====================================================
 
   useEffect(() => {
     if (!token) {
@@ -87,10 +72,7 @@ const OrderPage = () => {
       fetchAddress();
     }
   }, []);
-
-  // =====================================================
   // FETCH CART
-  // =====================================================
 
   const fetchCart = async () => {
     setLoading(true);
@@ -139,9 +121,7 @@ const OrderPage = () => {
     }
   };
 
-  // =====================================================
   // FETCH ADDRESS
-  // =====================================================
 
   const fetchAddress = async () => {
     try {
@@ -213,9 +193,7 @@ const OrderPage = () => {
     }
   };
 
-  // =====================================================
   // CALCULATE TOTALS
-  // =====================================================
 
   const mrpTotal = cartItems.reduce(
     (sum, item) =>
@@ -236,9 +214,7 @@ const OrderPage = () => {
       ? mrpTotal - grandTotal
       : 0;
 
-  // =====================================================
   // UPDATE ADDRESS FIELD
-  // =====================================================
 
   const updateAddress = (
     field,
@@ -250,9 +226,7 @@ const OrderPage = () => {
     }));
   };
 
-  // =====================================================
   // SAVE UPDATED ADDRESS
-  // =====================================================
 
   const handleSaveAddress = async () => {
     const requiredFields = [
@@ -458,13 +432,6 @@ const OrderPage = () => {
     }
   };
 
-  // =====================================================
-  // PLACE ORDER
-  // (Validates address, then hands off to the Payment page.
-  //  The actual order-placement API call now lives in
-  //  PaymentPage.jsx — this page no longer calls it directly.)
-  // =====================================================
-
   const handlePlaceOrder = () => {
     const requiredFields = [
       "fullName",
@@ -508,9 +475,6 @@ const OrderPage = () => {
     });
   };
 
-  // =====================================================
-  // LOADING
-  // =====================================================
 
   if (loading) {
     return (
@@ -521,11 +485,6 @@ const OrderPage = () => {
       </div>
     );
   }
-
-  // =====================================================
-  // PAGE
-  // =====================================================
-
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
 

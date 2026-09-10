@@ -2,9 +2,7 @@ import React from "react";
 
 const PaymentOrderSummary = ({ cartItems = [] }) => {
 
-  // =====================================================
   // GET PRODUCT IMAGE
-  // =====================================================
 
   const getProductImage = (item) => {
 
@@ -25,9 +23,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
       return "";
     }
 
-    // -----------------------------------------------------
     // Complete URL or Base64 data URL
-    // -----------------------------------------------------
 
     if (
       typeof image === "string" &&
@@ -40,9 +36,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
       return image;
     }
 
-    // -----------------------------------------------------
     // Raw Base64 image without prefix
-    // -----------------------------------------------------
 
     if (
       typeof image === "string" &&
@@ -54,10 +48,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
     return "";
   };
 
-
-  // =====================================================
   // GET PRODUCT NAME
-  // =====================================================
 
   const getProductName = (item) => {
     return (
@@ -69,10 +60,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
     );
   };
 
-
-  // =====================================================
   // CALCULATE ITEM TOTAL
-  // =====================================================
 
   const getItemTotal = (item) => {
 
@@ -95,9 +83,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
   };
 
 
-  // =====================================================
   // CALCULATE ITEMS TOTAL
-  // =====================================================
 
   const itemsTotal = cartItems.reduce(
     (total, item) => {
@@ -111,9 +97,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
 
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
 
-      {/* ================================================= */}
       {/* HEADER */}
-      {/* ================================================= */}
 
       <div className="flex items-center justify-between mb-5">
 
@@ -130,10 +114,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
 
       </div>
 
-
-      {/* ================================================= */}
       {/* PRODUCTS */}
-      {/* ================================================= */}
 
       <div className="space-y-4">
 
@@ -185,15 +166,11 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
                 className="flex items-center justify-between gap-4"
               >
 
-                {/* ====================================== */}
                 {/* PRODUCT INFORMATION */}
-                {/* ====================================== */}
 
                 <div className="flex items-center gap-3 min-w-0">
 
-                  {/* ==================================== */}
                   {/* PRODUCT IMAGE */}
-                  {/* ==================================== */}
 
                   <div
                     className="
@@ -250,10 +227,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
 
                   </div>
 
-
-                  {/* ==================================== */}
                   {/* PRODUCT DETAILS */}
-                  {/* ==================================== */}
 
                   <div className="min-w-0">
 
@@ -284,9 +258,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
                 </div>
 
 
-                {/* ====================================== */}
                 {/* PRODUCT TOTAL */}
-                {/* ====================================== */}
 
                 <p
                   className="
@@ -308,10 +280,7 @@ const PaymentOrderSummary = ({ cartItems = [] }) => {
 
       </div>
 
-
-      {/* ================================================= */}
       {/* ITEMS TOTAL */}
-      {/* ================================================= */}
 
       {cartItems.length > 0 && (
 

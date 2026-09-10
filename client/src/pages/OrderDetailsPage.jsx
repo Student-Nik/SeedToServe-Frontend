@@ -22,9 +22,7 @@ const OrderDetailsPage = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // =====================================================
   // Format order
-  // =====================================================
 
   const formatOrder = (selectedOrder) => {
     if (!selectedOrder) {
@@ -125,9 +123,7 @@ const OrderDetailsPage = () => {
     };
   };
 
-  // =====================================================
   // Fetch customer orders
-  // =====================================================
 
   const fetchOrders = async () => {
     const token = getToken();
@@ -192,9 +188,7 @@ const OrderDetailsPage = () => {
     return data;
   };
 
-  // =====================================================
   // Load selected order
-  // =====================================================
 
   const loadOrder = async () => {
     try {
@@ -272,18 +266,13 @@ const OrderDetailsPage = () => {
     }
   };
 
-  // =====================================================
   // Initial load
-  // =====================================================
 
   useEffect(() => {
     loadOrder();
   }, [orderId]);
 
-  // =====================================================
   // Refresh order status every 5 seconds
-  // =====================================================
-
   useEffect(() => {
     if (!orderId) {
       return;
@@ -376,19 +365,11 @@ const OrderDetailsPage = () => {
 
   }, [orderId]);
 
-  // =====================================================
-  // Back
-  // =====================================================
-
   const handleBackToOrders = () => {
     navigate(
       "/dashboard/order-details"
     );
   };
-
-  // =====================================================
-  // Cancel
-  // =====================================================
 
   const handleCancelOrder = async () => {
     try {
@@ -502,17 +483,9 @@ const OrderDetailsPage = () => {
     }
   };
 
-  // =====================================================
-  // Continue shopping
-  // =====================================================
-
   const handleContinueShopping = () => {
     navigate("/dashboard");
   };
-
-  // =====================================================
-  // Invoice
-  // =====================================================
 
   const handleDownloadInvoice = () => {
     console.log(
@@ -524,10 +497,6 @@ const OrderDetailsPage = () => {
       "Invoice API will be connected later."
     );
   };
-
-  // =====================================================
-  // Loading
-  // =====================================================
 
   if (loading) {
     return (
@@ -553,10 +522,6 @@ const OrderDetailsPage = () => {
       </div>
     );
   }
-
-  // =====================================================
-  // Not found
-  // =====================================================
 
   if (!order) {
     return (
@@ -592,10 +557,6 @@ const OrderDetailsPage = () => {
       </div>
     );
   }
-
-  // =====================================================
-  // Page
-  // =====================================================
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">

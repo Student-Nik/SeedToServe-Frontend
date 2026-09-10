@@ -15,9 +15,7 @@ const PaymentMethod = ({
 
       <div className="space-y-3">
 
-        {/* ================================================= */}
         {/* CASH ON DELIVERY */}
-        {/* ================================================= */}
 
         <label
           htmlFor="cash-on-delivery"
@@ -93,10 +91,7 @@ const PaymentMethod = ({
 
         </label>
 
-
-        {/* ================================================= */}
         {/* ONLINE PAYMENT */}
-        {/* ================================================= */}
 
         <label
           htmlFor="online-payment"

@@ -20,9 +20,7 @@ const PaymentSuccess = ({
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-md w-full text-center">
 
-        {/* ============================================ */}
         {/* SUCCESS ICON */}
-        {/* ============================================ */}
 
         <div className="flex justify-center mb-5">
           <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
@@ -32,11 +30,6 @@ const PaymentSuccess = ({
             />
           </div>
         </div>
-
-
-        {/* ============================================ */}
-        {/* TITLE */}
-        {/* ============================================ */}
 
         <h1 className="text-2xl font-bold text-gray-800">
           Order Confirmed!
@@ -54,11 +47,6 @@ const PaymentSuccess = ({
 
         </p>
 
-
-        {/* ============================================ */}
-        {/* ORDER ID */}
-        {/* ============================================ */}
-
         {orderId && (
           <div className="mt-6 bg-gray-50 rounded-xl p-4 border border-gray-100">
 
@@ -73,10 +61,7 @@ const PaymentSuccess = ({
           </div>
         )}
 
-
-        {/* ============================================ */}
         {/* PAYMENT METHOD */}
-        {/* ============================================ */}
 
         <div className="mt-4 flex items-center justify-center gap-2">
 
@@ -105,11 +90,6 @@ const PaymentSuccess = ({
 
         </div>
 
-
-        {/* ============================================ */}
-        {/* STATUS */}
-        {/* ============================================ */}
-
         <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50">
 
           <span className="w-2 h-2 rounded-full bg-green-500" />
@@ -124,12 +104,6 @@ const PaymentSuccess = ({
           </span>
 
         </div>
-
-
-        {/* ============================================ */}
-        {/* VIEW ORDER BUTTON */}
-        {/* ============================================ */}
-
         <button
           type="button"
           onClick={onViewOrder}
@@ -161,11 +135,6 @@ const PaymentSuccess = ({
           <FiArrowRight size={18} />
 
         </button>
-
-
-        {/* ============================================ */}
-        {/* CONTINUE SHOPPING */}
-        {/* ============================================ */}
 
         <button
           type="button"
