@@ -1,4 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -21,8 +26,15 @@ const DeliveryBoyOrdersPage = () => {
 
   const itemsPerPage = 5;
 
+  // Get normalized order status
+  const getOrderStatus = (order) => {
+    return String(
+      order?.orderStatus ?? order?.status ?? ""
+    ).toUpperCase();
+  };
+
   // Fetch orders
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -33,36 +45,63 @@ const DeliveryBoyOrdersPage = () => {
 
       const data = await getDeliveryBoyOrders(token);
 
-      setOrders(data || []);
+      console.log("DELIVERY BOY ORDERS:", data);
+
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid orders data received.");
+      }
+
+      setOrders(data);
     } catch (err) {
-      console.error("Error fetching delivery orders:", err);
-      setError("Failed to load orders.");
+      console.error(
+        "Error fetching delivery orders:",
+        err
+      );
+
+      setError(
+        err.message || "Failed to load orders."
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     if (token) {
       fetchOrders();
     }
-  }, [token]);
+  }, [token, fetchOrders]);
 
+  // Auto refresh orders every 5 seconds
+ useEffect(() => {
+  if (token) {
+    fetchOrders();
+  }
+}, [token, fetchOrders]);
   // Filter + Search
   const filteredOrders = useMemo(() => {
     const search = searchTerm.toLowerCase().trim();
 
     return orders.filter((order) => {
+      const orderStatus = getOrderStatus(order);
+
       // Status filter
       const matchesStatus =
         statusFilter === "ALL" ||
-        order.orderStatus === statusFilter;
+        orderStatus === statusFilter;
 
       // Search filter
+      const orderId = order?.orderId
+        ?.toString()
+        .toLowerCase();
+
+      const customerName =
+        order?.customerName?.toLowerCase() || "";
+
       const matchesSearch =
         search === "" ||
-        order.orderId?.toString().includes(search) ||
-        order.customerName?.toLowerCase().includes(search);
+        orderId?.includes(search) ||
+        customerName.includes(search);
 
       return matchesStatus && matchesSearch;
     });
@@ -73,7 +112,8 @@ const DeliveryBoyOrdersPage = () => {
     filteredOrders.length / itemsPerPage
   );
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const startIndex =
+    (currentPage - 1) * itemsPerPage;
 
   const currentOrders = filteredOrders.slice(
     startIndex,
@@ -87,7 +127,10 @@ const DeliveryBoyOrdersPage = () => {
 
   // Keep page valid
   useEffect(() => {
-    if (totalPages > 0 && currentPage > totalPages) {
+    if (
+      totalPages > 0 &&
+      currentPage > totalPages
+    ) {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
@@ -109,9 +152,13 @@ const DeliveryBoyOrdersPage = () => {
       <div className="min-h-screen bg-[#FDF8F3] p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-center items-center py-20">
-            <p className="text-black text-lg">
-              Loading orders...
-            </p>
+            <div className="text-center">
+              <div className="w-10 h-10 border-4 border-[#2F4C3B]/15 border-t-[#E24A3B] rounded-full animate-spin mx-auto mb-4"></div>
+
+              <p className="text-black text-lg">
+                Loading orders...
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -124,25 +171,30 @@ const DeliveryBoyOrdersPage = () => {
         <div className="max-w-7xl mx-auto">
 
           <button
-            onClick={() => navigate("/delivery/dashboard")}
+            type="button"
+            onClick={() =>
+              navigate("/delivery/dashboard")
+            }
             className="mb-6 px-4 py-2 bg-[#2F4C3B]/10 hover:bg-[#2F4C3B]/15 text-[#2F4C3B] rounded-lg font-medium transition"
           >
             ← Back to Dashboard
           </button>
 
           <div className="bg-white rounded-xl shadow-sm border border-[#2F4C3B]/10 p-8 text-center">
+
             <p className="text-red-500 text-lg mb-4">
               {error}
             </p>
 
             <button
+              type="button"
               onClick={fetchOrders}
               className="px-5 py-2 bg-[#E24A3B] hover:bg-[#c73f31] text-white rounded-lg font-medium transition"
             >
               Try Again
             </button>
-          </div>
 
+          </div>
         </div>
       </div>
     );
@@ -157,6 +209,10 @@ const DeliveryBoyOrdersPage = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
 
           <div>
+            <p className="text-sm font-semibold text-[#E24A3B] mb-1 tracking-wide">
+              DELIVERY PANEL
+            </p>
+
             <h1 className="text-3xl font-bold text-[#2F4C3B]">
               My Orders
             </h1>
@@ -169,13 +225,17 @@ const DeliveryBoyOrdersPage = () => {
           <div className="flex gap-3">
 
             <button
-              onClick={() => navigate("/delivery/dashboard")}
+              type="button"
+              onClick={() =>
+                navigate("/delivery/dashboard")
+              }
               className="px-4 py-2 bg-[#2F4C3B]/10 hover:bg-[#2F4C3B]/15 text-[#2F4C3B] rounded-lg font-medium transition"
             >
               ← Dashboard
             </button>
 
             <button
+              type="button"
               onClick={fetchOrders}
               className="px-4 py-2 bg-[#E24A3B] hover:bg-[#c73f31] text-white rounded-lg font-medium transition"
             >
@@ -185,28 +245,24 @@ const DeliveryBoyOrdersPage = () => {
           </div>
         </div>
 
-        {/* Search */}
+        {/* Search and Filters */}
         <div className="bg-white rounded-xl shadow-sm border border-[#2F4C3B]/10 p-5 mb-6">
 
-          <div className="flex flex-col lg:flex-row gap-4">
+          {/* Search */}
+          <div>
+            <label className="block text-sm font-medium text-black mb-2">
+              Search Orders
+            </label>
 
-            {/* Search Input */}
-            <div className="flex-1">
-
-              <label className="block text-sm font-medium text-black mb-2">
-                Search Orders
-              </label>
-
-              <input
-                type="text"
-                placeholder="Search by Order ID or Customer Name"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 border border-[#2F4C3B]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2F4C3B]/40"
-              />
-
-            </div>
-
+            <input
+              type="text"
+              placeholder="Search by Order ID or Customer Name"
+              value={searchTerm}
+              onChange={(e) =>
+                setSearchTerm(e.target.value)
+              }
+              className="w-full px-4 py-3 border border-[#2F4C3B]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2F4C3B]/40"
+            />
           </div>
 
           {/* Status Filters */}
@@ -218,8 +274,12 @@ const DeliveryBoyOrdersPage = () => {
 
             <div className="flex flex-wrap gap-2">
 
+              {/* ALL */}
               <button
-                onClick={() => setStatusFilter("ALL")}
+                type="button"
+                onClick={() =>
+                  setStatusFilter("ALL")
+                }
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "ALL"
                     ? "bg-[#2F4C3B] text-white"
@@ -229,8 +289,12 @@ const DeliveryBoyOrdersPage = () => {
                 All
               </button>
 
+              {/* ASSIGNED */}
               <button
-                onClick={() => setStatusFilter("ASSIGNED")}
+                type="button"
+                onClick={() =>
+                  setStatusFilter("ASSIGNED")
+                }
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "ASSIGNED"
                     ? "bg-[#E8A33D] text-white"
@@ -240,10 +304,32 @@ const DeliveryBoyOrdersPage = () => {
                 Assigned
               </button>
 
+              {/* SHIPPED */}
               <button
-                onClick={() => setStatusFilter("OUT_FOR_DELIVERY")}
+                type="button"
+                onClick={() =>
+                  setStatusFilter("SHIPPED")
+                }
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-                  statusFilter === "OUT_FOR_DELIVERY"
+                  statusFilter === "SHIPPED"
+                    ? "bg-blue-600 text-white"
+                    : "bg-[#2F4C3B]/10 text-black hover:bg-[#2F4C3B]/15"
+                }`}
+              >
+                Shipped
+              </button>
+
+              {/* OUT FOR DELIVERY */}
+              <button
+                type="button"
+                onClick={() =>
+                  setStatusFilter(
+                    "OUT_FOR_DELIVERY"
+                  )
+                }
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                  statusFilter ===
+                  "OUT_FOR_DELIVERY"
                     ? "bg-[#E24A3B] text-white"
                     : "bg-[#2F4C3B]/10 text-black hover:bg-[#2F4C3B]/15"
                 }`}
@@ -251,8 +337,12 @@ const DeliveryBoyOrdersPage = () => {
                 Out for Delivery
               </button>
 
+              {/* DELIVERED */}
               <button
-                onClick={() => setStatusFilter("DELIVERED")}
+                type="button"
+                onClick={() =>
+                  setStatusFilter("DELIVERED")
+                }
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "DELIVERED"
                     ? "bg-[#2F4C3B] text-white"
@@ -262,8 +352,12 @@ const DeliveryBoyOrdersPage = () => {
                 Delivered
               </button>
 
+              {/* CANCELLED */}
               <button
-                onClick={() => setStatusFilter("CANCELLED")}
+                type="button"
+                onClick={() =>
+                  setStatusFilter("CANCELLED")
+                }
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                   statusFilter === "CANCELLED"
                     ? "bg-red-600 text-white"
@@ -286,7 +380,10 @@ const DeliveryBoyOrdersPage = () => {
             <span className="font-semibold text-black">
               {filteredOrders.length}
             </span>{" "}
-            order{filteredOrders.length !== 1 ? "s" : ""}
+            order
+            {filteredOrders.length !== 1
+              ? "s"
+              : ""}
           </p>
 
         </div>
@@ -314,7 +411,8 @@ const DeliveryBoyOrdersPage = () => {
                 </h2>
 
                 <p className="text-black/70 mt-2">
-                  You currently don't have any orders assigned to you.
+                  You currently don't have any
+                  orders assigned to you.
                 </p>
               </>
             ) : (
@@ -324,10 +422,12 @@ const DeliveryBoyOrdersPage = () => {
                 </h2>
 
                 <p className="text-black/70 mt-2">
-                  No orders match your current search or status filter.
+                  No orders match your current
+                  search or status filter.
                 </p>
 
                 <button
+                  type="button"
                   onClick={() => {
                     setSearchTerm("");
                     setStatusFilter("ALL");
@@ -352,7 +452,9 @@ const DeliveryBoyOrdersPage = () => {
 
             <div className="flex items-center gap-2">
 
+              {/* Previous */}
               <button
+                type="button"
                 onClick={handlePrevious}
                 disabled={currentPage === 1}
                 className="px-4 py-2 bg-white border border-[#2F4C3B]/20 rounded-lg text-black hover:bg-[#2F4C3B]/5 disabled:opacity-50 disabled:cursor-not-allowed transition"
@@ -366,8 +468,11 @@ const DeliveryBoyOrdersPage = () => {
                 (_, index) => index + 1
               ).map((page) => (
                 <button
+                  type="button"
                   key={page}
-                  onClick={() => setCurrentPage(page)}
+                  onClick={() =>
+                    setCurrentPage(page)
+                  }
                   className={`w-10 h-10 rounded-lg font-medium transition ${
                     currentPage === page
                       ? "bg-[#2F4C3B] text-white"
@@ -378,16 +483,19 @@ const DeliveryBoyOrdersPage = () => {
                 </button>
               ))}
 
+              {/* Next */}
               <button
+                type="button"
                 onClick={handleNext}
-                disabled={currentPage === totalPages}
+                disabled={
+                  currentPage === totalPages
+                }
                 className="px-4 py-2 bg-white border border-[#2F4C3B]/20 rounded-lg text-black hover:bg-[#2F4C3B]/5 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 Next
               </button>
 
             </div>
-
           </div>
         )}
 

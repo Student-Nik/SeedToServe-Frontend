@@ -4,27 +4,27 @@ const OrderStatus = ({ orderStatus = "PENDING" }) => {
   const normalizedStatus = orderStatus?.toUpperCase();
 
   const statuses = [
-    {
-      key: "PENDING",
-      label: "Order Placed",
-    },
-    {
-      key: "CONFIRMED",
-      label: "Confirmed",
-    },
-    {
-      key: "SHIPPED",
-      label: "Shipped",
-    },
-    {
-      key: "OUT_FOR_DELIVERY",
-      label: "Out for Delivery",
-    },
-    {
-      key: "DELIVERED",
-      label: "Delivered",
-    },
-  ];
+  {
+    key: "PLACED",
+    label: "Order Placed",
+  },
+  {
+    key: "ASSIGNED",
+    label: "Assigned",
+  },
+  {
+    key: "SHIPPED",
+    label: "Shipped",
+  },
+  {
+    key: "OUT_FOR_DELIVERY",
+    label: "Out for Delivery",
+  },
+  {
+    key: "DELIVERED",
+    label: "Delivered",
+  },
+];
 
   const isCancelled = normalizedStatus === "CANCELLED";
 

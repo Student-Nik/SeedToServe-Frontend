@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import OrderHeader from "@/components/orderTracking/OrderHeader";
 import OrderStatus from "@/components/orderTracking/OrderStatus";
@@ -17,27 +17,13 @@ const CANCEL_ORDER_API = "http://localhost:8080/cancel/order";
 
 const OrderDetailsPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { orderId } = useParams();
 
-  const [orders, setOrders] = useState([]);
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // =====================================================
-  // GET ORDER ID FROM URL
-  // =====================================================
-
-  const stateOrderId = location.state?.orderId;
-
-  const searchParams = new URLSearchParams(location.search);
-  const queryOrderId = searchParams.get("orderId");
-
-  const requestedOrderId =
-    queryOrderId || stateOrderId;
-
-
-  // =====================================================
-  // FORMAT ORDER
+  // Format order
   // =====================================================
 
   const formatOrder = (selectedOrder) => {
@@ -46,13 +32,17 @@ const OrderDetailsPage = () => {
     }
 
     const backendStatus = String(
-      selectedOrder?.status || "PENDING"
+      selectedOrder?.status ??
+        selectedOrder?.orderStatus ??
+        "PENDING"
     ).toUpperCase();
+
+    console.log("FORMAT ORDER - BACKEND STATUS:", backendStatus);
 
     const statusMap = {
       PENDING: "PLACED",
       PLACED: "PLACED",
-      CONFIRMED: "CONFIRMED",
+      ASSIGNED: "ASSIGNED",
       SHIPPED: "SHIPPED",
       OUT_FOR_DELIVERY: "OUT_FOR_DELIVERY",
       DELIVERED: "DELIVERED",
@@ -60,31 +50,22 @@ const OrderDetailsPage = () => {
     };
 
     const orderStatus =
-      statusMap[backendStatus] ||
-      backendStatus;
-
-
-    // ===================================================
-    // PAYMENT STATUS
-    // ===================================================
+      statusMap[backendStatus] || backendStatus;
 
     let paymentStatus =
       selectedOrder?.paymentStatus || "";
 
     if (!paymentStatus) {
       if (
-        selectedOrder?.paymentMethod === "ONLINE"
+        String(
+          selectedOrder?.paymentMethod
+        ).toUpperCase() === "ONLINE"
       ) {
         paymentStatus = "Paid";
       } else {
         paymentStatus = "Pending";
       }
     }
-
-
-    // ===================================================
-    // FORMAT ADDRESS
-    // ===================================================
 
     const shippingAddress =
       selectedOrder?.shippingAddress || "";
@@ -129,7 +110,6 @@ const OrderDetailsPage = () => {
       tax:
         Number(selectedOrder.tax) || 0,
 
-      // Keep the complete shipping address.
       address: {
         shippingAddress,
         address: shippingAddress,
@@ -145,9 +125,8 @@ const OrderDetailsPage = () => {
     };
   };
 
-
   // =====================================================
-  // FETCH ALL ORDERS
+  // Fetch customer orders
   // =====================================================
 
   const fetchOrders = async () => {
@@ -160,6 +139,7 @@ const OrderDetailsPage = () => {
       );
 
       navigate("/login");
+
       return null;
     }
 
@@ -167,10 +147,14 @@ const OrderDetailsPage = () => {
       MY_ORDERS_API,
       {
         method: "GET",
+
         headers: {
-          Accept: "*/*",
+          Accept: "application/json",
           Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache",
         },
+
+        cache: "no-store",
       }
     );
 
@@ -178,7 +162,7 @@ const OrderDetailsPage = () => {
       await response.text();
 
     console.log(
-      "My Orders Response:",
+      "MY ORDERS API RESPONSE:",
       responseText
     );
 
@@ -208,110 +192,202 @@ const OrderDetailsPage = () => {
     return data;
   };
 
+  // =====================================================
+  // Load selected order
+  // =====================================================
+
+  const loadOrder = async () => {
+    try {
+      setLoading(true);
+
+      if (!orderId) {
+        console.error(
+          "Order ID is missing from URL."
+        );
+
+        setOrder(null);
+        return;
+      }
+
+      const data = await fetchOrders();
+
+      if (!data) {
+        return;
+      }
+
+      console.log(
+        "Looking for order:",
+        orderId
+      );
+
+      console.log(
+        "Available orders:",
+        data
+      );
+
+      const selectedOrder =
+        data.find(
+          (item) =>
+            String(item?.orderId) ===
+            String(orderId)
+        );
+
+      if (!selectedOrder) {
+        throw new Error(
+          `Order #${orderId} was not found.`
+        );
+      }
+
+      console.log(
+        "SELECTED ORDER:",
+        selectedOrder
+      );
+
+      const formattedOrder =
+        formatOrder(selectedOrder);
+
+      setOrder(formattedOrder);
+
+      console.log(
+        "INITIAL FRONTEND STATUS:",
+        formattedOrder.orderStatus
+      );
+
+    } catch (error) {
+      console.error(
+        "Fetch order details error:",
+        error
+      );
+
+      showToast(
+        "error",
+        error.message ||
+          "Failed to load order details."
+      );
+
+      setOrder(null);
+
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // =====================================================
-  // FETCH ORDERS WHEN PAGE OPENS
+  // Initial load
   // =====================================================
 
   useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        setLoading(true);
+    loadOrder();
+  }, [orderId]);
 
+  // =====================================================
+  // Refresh order status every 5 seconds
+  // =====================================================
+
+  useEffect(() => {
+    if (!orderId) {
+      return;
+    }
+
+    let intervalId;
+
+    const refreshOrderStatus = async () => {
+      try {
         const data = await fetchOrders();
 
-        // Save ALL orders.
-        setOrders(data);
-
-        if (data.length === 0) {
-          setOrder(null);
+        if (!Array.isArray(data)) {
           return;
         }
 
-
-        // =================================================
-        // IF SPECIFIC ORDER WAS REQUESTED
-        // =================================================
-
-        if (requestedOrderId) {
-          const selectedOrder =
-            data.find(
-              (item) =>
-                String(item?.orderId) ===
-                String(requestedOrderId)
-            );
-
-          if (!selectedOrder) {
-            throw new Error(
-              `Order #${requestedOrderId} was not found.`
-            );
-          }
-
-          setOrder(
-            formatOrder(selectedOrder)
+        const updatedOrder =
+          data.find(
+            (item) =>
+              String(item?.orderId) ===
+              String(orderId)
           );
 
+        if (!updatedOrder) {
+          console.log(
+            "Order not found during refresh:",
+            orderId
+          );
           return;
         }
 
+        console.log(
+          "REFRESHED BACKEND ORDER:",
+          updatedOrder
+        );
 
-        // =================================================
-        // NO ORDER ID
-        //
-        // Do NOT select data[0].
-        //
-        // We want to show ALL orders.
-        // =================================================
+        console.log(
+          "REFRESHED BACKEND STATUS:",
+          updatedOrder?.status
+        );
 
-        setOrder(null);
+        console.log(
+          "REFRESHED ORDER STATUS:",
+          updatedOrder?.orderStatus
+        );
+
+        const formattedOrder =
+          formatOrder(updatedOrder);
+
+        console.log(
+          "FINAL FRONTEND STATUS:",
+          formattedOrder?.orderStatus
+        );
+
+        setOrder(formattedOrder);
+
+        // Stop polling after final status
+        if (
+          formattedOrder?.orderStatus ===
+            "DELIVERED" ||
+          formattedOrder?.orderStatus ===
+            "CANCELLED"
+        ) {
+          clearInterval(intervalId);
+
+          console.log(
+            "Order completed. Polling stopped."
+          );
+        }
 
       } catch (error) {
         console.error(
-          "Fetch orders error:",
+          "Auto refresh order status error:",
           error
         );
-
-        showToast(
-          "error",
-          error.message ||
-            "Failed to load orders."
-        );
-
-        setOrders([]);
-        setOrder(null);
-
-      } finally {
-        setLoading(false);
       }
     };
 
-    loadOrders();
+    // Fetch immediately
+    refreshOrderStatus();
 
-  }, [requestedOrderId, navigate]);
-
-
-  // =====================================================
-  // OPEN ORDER DETAILS
-  // =====================================================
-
-  const handleViewOrder = (orderId) => {
-    navigate(
-      `/dashboard/order-details?orderId=${orderId}`
+    // Then every 5 seconds
+    intervalId = setInterval(
+      refreshOrderStatus,
+      5000
     );
-  };
 
+    return () => {
+      clearInterval(intervalId);
+    };
+
+  }, [orderId]);
 
   // =====================================================
-  // BACK TO ALL ORDERS
+  // Back
   // =====================================================
 
   const handleBackToOrders = () => {
-    navigate("/dashboard/order-details");
+    navigate(
+      "/dashboard/order-details"
+    );
   };
 
-
   // =====================================================
-  // CANCEL ORDER
+  // Cancel
   // =====================================================
 
   const handleCancelOrder = async () => {
@@ -323,6 +399,8 @@ const OrderDetailsPage = () => {
           "error",
           "Your session has expired. Please login again."
         );
+
+        navigate("/login");
         return;
       }
 
@@ -373,6 +451,7 @@ const OrderDetailsPage = () => {
           `${CANCEL_ORDER_API}/${order.orderId}`,
           {
             method: "POST",
+
             headers: {
               Accept: "*/*",
               Authorization:
@@ -384,22 +463,12 @@ const OrderDetailsPage = () => {
       const responseText =
         await response.text();
 
-      console.log(
-        "Cancel Order Response:",
-        responseText
-      );
-
       if (!response.ok) {
         throw new Error(
           responseText ||
             "Failed to cancel order."
         );
       }
-
-
-      // ================================================
-      // UPDATE CURRENT ORDER
-      // ================================================
 
       setOrder(
         (previousOrder) => ({
@@ -411,26 +480,6 @@ const OrderDetailsPage = () => {
           backendStatus:
             "CANCELLED",
         })
-      );
-
-
-      // ================================================
-      // UPDATE ORDER IN ALL ORDERS LIST
-      // ================================================
-
-      setOrders(
-        (previousOrders) =>
-          previousOrders.map(
-            (item) =>
-              String(item.orderId) ===
-              String(order.orderId)
-                ? {
-                    ...item,
-                    status:
-                      "CANCELLED",
-                  }
-                : item
-          )
       );
 
       showToast(
@@ -453,18 +502,16 @@ const OrderDetailsPage = () => {
     }
   };
 
-
   // =====================================================
-  // CONTINUE SHOPPING
+  // Continue shopping
   // =====================================================
 
   const handleContinueShopping = () => {
     navigate("/dashboard");
   };
 
-
   // =====================================================
-  // DOWNLOAD INVOICE
+  // Invoice
   // =====================================================
 
   const handleDownloadInvoice = () => {
@@ -478,17 +525,14 @@ const OrderDetailsPage = () => {
     );
   };
 
-
   // =====================================================
-  // LOADING
+  // Loading
   // =====================================================
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-
         <div className="text-center">
-
           <div
             className="
               w-10
@@ -503,407 +547,21 @@ const OrderDetailsPage = () => {
           />
 
           <p className="text-sm text-gray-500 mt-4">
-            Loading your orders...
+            Loading order details...
           </p>
-
         </div>
-
       </div>
     );
   }
 
-
   // =====================================================
-  // ALL ORDERS PAGE
-  //
-  // /dashboard/order-details
-  // =====================================================
-
-  if (!requestedOrderId) {
-
-    return (
-      <div className="min-h-screen bg-gray-50 pb-10">
-
-        <div className="max-w-6xl mx-auto px-4 pt-6">
-
-          {/* ========================================= */}
-          {/* PAGE HEADER */}
-          {/* ========================================= */}
-
-          <div className="mb-6">
-
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-
-              <div className="flex items-center justify-between gap-4">
-
-                <div>
-
-                  <h1 className="text-xl font-semibold text-black">
-                    My Orders
-                  </h1>
-
-                  <p className="text-sm text-gray-500 mt-1">
-                    View and track all your orders
-                  </p>
-
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    navigate("/dashboard")
-                  }
-                  className="
-                    px-4
-                    py-2
-                    rounded-lg
-                    border
-                    border-gray-200
-                    bg-white
-                    text-sm
-                    font-medium
-                    text-black
-                    hover:bg-gray-50
-                    transition
-                  "
-                >
-                  Continue Shopping
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          {/* ========================================= */}
-          {/* NO ORDERS */}
-          {/* ========================================= */}
-
-          {orders.length === 0 ? (
-
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-10 text-center">
-
-              <h2 className="text-lg font-semibold text-black">
-                No Orders Yet
-              </h2>
-
-              <p className="text-sm text-gray-500 mt-2">
-                You have not placed any orders yet.
-              </p>
-
-              <button
-                type="button"
-                onClick={() =>
-                  navigate("/dashboard")
-                }
-                className="
-                  mt-5
-                  px-5
-                  py-2.5
-                  rounded-lg
-                  bg-red-600
-                  text-white
-                  text-sm
-                  font-medium
-                  hover:bg-red-700
-                  transition
-                "
-              >
-                Start Shopping
-              </button>
-
-            </div>
-
-          ) : (
-
-            /* ========================================= */
-            /* ALL ORDERS */
-            /* ========================================= */
-
-            <div className="space-y-5">
-
-              {orders.map(
-                (item, index) => {
-
-                  const formattedOrder =
-                    formatOrder(item);
-
-                  if (!formattedOrder) {
-                    return null;
-                  }
-
-                  return (
-                    <div
-                      key={
-                        item?.orderId ||
-                        index
-                      }
-                      className="
-                        bg-white
-                        rounded-xl
-                        shadow-sm
-                        border
-                        border-gray-100
-                        p-5
-                      "
-                    >
-
-                      {/* ================================= */}
-                      {/* ORDER TOP */}
-                      {/* ================================= */}
-
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-                        <div>
-
-                          <h2 className="text-lg font-semibold text-black">
-                            Order #
-                            {formattedOrder.orderId}
-                          </h2>
-
-                          <p className="text-sm text-gray-500 mt-1">
-                            {formattedOrder.orderDate}
-                          </p>
-
-                        </div>
-
-
-                        {/* STATUS */}
-
-                        <div>
-
-                          <span
-                            className={`
-                              inline-flex
-                              items-center
-                              px-3
-                              py-1
-                              rounded-full
-                              text-xs
-                              font-medium
-                              ${
-                                formattedOrder.orderStatus ===
-                                "DELIVERED"
-                                  ? "bg-green-50 text-green-600"
-                                  : formattedOrder.orderStatus ===
-                                    "CANCELLED"
-                                  ? "bg-gray-100 text-gray-600"
-                                  : "bg-red-50 text-red-600"
-                              }
-                            `}
-                          >
-                            {formattedOrder.orderStatus ===
-                            "OUT_FOR_DELIVERY"
-                              ? "Out for Delivery"
-                              : formattedOrder.orderStatus}
-                          </span>
-
-                        </div>
-
-                      </div>
-
-
-                      {/* ================================= */}
-                      {/* ORDER CONTENT */}
-                      {/* ================================= */}
-
-                      <div className="border-t border-gray-100 mt-5 pt-5">
-
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-
-                          {/* ITEMS */}
-
-                          <div className="flex items-center gap-4">
-
-                            <div className="flex -space-x-3">
-
-                              {formattedOrder.items
-                                .slice(0, 3)
-                                .map(
-                                  (
-                                    orderItem,
-                                    itemIndex
-                                  ) => {
-
-                                    const image =
-                                      orderItem?.productImage ||
-                                      orderItem?.image ||
-                                      "";
-
-                                    return (
-                                      <div
-                                        key={
-                                          orderItem?.productId ||
-                                          itemIndex
-                                        }
-                                        className="
-                                          w-12
-                                          h-12
-                                          rounded-lg
-                                          bg-gray-100
-                                          border-2
-                                          border-white
-                                          overflow-hidden
-                                        "
-                                      >
-
-                                        {image ? (
-
-                                          <img
-                                            src={image}
-                                            alt={
-                                              orderItem?.productName ||
-                                              "Product"
-                                            }
-                                            className="
-                                              w-full
-                                              h-full
-                                              object-cover
-                                            "
-                                          />
-
-                                        ) : (
-
-                                          <div className="
-                                            w-full
-                                            h-full
-                                            flex
-                                            items-center
-                                            justify-center
-                                            text-xs
-                                            text-gray-400
-                                          ">
-                                            —
-                                          </div>
-
-                                        )}
-
-                                      </div>
-                                    );
-                                  }
-                                )}
-
-                            </div>
-
-
-                            <div>
-
-                              <p className="text-sm font-medium text-black">
-
-                                {formattedOrder.items.length}{" "}
-
-                                {formattedOrder.items.length ===
-                                1
-                                  ? "item"
-                                  : "items"}
-
-                              </p>
-
-                              <p className="text-xs text-gray-500 mt-1">
-
-                                {formattedOrder.items
-                                  .slice(0, 2)
-                                  .map(
-                                    (
-                                      product
-                                    ) =>
-                                      product?.productName
-                                  )
-                                  .filter(Boolean)
-                                  .join(
-                                    ", "
-                                  )}
-
-                                {formattedOrder.items
-                                  .length > 2
-                                  ? "..."
-                                  : ""}
-
-                              </p>
-
-                            </div>
-
-                          </div>
-
-
-                          {/* TOTAL */}
-
-                          <div className="md:text-right">
-
-                            <p className="text-xs text-gray-500">
-                              Total Amount
-                            </p>
-
-                            <p className="text-lg font-semibold text-black mt-1">
-                              ₹
-                              {formattedOrder.totalAmount.toFixed(
-                                2
-                              )}
-                            </p>
-
-                          </div>
-
-
-                          {/* VIEW BUTTON */}
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleViewOrder(
-                                formattedOrder.orderId
-                              )
-                            }
-                            className="
-                              w-full
-                              md:w-auto
-                              px-5
-                              py-2.5
-                              rounded-lg
-                              bg-red-600
-                              text-white
-                              text-sm
-                              font-medium
-                              hover:bg-red-700
-                              transition
-                            "
-                          >
-                            View Order
-                          </button>
-
-                        </div>
-
-                      </div>
-
-                    </div>
-                  );
-                }
-              )}
-
-            </div>
-
-          )}
-
-        </div>
-
-      </div>
-    );
-  }
-
-
-  // =====================================================
-  // SELECTED ORDER DETAILS PAGE
-  //
-  // /dashboard/order-details?orderId=11
+  // Not found
   // =====================================================
 
   if (!order) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center max-w-md w-full">
-
           <h2 className="text-xl font-semibold text-black">
             Order Details Not Found
           </h2>
@@ -914,9 +572,7 @@ const OrderDetailsPage = () => {
 
           <button
             type="button"
-            onClick={
-              handleBackToOrders
-            }
+            onClick={handleBackToOrders}
             className="
               mt-5
               px-5
@@ -932,32 +588,22 @@ const OrderDetailsPage = () => {
           >
             Back to My Orders
           </button>
-
         </div>
-
       </div>
     );
   }
 
-
   // =====================================================
-  // SELECTED ORDER DETAILS
+  // Page
   // =====================================================
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
-
       <div className="max-w-6xl mx-auto px-4 pt-6">
-
-        {/* ============================================= */}
-        {/* BACK TO ALL ORDERS */}
-        {/* ============================================= */}
 
         <button
           type="button"
-          onClick={
-            handleBackToOrders
-          }
+          onClick={handleBackToOrders}
           className="
             mb-4
             text-sm
@@ -970,43 +616,18 @@ const OrderDetailsPage = () => {
           ← Back to My Orders
         </button>
 
-
-        {/* ============================================= */}
-        {/* ORDER HEADER */}
-        {/* ============================================= */}
-
         <div className="mb-5">
-
           <OrderHeader
             order={order}
-            onBack={
-              handleBackToOrders
-            }
+            onBack={handleBackToOrders}
           />
-
         </div>
 
-
-        {/* ============================================= */}
-        {/* ORDER STATUS */}
-        {/* ============================================= */}
-
         <OrderStatus
-          orderStatus={
-            order.orderStatus
-          }
+          orderStatus={order.orderStatus}
         />
 
-
-        {/* ============================================= */}
-        {/* ORDER CONTENT */}
-        {/* ============================================= */}
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-5">
-
-          {/* =========================================== */}
-          {/* LEFT */}
-          {/* =========================================== */}
 
           <div className="lg:col-span-2 space-y-5">
 
@@ -1023,11 +644,6 @@ const OrderDetailsPage = () => {
             />
 
           </div>
-
-
-          {/* =========================================== */}
-          {/* RIGHT */}
-          {/* =========================================== */}
 
           <div className="space-y-5">
 
@@ -1053,7 +669,6 @@ const OrderDetailsPage = () => {
         </div>
 
       </div>
-
     </div>
   );
 };

@@ -3,11 +3,14 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 const DeliveryStatus = ({ order, onStatusUpdated }) => {
-  // Get JWT token from Redux
   const { token } = useSelector((state) => state.user);
 
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState("");
+
+  const currentStatus = String(
+    order?.orderStatus ?? order?.status ?? ""
+  ).toUpperCase();
 
   const handleStatusUpdate = async (newStatus) => {
     try {
@@ -15,6 +18,9 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
       setError("");
 
       console.log("DELIVERY BOY TOKEN:", token);
+      console.log("ORDER ID:", order.orderId);
+      console.log("CURRENT STATUS:", currentStatus);
+      console.log("NEW STATUS:", newStatus);
 
       if (!token) {
         throw new Error("Authentication token not found");
@@ -26,23 +32,27 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
         token
       );
 
-      // Refresh orders after successful status update
       if (onStatusUpdated) {
         await onStatusUpdated();
       }
-
     } catch (err) {
       console.error("Status update error:", err);
-      setError("Failed to update order status.");
+
+      setError(
+        err.message || "Failed to update order status."
+      );
     } finally {
       setUpdating(false);
     }
   };
 
   const getStatusStyle = () => {
-    switch (order.orderStatus) {
+    switch (currentStatus) {
       case "ASSIGNED":
         return "bg-[#E8A33D]/15 text-[#E8A33D]";
+
+      case "SHIPPED":
+        return "bg-blue-100 text-blue-700";
 
       case "OUT_FOR_DELIVERY":
         return "bg-[#E24A3B]/10 text-[#E24A3B]";
@@ -70,7 +80,7 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
         <span
           className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusStyle()}`}
         >
-          {order.orderStatus}
+          {currentStatus || "UNKNOWN"}
         </span>
       </div>
 
@@ -81,47 +91,85 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
         </p>
       )}
 
-      {/* Status Actions */}
-
-      {/* ASSIGNED → OUT_FOR_DELIVERY */}
-      {order.orderStatus === "ASSIGNED" && (
+      {/* ASSIGNED → SHIPPED */}
+      {currentStatus === "ASSIGNED" && (
         <button
+          type="button"
+          onClick={() => handleStatusUpdate("SHIPPED")}
+          disabled={updating}
+          className="
+            w-full
+            bg-[#E8A33D]
+            hover:bg-[#d18f2f]
+            text-white
+            py-3
+            rounded-lg
+            font-medium
+            disabled:opacity-50
+            transition
+          "
+        >
+          {updating ? "Updating..." : "Ship Order"}
+        </button>
+      )}
+
+      {/* SHIPPED → OUT_FOR_DELIVERY */}
+      {currentStatus === "SHIPPED" && (
+        <button
+          type="button"
           onClick={() =>
             handleStatusUpdate("OUT_FOR_DELIVERY")
           }
           disabled={updating}
-          className="w-full bg-[#E24A3B] hover:bg-[#c73f31] text-white py-3 rounded-lg font-medium disabled:opacity-50 transition"
+          className="
+            w-full
+            bg-[#E24A3B]
+            hover:bg-[#c73f31]
+            text-white
+            py-3
+            rounded-lg
+            font-medium
+            disabled:opacity-50
+            transition
+          "
         >
-          {updating
-            ? "Updating..."
-            : "Start Delivery"}
+          {updating ? "Updating..." : "Start Delivery"}
         </button>
       )}
 
       {/* OUT_FOR_DELIVERY → DELIVERED */}
-      {order.orderStatus === "OUT_FOR_DELIVERY" && (
+      {currentStatus === "OUT_FOR_DELIVERY" && (
         <button
+          type="button"
           onClick={() =>
             handleStatusUpdate("DELIVERED")
           }
           disabled={updating}
-          className="w-full bg-[#2F4C3B] hover:bg-[#243b2f] text-white py-3 rounded-lg font-medium disabled:opacity-50 transition"
+          className="
+            w-full
+            bg-[#2F4C3B]
+            hover:bg-[#243b2f]
+            text-white
+            py-3
+            rounded-lg
+            font-medium
+            disabled:opacity-50
+            transition
+          "
         >
-          {updating
-            ? "Updating..."
-            : "Mark as Delivered"}
+          {updating ? "Updating..." : "Mark as Delivered"}
         </button>
       )}
 
       {/* DELIVERED */}
-      {order.orderStatus === "DELIVERED" && (
+      {currentStatus === "DELIVERED" && (
         <div className="text-center text-[#2F4C3B] font-medium">
           ✓ Order Delivered
         </div>
       )}
 
       {/* CANCELLED */}
-      {order.orderStatus === "CANCELLED" && (
+      {currentStatus === "CANCELLED" && (
         <div className="text-center text-red-600 font-medium">
           Order Cancelled
         </div>

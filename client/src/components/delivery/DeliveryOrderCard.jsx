@@ -2,10 +2,17 @@ import React from "react";
 import DeliveryStatus from "./DeliveryStatus";
 
 const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
+  const currentStatus = String(
+    order?.orderStatus ?? order?.status ?? ""
+  ).toUpperCase();
+
   const getStatusClass = (status) => {
     switch (status) {
       case "ASSIGNED":
         return "bg-[#E8A33D]/15 text-[#E8A33D]";
+
+      case "SHIPPED":
+        return "bg-blue-100 text-blue-700";
 
       case "OUT_FOR_DELIVERY":
         return "bg-[#E24A3B]/10 text-[#E24A3B]";
@@ -25,23 +32,25 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
     <div className="bg-white rounded-xl shadow-sm border border-[#2F4C3B]/10 p-6">
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-5">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-5">
         <div>
           <h2 className="text-xl font-semibold text-[#2F4C3B]">
             Order #{order.orderId}
           </h2>
 
           <p className="text-sm text-black/60 mt-1">
-            {new Date(order.orderDate).toLocaleString()}
+            {order.orderDate
+              ? new Date(order.orderDate).toLocaleString()
+              : "Date not available"}
           </p>
         </div>
 
         <span
-          className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusClass(
-            order.orderStatus
+          className={`self-start sm:self-auto px-3 py-1 rounded-full text-sm font-medium ${getStatusClass(
+            currentStatus
           )}`}
         >
-          {order.orderStatus}
+          {currentStatus || "UNKNOWN"}
         </span>
       </div>
 
@@ -53,12 +62,12 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
 
         <p className="text-black">
           <span className="font-medium">Name:</span>{" "}
-          {order.customerName}
+          {order.customerName || "N/A"}
         </p>
 
         <p className="text-black mt-1">
           <span className="font-medium">Address:</span>{" "}
-          {order.address}
+          {order.address || "N/A"}
         </p>
       </div>
 
@@ -68,45 +77,51 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
           Order Items
         </h3>
 
-        <div className="space-y-3">
-          {order.items?.map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-4 border-b border-[#2F4C3B]/10 pb-3"
-            >
-              {/* Product Image */}
-              {item.productImage ? (
-                <img
-                  src={`data:image/jpeg;base64,${item.productImage}`}
-                  alt={item.productName}
-                  className="w-16 h-16 object-cover rounded-lg border border-[#2F4C3B]/10"
-                />
-              ) : (
-                <div className="w-16 h-16 bg-[#FDF8F3] rounded-lg flex items-center justify-center">
-                  <span className="text-xs text-black/40">
-                    No Image
-                  </span>
+        {order.items?.length > 0 ? (
+          <div className="space-y-3">
+            {order.items.map((item, index) => (
+              <div
+                key={item.itemId || index}
+                className="flex flex-col sm:flex-row sm:items-center gap-4 border-b border-[#2F4C3B]/10 pb-3"
+              >
+                {/* Product Image */}
+                {item.productImage ? (
+                  <img
+                    src={`data:image/jpeg;base64,${item.productImage}`}
+                    alt={item.productName || "Product"}
+                    className="w-16 h-16 object-cover rounded-lg border border-[#2F4C3B]/10"
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-[#FDF8F3] rounded-lg flex items-center justify-center">
+                    <span className="text-xs text-black/40">
+                      No Image
+                    </span>
+                  </div>
+                )}
+
+                {/* Product Information */}
+                <div className="flex-1">
+                  <p className="font-medium text-black">
+                    {item.productName || "Product"}
+                  </p>
+
+                  <p className="text-sm text-black/60">
+                    Quantity: {item.quantity || 0}
+                  </p>
                 </div>
-              )}
 
-              {/* Product Information */}
-              <div className="flex-1">
-                <p className="font-medium text-black">
-                  {item.productName}
-                </p>
-
-                <p className="text-sm text-black/60">
-                  Quantity: {item.quantity}
+                {/* Product Price */}
+                <p className="font-medium text-[#2F4C3B]">
+                  ₹{item.price || 0}
                 </p>
               </div>
-
-              {/* Product Price */}
-              <p className="font-medium text-[#2F4C3B]">
-                ₹{item.price}
-              </p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-black/60">
+            No items available.
+          </p>
+        )}
       </div>
 
       {/* Payment Details */}
@@ -118,7 +133,7 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
           </span>
 
           <span className="font-medium text-black">
-            {order.paymentMethod}
+            {order.paymentMethod || "N/A"}
           </span>
         </div>
 
@@ -129,12 +144,12 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
 
           <span
             className={
-              order.paymentStatus === "PAID"
+              String(order.paymentStatus).toUpperCase() === "PAID"
                 ? "text-[#2F4C3B] font-medium"
                 : "text-[#E8A33D] font-medium"
             }
           >
-            {order.paymentStatus}
+            {order.paymentStatus || "N/A"}
           </span>
         </div>
 
@@ -143,14 +158,17 @@ const DeliveryOrderCard = ({ order, onStatusUpdated }) => {
           <span>Total</span>
 
           <span>
-            ₹{order.totalAmount}
+            ₹{order.totalAmount || 0}
           </span>
         </div>
       </div>
 
       {/* Delivery Status */}
       <DeliveryStatus
-        order={order}
+        order={{
+          ...order,
+          orderStatus: currentStatus,
+        }}
         onStatusUpdated={onStatusUpdated}
       />
 

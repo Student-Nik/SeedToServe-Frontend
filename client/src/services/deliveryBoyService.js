@@ -1,6 +1,7 @@
 const API_URL = "http://localhost:8080/api/delivery/boy";
 
 // Get orders assigned to logged-in delivery boy
+
 export const getDeliveryBoyOrders = async (token) => {
   const response = await fetch(`${API_URL}/orders`, {
     method: "GET",
@@ -11,14 +12,21 @@ export const getDeliveryBoyOrders = async (token) => {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch orders: ${response.status}`);
+    throw new Error(
+      `Failed to fetch orders: ${response.status}`
+    );
   }
 
   return await response.json();
 };
 
 // Update order status
-export const updateOrderStatus = async (orderId, status, token) => {
+
+export const updateOrderStatus = async (
+  orderId,
+  status,
+  token
+) => {
   const response = await fetch(
     `${API_URL}/orders/${orderId}/status`,
     {
@@ -29,16 +37,28 @@ export const updateOrderStatus = async (orderId, status, token) => {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        status,
+        orderStatus: status,
       }),
     }
   );
 
+  const responseText = await response.text();
+
+  console.log(
+    "Update Order Status Response:",
+    responseText
+  );
+
   if (!response.ok) {
     throw new Error(
-      `Failed to update status: ${response.status}`
+      responseText ||
+        `Failed to update status: ${response.status}`
     );
   }
 
-  return await response.json();
+  try {
+    return JSON.parse(responseText);
+  } catch {
+    return responseText;
+  }
 };

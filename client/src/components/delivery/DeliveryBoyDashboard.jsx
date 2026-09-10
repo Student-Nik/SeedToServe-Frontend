@@ -1,69 +1,152 @@
 import Logout from "@/pages/Logout";
 import { getDeliveryBoyOrders } from "@/services/deliveryBoyService";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const STATUS_STYLES = {
   ASSIGNED: "bg-[#E8A33D]/15 text-[#E8A33D]",
+  SHIPPED: "bg-blue-100 text-blue-700",
   OUT_FOR_DELIVERY: "bg-[#E24A3B]/10 text-[#E24A3B]",
   DELIVERED: "bg-[#2F4C3B]/10 text-[#2F4C3B]",
+  CANCELLED: "bg-red-100 text-red-700",
 };
 
 const DeliveryBoyDashboard = () => {
-  // Get JWT token from Redux
   const { token } = useSelector((state) => state.user);
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // ================= FETCH ORDERS =================
+  const fetchOrders = useCallback(
+    async (showLoader = false) => {
+      try {
+        if (showLoader) {
+          setLoading(true);
+        }
 
-  const fetchOrders = async () => {
-    try {
-      setLoading(true);
-      setError("");
+        setError("");
 
-      console.log("DELIVERY BOY TOKEN:", token);
+        console.log("DELIVERY BOY TOKEN:", token);
 
-      if (!token) {
-        throw new Error("Authentication token not found");
+        if (!token) {
+          throw new Error("Authentication token not found");
+        }
+
+        const data = await getDeliveryBoyOrders(token);
+
+        console.log("DELIVERY BOY ORDERS:", data);
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid orders data received.");
+        }
+
+        setOrders(data);
+      } catch (err) {
+        console.error(
+          "Error fetching dashboard orders:",
+          err
+        );
+
+        setError(
+          err.message ||
+            "Failed to load dashboard data."
+        );
+      } finally {
+        if (showLoader) {
+          setLoading(false);
+        }
       }
-
-      const data = await getDeliveryBoyOrders(token);
-
-      setOrders(data);
-    } catch (err) {
-      console.error("Error fetching dashboard orders:", err);
-      setError("Failed to load dashboard data.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [token]
+  );
 
   useEffect(() => {
     if (token) {
-      fetchOrders();
+      fetchOrders(true);
     }
-  }, [token]);
+  }, [token, fetchOrders]);
 
-  // ================= STATISTICS =================
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+
+    const intervalId = setInterval(() => {
+      console.log(
+        "Auto refreshing delivery dashboard..."
+      );
+
+      fetchOrders(false);
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [token, fetchOrders]);
+
+  const getStatus = (order) => {
+    return (
+      order?.orderStatus?.toUpperCase() || ""
+    );
+  };
 
   const totalOrders = orders.length;
 
   const assignedOrders = orders.filter(
-    (order) => order.orderStatus === "ASSIGNED"
+    (order) =>
+      getStatus(order) === "ASSIGNED"
+  ).length;
+
+  const shippedOrders = orders.filter(
+    (order) =>
+      getStatus(order) === "SHIPPED"
   ).length;
 
   const outForDeliveryOrders = orders.filter(
-    (order) => order.orderStatus === "OUT_FOR_DELIVERY"
+    (order) =>
+      getStatus(order) === "OUT_FOR_DELIVERY"
   ).length;
 
   const deliveredOrders = orders.filter(
-    (order) => order.orderStatus === "DELIVERED"
+    (order) =>
+      getStatus(order) === "DELIVERED"
   ).length;
 
-  // ================= LOADING =================
+  const currentOrder = orders.find((order) => {
+    const status = getStatus(order);
+
+    return (
+      status === "ASSIGNED" ||
+      status === "SHIPPED" ||
+      status === "OUT_FOR_DELIVERY"
+    );
+  });
+
+  const currentStatus = currentOrder
+    ? getStatus(currentOrder)
+    : "";
+
+  const assignedCompleted = [
+    "ASSIGNED",
+    "SHIPPED",
+    "OUT_FOR_DELIVERY",
+    "DELIVERED",
+  ].includes(currentStatus);
+
+  const shippedCompleted = [
+    "SHIPPED",
+    "OUT_FOR_DELIVERY",
+    "DELIVERED",
+  ].includes(currentStatus);
+
+  const outForDeliveryCompleted = [
+    "OUT_FOR_DELIVERY",
+    "DELIVERED",
+  ].includes(currentStatus);
+
+  const deliveredCompleted =
+    currentStatus === "DELIVERED";
 
   if (loading) {
     return (
@@ -79,8 +162,6 @@ const DeliveryBoyDashboard = () => {
     );
   }
 
-  // ================= ERROR =================
-
   if (error) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center bg-[#FDF8F3]">
@@ -90,7 +171,8 @@ const DeliveryBoyDashboard = () => {
           </p>
 
           <button
-            onClick={fetchOrders}
+            type="button"
+            onClick={() => fetchOrders(true)}
             className="px-5 py-2 bg-[#E24A3B] text-white rounded-lg font-medium hover:bg-[#c73f31] transition"
           >
             Try Again
@@ -100,26 +182,13 @@ const DeliveryBoyDashboard = () => {
     );
   }
 
-  // ================= CURRENT ORDER =================
-
-  const currentOrder = orders.find(
-    (order) =>
-      order.orderStatus === "ASSIGNED" ||
-      order.orderStatus === "OUT_FOR_DELIVERY"
-  );
-
   return (
     <div className="bg-[#FDF8F3]">
 
-      {/* ================= HEADER ================= */}
-
       <div className="border-b border-[#2F4C3B]/10 bg-white">
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7">
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
-            {/* Header Title */}
 
             <div>
               <p className="text-sm font-semibold text-[#E24A3B] mb-1 tracking-wide">
@@ -135,8 +204,6 @@ const DeliveryBoyDashboard = () => {
               </p>
             </div>
 
-            {/* Logout Button */}
-
             <div className="w-fit">
               <Logout />
             </div>
@@ -144,21 +211,13 @@ const DeliveryBoyDashboard = () => {
           </div>
 
         </div>
-
       </div>
-
-      {/* ================= CONTENT ================= */}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-        {/* ================= STATISTICS ================= */}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
-          {/* Total Orders */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
 
           <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
-
             <p className="text-sm font-medium text-black">
               Total Orders
             </p>
@@ -166,13 +225,9 @@ const DeliveryBoyDashboard = () => {
             <h2 className="text-3xl font-extrabold text-[#2F4C3B] mt-2">
               {totalOrders}
             </h2>
-
           </div>
 
-          {/* Assigned */}
-
           <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
-
             <p className="text-sm font-medium text-black">
               Assigned
             </p>
@@ -180,13 +235,19 @@ const DeliveryBoyDashboard = () => {
             <h2 className="text-3xl font-extrabold text-[#E8A33D] mt-2">
               {assignedOrders}
             </h2>
-
           </div>
 
-          {/* Out For Delivery */}
+          <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
+            <p className="text-sm font-medium text-black">
+              Shipped
+            </p>
+
+            <h2 className="text-3xl font-extrabold text-blue-700 mt-2">
+              {shippedOrders}
+            </h2>
+          </div>
 
           <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
-
             <p className="text-sm font-medium text-black">
               Out for Delivery
             </p>
@@ -194,13 +255,9 @@ const DeliveryBoyDashboard = () => {
             <h2 className="text-3xl font-extrabold text-[#E24A3B] mt-2">
               {outForDeliveryOrders}
             </h2>
-
           </div>
 
-          {/* Delivered */}
-
           <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-5 shadow-sm hover:shadow-md transition duration-200">
-
             <p className="text-sm font-medium text-black">
               Delivered
             </p>
@@ -208,19 +265,15 @@ const DeliveryBoyDashboard = () => {
             <h2 className="text-3xl font-extrabold text-[#2F4C3B] mt-2">
               {deliveredOrders}
             </h2>
-
           </div>
 
         </div>
-
-        {/* ================= CURRENT ORDER ================= */}
 
         <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-6 shadow-sm">
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
 
             <div>
-
               <h2 className="text-xl font-bold text-[#2F4C3B]">
                 Current Order
               </h2>
@@ -228,11 +281,11 @@ const DeliveryBoyDashboard = () => {
               <p className="text-sm text-black/70 mt-1">
                 Your latest active delivery order
               </p>
-
             </div>
 
             <button
-              onClick={fetchOrders}
+              type="button"
+              onClick={() => fetchOrders(true)}
               className="px-4 py-2 border border-[#2F4C3B]/20 rounded-lg text-sm font-medium text-[#2F4C3B] hover:bg-[#FDF8F3] transition"
             >
               Refresh
@@ -258,12 +311,9 @@ const DeliveryBoyDashboard = () => {
 
             <div className="border border-[#2F4C3B]/10 rounded-xl p-5 bg-[#FDF8F3]/40">
 
-              {/* ================= ORDER HEADER ================= */}
-
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
                 <div>
-
                   <p className="text-xs text-black/50 uppercase tracking-wide">
                     Order ID
                   </p>
@@ -271,28 +321,22 @@ const DeliveryBoyDashboard = () => {
                   <p className="text-2xl font-bold text-[#2F4C3B] mt-1">
                     #{currentOrder.orderId}
                   </p>
-
                 </div>
 
                 <span
                   className={`self-start sm:self-auto px-4 py-2 rounded-full text-xs font-semibold ${
-                    STATUS_STYLES[currentOrder.orderStatus] ||
+                    STATUS_STYLES[currentStatus] ||
                     "bg-[#2F4C3B]/10 text-[#2F4C3B]"
                   }`}
                 >
-                  {currentOrder.orderStatus}
+                  {currentStatus}
                 </span>
 
               </div>
 
-              {/* ================= ORDER DETAILS ================= */}
-
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6 pt-5 border-t border-[#2F4C3B]/10">
 
-                {/* Customer */}
-
                 <div>
-
                   <p className="text-xs text-black/50 uppercase tracking-wide">
                     Customer
                   </p>
@@ -300,13 +344,9 @@ const DeliveryBoyDashboard = () => {
                   <p className="font-semibold text-black mt-1">
                     {currentOrder.customerName || "N/A"}
                   </p>
-
                 </div>
 
-                {/* Amount */}
-
                 <div>
-
                   <p className="text-xs text-black/50 uppercase tracking-wide">
                     Order Amount
                   </p>
@@ -314,13 +354,9 @@ const DeliveryBoyDashboard = () => {
                   <p className="font-semibold text-[#2F4C3B] mt-1">
                     ₹{currentOrder.totalAmount || 0}
                   </p>
-
                 </div>
 
-                {/* Payment */}
-
                 <div>
-
                   <p className="text-xs text-black/50 uppercase tracking-wide">
                     Payment Method
                   </p>
@@ -328,13 +364,9 @@ const DeliveryBoyDashboard = () => {
                   <p className="font-semibold text-black mt-1">
                     {currentOrder.paymentMethod || "N/A"}
                   </p>
-
                 </div>
 
-                {/* Payment Status */}
-
                 <div>
-
                   <p className="text-xs text-black/50 uppercase tracking-wide">
                     Payment Status
                   </p>
@@ -342,12 +374,9 @@ const DeliveryBoyDashboard = () => {
                   <p className="font-semibold text-black mt-1">
                     {currentOrder.paymentStatus || "N/A"}
                   </p>
-
                 </div>
 
               </div>
-
-              {/* ================= DELIVERY PROGRESS ================= */}
 
               <div className="mt-6 pt-5 border-t border-[#2F4C3B]/10">
 
@@ -357,38 +386,33 @@ const DeliveryBoyDashboard = () => {
 
                 <div className="flex items-center gap-2">
 
-                  {/* Assigned */}
-
                   <div
                     className={`h-2 flex-1 rounded-full ${
-                      [
-                        "ASSIGNED",
-                        "OUT_FOR_DELIVERY",
-                        "DELIVERED",
-                      ].includes(currentOrder.orderStatus)
+                      assignedCompleted
                         ? "bg-[#E8A33D]"
                         : "bg-gray-200"
                     }`}
                   />
 
-                  {/* Out For Delivery */}
+                  <div
+                    className={`h-2 flex-1 rounded-full ${
+                      shippedCompleted
+                        ? "bg-blue-600"
+                        : "bg-gray-200"
+                    }`}
+                  />
 
                   <div
                     className={`h-2 flex-1 rounded-full ${
-                      [
-                        "OUT_FOR_DELIVERY",
-                        "DELIVERED",
-                      ].includes(currentOrder.orderStatus)
+                      outForDeliveryCompleted
                         ? "bg-[#E24A3B]"
                         : "bg-gray-200"
                     }`}
                   />
 
-                  {/* Delivered */}
-
                   <div
                     className={`h-2 flex-1 rounded-full ${
-                      currentOrder.orderStatus === "DELIVERED"
+                      deliveredCompleted
                         ? "bg-[#2F4C3B]"
                         : "bg-gray-200"
                     }`}
@@ -396,10 +420,14 @@ const DeliveryBoyDashboard = () => {
 
                 </div>
 
-                <div className="flex justify-between text-xs text-black/60 mt-2">
+                <div className="flex justify-between text-xs text-black/60 mt-2 gap-2">
 
                   <span>
                     Assigned
+                  </span>
+
+                  <span>
+                    Shipped
                   </span>
 
                   <span>
@@ -419,8 +447,6 @@ const DeliveryBoyDashboard = () => {
           )}
 
         </div>
-
-        {/* ================= RECENT ORDERS ================= */}
 
         <div className="bg-white rounded-xl border border-[#2F4C3B]/10 p-6 shadow-sm">
 
@@ -450,49 +476,46 @@ const DeliveryBoyDashboard = () => {
 
             <div className="space-y-3">
 
-              {orders.slice(0, 5).map((order) => (
+              {orders.slice(0, 5).map((order) => {
 
-                <div
-                  key={order.orderId}
-                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#2F4C3B]/10 last:border-b-0 pb-3 last:pb-0"
-                >
+                const status = getStatus(order);
 
-                  {/* Order Information */}
+                return (
+                  <div
+                    key={order.orderId}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#2F4C3B]/10 last:border-b-0 pb-3 last:pb-0"
+                  >
 
-                  <div>
+                    <div>
+                      <p className="font-medium text-black">
+                        Order #{order.orderId}
+                      </p>
 
-                    <p className="font-medium text-black">
-                      Order #{order.orderId}
-                    </p>
+                      <p className="text-sm text-black/60">
+                        {order.customerName || "N/A"}
+                      </p>
+                    </div>
 
-                    <p className="text-sm text-black/60">
-                      {order.customerName}
-                    </p>
+                    <div className="flex items-center gap-4">
+
+                      <span className="font-medium text-[#2F4C3B]">
+                        ₹{order.totalAmount || 0}
+                      </span>
+
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          STATUS_STYLES[status] ||
+                          "bg-[#2F4C3B]/10 text-[#2F4C3B]"
+                        }`}
+                      >
+                        {status}
+                      </span>
+
+                    </div>
 
                   </div>
-
-                  {/* Amount and Status */}
-
-                  <div className="flex items-center gap-4">
-
-                    <span className="font-medium text-[#2F4C3B]">
-                      ₹{order.totalAmount}
-                    </span>
-
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        STATUS_STYLES[order.orderStatus] ||
-                        "bg-[#2F4C3B]/10 text-[#2F4C3B]"
-                      }`}
-                    >
-                      {order.orderStatus}
-                    </span>
-
-                  </div>
-
-                </div>
-
-              ))}
+                );
+              })}
 
             </div>
 
