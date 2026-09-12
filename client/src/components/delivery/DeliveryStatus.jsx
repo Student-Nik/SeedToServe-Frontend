@@ -17,30 +17,18 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
       setUpdating(true);
       setError("");
 
-      console.log("DELIVERY BOY TOKEN:", token);
-      console.log("ORDER ID:", order.orderId);
-      console.log("CURRENT STATUS:", currentStatus);
-      console.log("NEW STATUS:", newStatus);
-
       if (!token) {
         throw new Error("Authentication token not found");
       }
 
-      await updateOrderStatus(
-        order.orderId,
-        newStatus,
-        token
-      );
+      await updateOrderStatus(order.orderId, newStatus, token);
 
       if (onStatusUpdated) {
         await onStatusUpdated();
       }
     } catch (err) {
       console.error("Status update error:", err);
-
-      setError(
-        err.message || "Failed to update order status."
-      );
+      setError(err.message || "Failed to update order status.");
     } finally {
       setUpdating(false);
     }
@@ -72,13 +60,13 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
     <div className="border-t border-[#2F4C3B]/10 pt-4 mt-4">
 
       {/* Current Status */}
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-black/70 font-medium">
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <span className="text-black/70 font-medium text-sm sm:text-base">
           Order Status
         </span>
 
         <span
-          className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusStyle()}`}
+          className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${getStatusStyle()}`}
         >
           {currentStatus || "UNKNOWN"}
         </span>
@@ -97,17 +85,7 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
           type="button"
           onClick={() => handleStatusUpdate("SHIPPED")}
           disabled={updating}
-          className="
-            w-full
-            bg-[#E8A33D]
-            hover:bg-[#d18f2f]
-            text-white
-            py-3
-            rounded-lg
-            font-medium
-            disabled:opacity-50
-            transition
-          "
+          className="w-full bg-[#E8A33D] hover:bg-[#d18f2f] active:bg-[#d18f2f] text-white py-3 rounded-lg text-sm sm:text-base font-medium disabled:opacity-50 transition"
         >
           {updating ? "Updating..." : "Ship Order"}
         </button>
@@ -117,21 +95,9 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
       {currentStatus === "SHIPPED" && (
         <button
           type="button"
-          onClick={() =>
-            handleStatusUpdate("OUT_FOR_DELIVERY")
-          }
+          onClick={() => handleStatusUpdate("OUT_FOR_DELIVERY")}
           disabled={updating}
-          className="
-            w-full
-            bg-[#E24A3B]
-            hover:bg-[#c73f31]
-            text-white
-            py-3
-            rounded-lg
-            font-medium
-            disabled:opacity-50
-            transition
-          "
+          className="w-full bg-[#E24A3B] hover:bg-[#c73f31] active:bg-[#c73f31] text-white py-3 rounded-lg text-sm sm:text-base font-medium disabled:opacity-50 transition"
         >
           {updating ? "Updating..." : "Start Delivery"}
         </button>
@@ -141,21 +107,9 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
       {currentStatus === "OUT_FOR_DELIVERY" && (
         <button
           type="button"
-          onClick={() =>
-            handleStatusUpdate("DELIVERED")
-          }
+          onClick={() => handleStatusUpdate("DELIVERED")}
           disabled={updating}
-          className="
-            w-full
-            bg-[#2F4C3B]
-            hover:bg-[#243b2f]
-            text-white
-            py-3
-            rounded-lg
-            font-medium
-            disabled:opacity-50
-            transition
-          "
+          className="w-full bg-[#2F4C3B] hover:bg-[#243b2f] active:bg-[#243b2f] text-white py-3 rounded-lg text-sm sm:text-base font-medium disabled:opacity-50 transition"
         >
           {updating ? "Updating..." : "Mark as Delivered"}
         </button>
@@ -163,14 +117,14 @@ const DeliveryStatus = ({ order, onStatusUpdated }) => {
 
       {/* DELIVERED */}
       {currentStatus === "DELIVERED" && (
-        <div className="text-center text-[#2F4C3B] font-medium">
+        <div className="text-center text-[#2F4C3B] font-medium text-sm sm:text-base">
           ✓ Order Delivered
         </div>
       )}
 
       {/* CANCELLED */}
       {currentStatus === "CANCELLED" && (
-        <div className="text-center text-red-600 font-medium">
+        <div className="text-center text-red-600 font-medium text-sm sm:text-base">
           Order Cancelled
         </div>
       )}
