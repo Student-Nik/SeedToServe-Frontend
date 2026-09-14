@@ -28,7 +28,6 @@ import Cart from "./pages/Cart";
 import OrderPage from "./pages/OrderPage";
 import PaymentPage from "./pages/PaymentPage";
 
-
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminOrderDetails from "./pages/admin/AdminOrderDetails";
@@ -36,47 +35,84 @@ import AdminDeliveryBoys from "./pages/admin/AdminDeliveryBoys";
 
 import DeliveryBoyDashboardPage from "./pages/delivery/DeliveryBoyDashboardPage";
 import DeliveryBoyOrdersPage from "./pages/delivery/DeliveryBoyOrdersPage";
+
 import MyOrdersPage from "./pages/MyOrdersPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const App = () => {
   return (
     <Routes>
+
       {/* =========================
           Authentication
       ========================== */}
+
       <Route path="/signup" element={<SignUp />} />
+
       <Route path="/login" element={<SignIn />} />
+
+      <Route
+        path="/forgot-password"
+        element={<ForgotPassword />}
+      />
+
       <Route path="/auth-success" element={<AuthSuccess />} />
+
 
       {/* =========================
           Landing Page
       ========================== */}
+
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
       </Route>
 
+
       {/* =========================
           Protected Routes
       ========================== */}
+
       <Route element={<ProtectedRoute />}>
+
         {/* =========================
             Farmer Routes
         ========================== */}
+
         <Route element={<OnlyFarmerAllowed />}>
-          <Route path="/farmer-popup" element={<FarmerPopup />} />
 
-          <Route path="/addcategory" element={<AddCategory />} />
+          <Route
+            path="/farmer-popup"
+            element={<FarmerPopup />}
+          />
 
-          <Route path="/addproducts" element={<AddProduct />} />
+          <Route
+            path="/addcategory"
+            element={<AddCategory />}
+          />
+
+          <Route
+            path="/addproducts"
+            element={<AddProduct />}
+          />
+
         </Route>
+
 
         {/* =========================
             Admin Routes
         ========================== */}
+
         <Route element={<OnlyAdminAllowed />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
+
+          <Route
+            path="/admin"
+            element={<AdminLayout />}
+          >
+            <Route
+              index
+              element={<AdminDashboard />}
+            />
 
             {/* Admin Profile
             <Route
@@ -85,7 +121,10 @@ const App = () => {
             />
             */}
 
-            <Route path="orders" element={<AdminOrders />} />
+            <Route
+              path="orders"
+              element={<AdminOrders />}
+            />
 
             <Route
               path="orders/:id"
@@ -96,13 +135,18 @@ const App = () => {
               path="delivery-boys"
               element={<AdminDeliveryBoys />}
             />
+
           </Route>
+
         </Route>
+
 
         {/* =========================
             Delivery Boy Routes
         ========================== */}
+
         <Route element={<OnlyDeliveryBoyAllowed />}>
+
           <Route
             path="/delivery/dashboard"
             element={<DeliveryBoyDashboardPage />}
@@ -112,23 +156,48 @@ const App = () => {
             path="/delivery/dashboard/orders"
             element={<DeliveryBoyOrdersPage />}
           />
+
         </Route>
+
 
         {/* =========================
             User Dashboard
         ========================== */}
-        <Route path="/dashboard" element={<UserLayout />}>
-          <Route index element={<UserDashboard />} />
 
-          <Route path="products" element={<Products />} />
+        <Route
+          path="/dashboard"
+          element={<UserLayout />}
+        >
 
-          <Route path="products/:id" element={<ProductDetails />} />
+          <Route
+            index
+            element={<UserDashboard />}
+          />
 
-          <Route path="cart" element={<Cart />} />
+          <Route
+            path="products"
+            element={<Products />}
+          />
 
-          <Route path="orders" element={<OrderPage />} />
+          <Route
+            path="products/:id"
+            element={<ProductDetails />}
+          />
 
-          <Route path="payment" element={<PaymentPage />} />
+          <Route
+            path="cart"
+            element={<Cart />}
+          />
+
+          <Route
+            path="orders"
+            element={<OrderPage />}
+          />
+
+          <Route
+            path="payment"
+            element={<PaymentPage />}
+          />
 
           <Route
             path="order-details"
@@ -139,8 +208,11 @@ const App = () => {
             path="order-details/:orderId"
             element={<OrderDetailsPage />}
           />
+
         </Route>
+
       </Route>
+
     </Routes>
   );
 };
