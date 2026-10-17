@@ -19,6 +19,10 @@ const API_BASE =
 const ADDRESS_API =
   "http://localhost:8080/api/customer/address";
 
+// Same endpoint ProductDetail uses: GET /show/product/{id}
+const PRODUCT_API =
+  "http://localhost:8080/show/product";
+
 const Cart = () => {
   const navigate = useNavigate();
 
@@ -32,8 +36,12 @@ const Cart = () => {
     totalItems: 0,
   });
 
+  // { [productId]: stock }
+  const [stockMap, setStockMap] = useState({});
+
   const [loading, setLoading] = useState(true);
-  const [updatingItemId, setUpdatingItemId] = useState(null);
+  const [updatingItemId, setUpdatingItemId] =
+    useState(null);
 
   // Address states
   const [showAddressModal, setShowAddressModal] =
@@ -58,17 +66,98 @@ const Cart = () => {
       currentUser?.userId ??
       null;
 
-    console.log(
-      "Current user from Redux:",
-      currentUser
-    );
-
-    console.log(
-      "Resolved customer ID:",
-      customerId
-    );
-
     return customerId;
+  };
+
+  const getItemStock = (item) => {
+    const raw =
+      item?.stock ??
+      item?.availableStock ??
+      item?.stockQuantity ??
+      item?.product?.stock ??
+      stockMap[item?.productId] ??
+      null;
+
+    if (raw === null || raw === undefined) {
+      return null;
+    }
+
+    const parsed = Number(raw);
+
+    return Number.isNaN(parsed) ? null : parsed;
+  };
+
+  // =====================================================
+  // FETCH STOCK FOR CART PRODUCTS
+  // =====================================================
+
+  const fetchStockForItems = async (items) => {
+    const productIds = [
+      ...new Set(
+        items
+          .filter(
+            (item) =>
+              item.stock === undefined &&
+              item.availableStock === undefined &&
+              item.stockQuantity === undefined &&
+              item.productId !== undefined &&
+              item.productId !== null
+          )
+          .map((item) => item.productId)
+      ),
+    ];
+
+    if (productIds.length === 0) {
+      return;
+    }
+
+    const results = await Promise.all(
+      productIds.map(async (productId) => {
+        try {
+          const res = await fetch(
+            `${PRODUCT_API}/${productId}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!res.ok) {
+            throw new Error(
+              `Status ${res.status}`
+            );
+          }
+
+          const product = await res.json();
+
+          return [
+            productId,
+            product?.stock ?? null,
+          ];
+        } catch (err) {
+          console.warn(
+            `Could not load stock for product ${productId}:`,
+            err.message
+          );
+
+          return [productId, null];
+        }
+      })
+    );
+
+    setStockMap((prev) => {
+      const next = { ...prev };
+
+      results.forEach(([productId, stock]) => {
+        if (stock !== null) {
+          next[productId] = stock;
+        }
+      });
+
+      return next;
+    });
   };
 
   // =====================================================
@@ -128,16 +217,11 @@ const Cart = () => {
         );
       }
 
-      console.log(
-        "Cart API response:",
-        data
-      );
+      const items = Array.isArray(data.items)
+        ? data.items
+        : [];
 
-      setCartItems(
-        Array.isArray(data.items)
-          ? data.items
-          : []
-      );
+      setCartItems(items);
 
       setTotals({
         totalAmount:
@@ -146,6 +230,9 @@ const Cart = () => {
         totalItems:
           Number(data.totalItems) || 0,
       });
+
+      // Load latest stock for every product in the cart
+      await fetchStockForItems(items);
     } catch (err) {
       console.error(
         "Fetch cart error:",
@@ -170,6 +257,42 @@ const Cart = () => {
     newQuantity
   ) => {
     if (newQuantity < 1) {
+      return;
+    }
+
+    // Ignore clicks while this item is updating
+    if (updatingItemId === itemId) {
+      return;
+    }
+
+    const targetItem = cartItems.find(
+      (item) => item.id === itemId
+    );
+
+    if (!targetItem) {
+      return;
+    }
+
+    // -------------------------------------------------
+    // STOCK VALIDATION
+    // -------------------------------------------------
+
+    const availableStock =
+      getItemStock(targetItem);
+
+    if (
+      availableStock !== null &&
+      newQuantity > availableStock
+    ) {
+      showToast(
+        "error",
+        `Only ${availableStock} ${
+          availableStock === 1
+            ? "unit"
+            : "units"
+        } available in stock`
+      );
+
       return;
     }
 
@@ -212,8 +335,10 @@ const Cart = () => {
           responseText
         );
 
+        // Surface backend message (e.g. insufficient stock)
         throw new Error(
-          "Failed to update quantity"
+          responseText ||
+            "Failed to update quantity"
         );
       }
 
@@ -228,7 +353,10 @@ const Cart = () => {
 
       showToast(
         "error",
-        "Failed to update quantity"
+        err.message &&
+          err.message.length < 150
+          ? err.message
+          : "Failed to update quantity"
       );
     } finally {
       setUpdatingItemId(null);
@@ -380,35 +508,40 @@ const Cart = () => {
       return;
     }
 
+    // Block checkout if any item exceeds available stock
+    const overStockItem = cartItems.find(
+      (item) => {
+        const stock = getItemStock(item);
+
+        return (
+          stock !== null &&
+          Number(item.quantity) > stock
+        );
+      }
+    );
+
+    if (overStockItem) {
+      const stock =
+        getItemStock(overStockItem);
+
+      showToast(
+        "error",
+        `${
+          overStockItem.productName ||
+          "An item"
+        } has only ${stock} in stock. Please reduce the quantity.`
+      );
+
+      return;
+    }
+
     setCheckingAddress(true);
 
     try {
       const customerId =
         getResolvedCustomerId();
 
-      console.log(
-        "Customer ID used for address:",
-        customerId
-      );
-
-      /*
-       * IMPORTANT
-       *
-       * We first call the normal /show endpoint.
-       *
-       * Your backend should ideally derive the
-       * customer from the JWT token.
-       */
-
       let url = `${ADDRESS_API}/show`;
-
-      /*
-       * If customer ID is available, send it as
-       * a query parameter as well.
-       *
-       * This protects against a backend implementation
-       * where /show expects customerId.
-       */
 
       if (
         customerId !== null &&
@@ -419,24 +552,15 @@ const Cart = () => {
         )}`;
       }
 
-      console.log(
-        "Address request URL:",
-        url
-      );
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-      const res = await fetch(
-        url,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const responseText =
-        await res.text();
+      const responseText = await res.text();
 
       console.log(
         "Address API status:",
@@ -449,33 +573,29 @@ const Cart = () => {
       );
 
       if (res.status === 404) {
-    console.log("No address found. Opening address modal.");
-    setShowAddressModal(true);
-    return;
-}
+        console.log(
+          "No address found. Opening address modal."
+        );
+        setShowAddressModal(true);
+        return;
+      }
 
-if (!res.ok) {
-    throw new Error(
-        responseText || "Failed to fetch address"
-    );
-}
+      if (!res.ok) {
+        throw new Error(
+          responseText ||
+            "Failed to fetch address"
+        );
+      }
 
       let data;
 
       try {
-        data = JSON.parse(
-          responseText
-        );
+        data = JSON.parse(responseText);
       } catch {
         throw new Error(
           "Invalid address response from server"
         );
       }
-
-      console.log(
-        "Address API parsed response:",
-        data
-      );
 
       // =================================================
       // RESOLVE ADDRESS ARRAY
@@ -489,28 +609,13 @@ if (!res.ok) {
         Array.isArray(data.addresses)
       ) {
         addresses = data.addresses;
-      } else if (
-        Array.isArray(data.data)
-      ) {
+      } else if (Array.isArray(data.data)) {
         addresses = data.data;
-      } else if (
-        data.address
-      ) {
+      } else if (data.address) {
         addresses = [data.address];
-      } else if (
-        data.id
-      ) {
-        /*
-         * Backend may return one address
-         * directly instead of an array.
-         */
+      } else if (data.id) {
         addresses = [data];
       }
-
-      console.log(
-        "Resolved customer addresses:",
-        addresses
-      );
 
       // =================================================
       // ADDRESS EXISTS
@@ -518,23 +623,8 @@ if (!res.ok) {
 
       if (addresses.length > 0) {
         const selectedAddress =
-          addresses[
-            addresses.length - 1
-          ];
+          addresses[addresses.length - 1];
 
-        console.log(
-          "Selected address:",
-          selectedAddress
-        );
-
-        console.log(
-          "Selected address ID:",
-          selectedAddress?.id
-        );
-
-        /*
-         * Make sure we really received an address.
-         */
         if (
           !selectedAddress ||
           !selectedAddress.id
@@ -554,20 +644,14 @@ if (!res.ok) {
           return;
         }
 
-        navigate(
-          "/dashboard/orders",
-          {
-            state: {
-              cartItems,
-              totals,
-              address:
-                selectedAddress,
-
-              addressId:
-                selectedAddress.id,
-            },
-          }
-        );
+        navigate("/dashboard/orders", {
+          state: {
+            cartItems,
+            totals,
+            address: selectedAddress,
+            addressId: selectedAddress.id,
+          },
+        });
 
         return;
       }
@@ -576,10 +660,6 @@ if (!res.ok) {
       // NO ADDRESS
       // =================================================
 
-      console.log(
-        "No address found. Opening address modal."
-      );
-
       setShowAddressModal(true);
     } catch (err) {
       console.error(
@@ -587,18 +667,12 @@ if (!res.ok) {
         err
       );
 
-      /*
-       * Do NOT hide the actual backend error.
-       */
       showToast(
         "error",
         err.message ||
           "Could not load your delivery address"
       );
 
-      /*
-       * Allow user to add an address.
-       */
       setShowAddressModal(true);
     } finally {
       setCheckingAddress(false);
@@ -612,16 +686,8 @@ if (!res.ok) {
   const handleAddressSaved = (
     savedAddress
   ) => {
-    console.log(
-      "Address saved successfully:",
-      savedAddress
-    );
-
     setShowAddressModal(false);
 
-    /*
-     * Make sure saved address exists.
-     */
     if (!savedAddress) {
       showToast(
         "error",
@@ -631,33 +697,28 @@ if (!res.ok) {
       return;
     }
 
-    navigate(
-      "/dashboard/orders",
-      {
-        state: {
-          cartItems,
-          totals,
-          address:
-            savedAddress,
-
-          addressId:
-            savedAddress.id ||
-            savedAddress.addressId ||
-            null,
-        },
-      }
-    );
+    navigate("/dashboard/orders", {
+      state: {
+        cartItems,
+        totals,
+        address: savedAddress,
+        addressId:
+          savedAddress.id ||
+          savedAddress.addressId ||
+          null,
+      },
+    });
   };
 
   // =====================================================
   // LOADING
   // =====================================================
 
-  if (loading) {
+  if (loading && cartItems.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <p className="text-sm text-gray-500">
-          Loading...
+          Loading your cart...
         </p>
       </div>
     );
@@ -668,9 +729,9 @@ if (!res.ok) {
   // =====================================================
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
+    <div className="min-h-screen bg-gray-50 pb-8 sm:pb-10">
 
-      <div className="max-w-6xl mx-auto px-4 pt-6">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 pt-4 sm:pt-6">
 
         {/* Back Button */}
         <button
@@ -682,7 +743,8 @@ if (!res.ok) {
             text-sm
             text-gray-500
             hover:text-black
-            mb-4
+            mb-3
+            sm:mb-4
             transition
           "
         >
@@ -690,42 +752,70 @@ if (!res.ok) {
           Back
         </button>
 
-        {/* Step Indicator */}
-        <span
-          className="
-            text-xs
-            font-medium
-            text-gray-600
-            bg-gray-100
-            px-2.5
-            py-1
-            rounded-full
-          "
-        >
-          STEP 1 — SHOPPING CART
-        </span>
+        {/* Header */}
+        <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
 
-        {/* Page Title */}
-        <h1
-          className="
-            text-2xl
-            sm:text-3xl
-            font-bold
-            text-black
-            mt-2
-          "
-        >
-          Your Shopping Cart
-        </h1>
+          <div className="min-w-0">
 
-        {/* Item Count */}
-        <p className="text-sm text-gray-500 mt-1">
-          {totals.totalItems}{" "}
-          {totals.totalItems === 1
-            ? "item"
-            : "items"}{" "}
-          in your cart
-        </p>
+            {/* Step Indicator */}
+            <span
+              className="
+                inline-block
+                text-[10px]
+                sm:text-xs
+                font-medium
+                text-gray-600
+                bg-gray-100
+                px-2.5
+                py-1
+                rounded-full
+              "
+            >
+              STEP 1 — SHOPPING CART
+            </span>
+
+            {/* Page Title */}
+            <h1
+              className="
+                text-xl
+                sm:text-2xl
+                lg:text-3xl
+                font-bold
+                text-black
+                mt-2
+              "
+            >
+              Your Shopping Cart
+            </h1>
+
+            {/* Item Count */}
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              {totals.totalItems}{" "}
+              {totals.totalItems === 1
+                ? "item"
+                : "items"}{" "}
+              in your cart
+            </p>
+          </div>
+
+          {/* Clear Cart */}
+          {cartItems.length > 0 && (
+            <button
+              onClick={handleClearCart}
+              className="
+                text-xs
+                sm:text-sm
+                text-red-500
+                hover:text-red-600
+                font-medium
+                transition
+                py-1
+              "
+            >
+              Clear Cart
+            </button>
+          )}
+        </div>
 
         {/* Empty Cart */}
         {cartItems.length === 0 ? (
@@ -740,78 +830,61 @@ if (!res.ok) {
               grid
               grid-cols-1
               lg:grid-cols-3
-              gap-6
-              mt-6
+              gap-4
+              sm:gap-6
+              mt-4
+              sm:mt-6
+              items-start
             "
           >
 
             {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="lg:col-span-2 min-w-0">
 
               <div
                 className="
                   bg-white
-                  rounded-2xl
+                  rounded-xl
+                  sm:rounded-2xl
                   shadow-sm
                   border
                   border-gray-100
-                  px-5
+                  px-3
                   sm:px-6
                 "
               >
-                {cartItems.map(
-                  (item) => (
-                    <CartItem
-                      key={item.id}
-                      item={item}
-                      onUpdateQuantity={
-                        handleUpdateQuantity
-                      }
-                      onRemove={
-                        handleRemoveItem
-                      }
-                      updating={
-                        updatingItemId ===
-                        item.id
-                      }
-                    />
-                  )
-                )}
+                {cartItems.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    onUpdateQuantity={
+                      handleUpdateQuantity
+                    }
+                    onRemove={
+                      handleRemoveItem
+                    }
+                    updating={
+                      updatingItemId ===
+                      item.id
+                    }
+                    maxStock={getItemStock(
+                      item
+                    )}
+                  />
+                ))}
               </div>
-
-              {/* Clear Cart */}
-              <button
-                onClick={
-                  handleClearCart
-                }
-                className="
-                  text-sm
-                  text-red-500
-                  hover:text-red-600
-                  font-medium
-                  transition
-                "
-              >
-                Clear Cart
-              </button>
 
             </div>
 
             {/* Cart Summary */}
-            <CartSummary
-              itemCount={
-                totals.totalItems
-              }
-              subtotal={
-                totals.totalAmount
-              }
-              onCheckout={
-                handleCheckout
-              }
-              checkingOut={
-                checkingAddress
-              }
-            />
+            <div className="lg:col-span-1 lg:sticky lg:top-6 min-w-0">
+              <CartSummary
+                itemCount={totals.totalItems}
+                subtotal={totals.totalAmount}
+                onCheckout={handleCheckout}
+                checkingOut={checkingAddress}
+              />
+            </div>
 
           </div>
         )}
@@ -824,13 +897,9 @@ if (!res.ok) {
           onClose={() =>
             setShowAddressModal(false)
           }
-          onSaved={
-            handleAddressSaved
-          }
+          onSaved={handleAddressSaved}
         />
       )}
-
-      
 
     </div>
   );
